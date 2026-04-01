@@ -56,32 +56,6 @@ show_help() {
     echo "               HIDE_HEADER=1 pack.sh build"
 }
 
-# Check if user wants to see help or no command is provided
-if [[ ${command} == "-h" || ${command} == "--help" || -z "${command}" ]]; then
-    echo-header.sh
-    echo ""
-    show_help
-    exit 0
-fi
-
-if [ "${HIDE_HEADER}" != "1" ]; then
-    echo-header.sh
-fi
-
-show_elapsed_time() {
-    show-time.sh ${start_time}
-}
-
-# Run a command with indented output (preserves colors)
-# Usage: run_indented <exit_code> <command> [args...]
-run_indented() {
-    echo ""
-    local exit_code=$1
-    shift
-    "$@" 2>&1 | while IFS= read -r line; do echo "│ $line"; done || exit $exit_code
-    echo ""
-}
-
 check_composer_extra_info() {
     echo "Checking composer extra info"
     local source_path=$1
@@ -116,6 +90,34 @@ check_composer_extra_info() {
     fi
 
     echo "All required 'extra' fields are present in $composer_file."
+}
+
+check_composer_extra_info "${source_path}"
+
+# Check if user wants to see help or no command is provided
+if [[ ${command} == "-h" || ${command} == "--help" || -z "${command}" ]]; then
+    echo-header.sh
+    echo ""
+    show_help
+    exit 0
+fi
+
+if [ "${HIDE_HEADER}" != "1" ]; then
+    echo-header.sh
+fi
+
+show_elapsed_time() {
+    show-time.sh ${start_time}
+}
+
+# Run a command with indented output (preserves colors)
+# Usage: run_indented <exit_code> <command> [args...]
+run_indented() {
+    echo ""
+    local exit_code=$1
+    shift
+    "$@" 2>&1 | while IFS= read -r line; do echo "│ $line"; done || exit $exit_code
+    echo ""
 }
 
 command_dir() {
@@ -234,7 +236,6 @@ command_zip() {
 case "${command}" in
 "dir")
     set-git-config.sh ${source_path}
-    check_composer_extra_info ${source_path}
     command_dir
 
     echo-separator.sh
@@ -247,7 +248,6 @@ case "${command}" in
     ;;
 "zip")
     set-git-config.sh ${source_path}
-    check_composer_extra_info ${source_path}
     command_dir
     command_zip
 
