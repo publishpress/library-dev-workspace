@@ -39,7 +39,6 @@
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10",
-        "publishpress/dev-workspace": "*",
         "publishpress/publishpress-phpcs-standards": "dev-main",
         "publishpress/translations": "^1",
         "spatie/ray": "^1.41",
