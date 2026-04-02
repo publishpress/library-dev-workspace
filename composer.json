@@ -13,7 +13,7 @@
         "class": "PublishPress\\DevWorkspace\\Plugin"
     },
     "require": {
-        "php": "^7.4",
+        "php": ">=7.4",
         "ext-json": "*",
         "composer-plugin-api": "^2.0",
         "automattic/vipwpcs": "^3",
