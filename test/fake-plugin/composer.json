@@ -28,7 +28,9 @@
     "config": {
         "allow-plugins": {
             "publishpress/dev-workspace": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
         }
     }
 }

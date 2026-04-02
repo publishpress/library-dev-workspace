@@ -1,5 +1,6 @@
+/vendor/
+test/fake-plugin/.env
 test/fake-plugin/dev-workspace
 test/fake-plugin/dist
-test/fake-plugin/vendor
 test/fake-plugin/node_modules
-test/fake-plugin/.env
+test/fake-plugin/vendor
