@@ -1,4 +1,5 @@
 /vendor/
+dev-workspace-cache/
 test/fake-plugin/.env
 test/fake-plugin/dev-workspace
 test/fake-plugin/dist
