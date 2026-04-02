@@ -19,14 +19,17 @@ Add the following to the plugin's `composer.json` first, then run `composer upda
 
 ```json
 {
-  "require-dev": {
-    "publishpress/dev-workspace": "^1.0"
-  },
-  "config": {
-    "allow-plugins": {
-      "publishpress/dev-workspace": true
+    "require-dev": {
+        "publishpress/dev-workspace": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "publishpress/dev-workspace": true,
+            "php-http/discovery": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     }
-  }
 }
 ```
 
@@ -34,7 +37,6 @@ Alternatively, use the CLI — Composer will prompt you to allow the plugin on f
 
 ```bash
 composer require --dev publishpress/dev-workspace
-```
 ```
 
 Once installed, all shared scripts become available through `composer`. For example:
@@ -51,12 +53,15 @@ Set the following keys in the plugin's `composer.json` `extra` section so the wo
 
 ```json
 {
-  "extra": {
-    "plugin-slug": "my-plugin",
-    "plugin-lang-domain": "my-plugin",
-    "plugin-github-repo": "publishpress/my-plugin",
-    "plugin-composer-package": "publishpress/my-plugin"
-  }
+    "extra": {
+        "plugin-slug": "post-expirator",
+        "plugin-name": "publishpress-future",
+        "plugin-folder": "post-expirator",
+        "version-constant": "PUBLISHPRESS_FUTURE_VERSION",
+        "plugin-lang-domain": "post-expirator",
+        "plugin-github-repo": "publishpress/publishpress-future",
+        "plugin-composer-package": "publishpress/publishpress-future"
+    }
 }
 ```
 
