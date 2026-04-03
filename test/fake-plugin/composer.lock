@@ -5925,7 +5925,7 @@
             "source": {
                 "type": "git",
                 "url": "../..",
-                "reference": "80bfc70b6a3887a791f66d106f424df078ba7770"
+                "reference": "be246e0ec38d7b901a87c36f2222bd9b497122de"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -5954,7 +5954,7 @@
                 "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^10",
-                "publishpress/publishpress-phpcs-standards": "dev-main",
+                "publishpress/publishpress-phpcs-standards": "^1",
                 "publishpress/translations": "^1",
                 "spatie/ray": "^1.41",
                 "squizlabs/php_codesniffer": "^3.8",
@@ -6287,11 +6287,11 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Shared Composer scripts for PublishPress plugins",
-            "time": "2026-04-02T20:11:45+00:00"
+            "time": "2026-04-02T21:27:07+00:00"
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
-            "version": "dev-main",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/publishpress-phpcs-standards.git",
@@ -6331,7 +6331,7 @@
             ],
             "support": {
                 "issues": "https://github.com/publishpress/publishpress-phpcs-standards/issues",
-                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/development"
+                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/1.0.0"
             },
             "time": "2026-04-02T20:16:04+00:00"
         },
