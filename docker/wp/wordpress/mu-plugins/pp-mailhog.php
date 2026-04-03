@@ -33,6 +33,10 @@ add_filter('wp_mail_from_name', function ($from_name) {
 });
 
 add_action('phpmailer_init', function (\WP_PHPMailer $phpmailer) {
+    if (! defined('WP_MAILHOG_SMTP_HOST') || ! defined('WP_MAILHOG_SMTP_PORT')) {
+        return;
+    }
+
     $phpmailer->isSMTP();
     $phpmailer->Host = constant('WP_MAILHOG_SMTP_HOST');
     $phpmailer->Port = constant('WP_MAILHOG_SMTP_PORT');

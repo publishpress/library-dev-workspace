@@ -23,9 +23,9 @@ fi
 # Copy mu-plugin and ray files into the WP cache so they are part of the main
 # volume mount. Mounting individual files inside an already-mounted directory
 # fails on Docker Desktop for Mac with virtiofs.
-cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/load-spatie-ray.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/load-spatie-ray.php"
-cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/pp-mailhog.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/pp-mailhog.php"
-cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/ray.php" "$CACHE_PATH/wp_test/ray.php"
+[[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/load-spatie-ray.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/load-spatie-ray.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/load-spatie-ray.php"
+[[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/pp-mailhog.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/pp-mailhog.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/pp-mailhog.php"
+[[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/ray.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/ray.php" "$CACHE_PATH/wp_test/ray.php"
 [[ -d $CACHE_PATH/.zsh ]] || mkdir -p $CACHE_PATH/.zsh
 [[ -f $CACHE_PATH/.zsh/.zsh_history ]] || touch $CACHE_PATH/.zsh/.zsh_history
 [[ -f $CACHE_PATH/.bash_history ]] || touch $CACHE_PATH/.bash_history

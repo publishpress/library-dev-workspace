@@ -1,7 +1,9 @@
 /vendor/
 dev-workspace-cache/
 test/fake-plugin/.env
-test/fake-plugin/dev-workspace-cache
-test/fake-plugin/dist
-test/fake-plugin/node_modules
-test/fake-plugin/vendor
+test/fake-plugin/dev-workspace-cache/
+test/fake-plugin/dist/
+test/fake-plugin/node_modules/
+test/fake-plugin/vendor/
+test/fake-plugin/tests/_output/
+test/fake-plugin/tests/_wordpress/
