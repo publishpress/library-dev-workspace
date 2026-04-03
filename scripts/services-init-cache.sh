@@ -14,7 +14,7 @@ fi
 [[ -d $CACHE_PATH/.npm/_logs ]] || mkdir -p $CACHE_PATH/.npm/_logs
 [[ -d $CACHE_PATH/.composer/cache ]] || mkdir -p $CACHE_PATH/.composer/cache
 [[ -d $CACHE_PATH/.oh-my-zsh/log ]] || mkdir -p $CACHE_PATH/.oh-my-zsh/log
-[[ -d $CACHE_PATH/.git ]] || mkdir -p $CACHE_PATH/.git
+[[ -d $CACHE_PATH/.gitconfig ]] || mkdir -p $CACHE_PATH/.gitconfig
 # Docker bind-mount directories for test containers must be pre-created by the host user
 # so containers (mariadb, wordpress) get correct ownership on first start.
 [[ -d $CACHE_PATH/db_test ]] || mkdir -p $CACHE_PATH/db_test
@@ -25,4 +25,4 @@ fi
 [[ -f $CACHE_PATH/.zsh_history ]] || touch $CACHE_PATH/.zsh_history
 [[ -f $CACHE_PATH/.bash_history ]] || touch $CACHE_PATH/.bash_history
 [[ -f $CACHE_PATH/.composer/auth.json ]] || echo '{}' > $CACHE_PATH/.composer/auth.json
-[[ -f $CACHE_PATH/.git/config ]] || touch $CACHE_PATH/.git/config
+[[ -f $CACHE_PATH/.gitconfig/config ]] || touch $CACHE_PATH/.gitconfig/config
