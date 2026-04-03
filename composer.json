@@ -1,7 +1,7 @@
 {
     "name": "publishpress/dev-workspace",
     "type": "composer-plugin",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Shared Composer scripts for PublishPress plugins",
     "license": "GPL-2.0-or-later",
     "autoload": {
