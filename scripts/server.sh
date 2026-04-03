@@ -16,6 +16,7 @@ fi
 PROFILE="${2:-dev}"
 
 COMPOSE_FILE=docker/compose.yaml
+COMPOSE_ENV_FILE="$REPO_ROOT/.env"
 CACHE_BASE_PATH=$REPO_ROOT/dev-workspace-cache
 WP_CACHE=$CACHE_BASE_PATH/wp_${PROFILE}
 DB_CACHE=$CACHE_BASE_PATH/db_${PROFILE}
@@ -44,42 +45,42 @@ WP_DB_NAME=$(echo $WP_DB_URL | sed -E 's/mysql:\/\/.*@.*\/([^\/]+)$/\1/')
 
 service_up() {
   echo "Starting..."
-  docker compose -f $COMPOSE_FILE --profile ${PROFILE} up -d
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} up -d
 }
 
 service_stop() {
   echo "Stopping..."
-  docker compose -f $COMPOSE_FILE --profile ${PROFILE} stop
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} stop
 }
 
 service_down() {
   echo "Shutting down..."
-  docker compose -f $COMPOSE_FILE --profile ${PROFILE} down
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} down
 }
 
 service_cleanup() {
   echo "Cleaning up..."
-  docker compose -f $COMPOSE_FILE --profile ${PROFILE} down
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} down
 }
 
 get_wp_port() {
-  docker compose -f $COMPOSE_FILE port $1 80 | cut -d: -f2
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE port $1 80 | cut -d: -f2
 }
 
 get_db_port() {
-  docker compose -f $COMPOSE_FILE port $1 3306 | cut -d: -f2
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE port $1 3306 | cut -d: -f2
 }
 
 get_mailhog_port_8025() {
-  docker compose -f $COMPOSE_FILE port mailhog 8025 | cut -d: -f2
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE port mailhog 8025 | cut -d: -f2
 }
 
 get_mailhog_port_1025() {
-  docker compose -f $COMPOSE_FILE port mailhog 1025 | cut -d: -f2
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE port mailhog 1025 | cut -d: -f2
 }
 
 get_container_id() {
-  docker compose -f $COMPOSE_FILE ps -q $1
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE ps -q $1
 }
 
 service_info() {

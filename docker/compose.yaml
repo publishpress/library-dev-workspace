@@ -45,7 +45,7 @@ services:
             MARIADB_PASSWORD: wordpress
             MARIADB_ROOT_PASSWORD: root
         ports:
-          - "3311:3306"
+          - "${DB_TESTS_PORT:-3311}:3306"
         volumes:
             - ${CACHE_PATH}/db_test:/var/lib/mysql
             - ${CACHE_PATH}/logs/db_test:/var/log/mysql
@@ -133,8 +133,8 @@ services:
         profiles: ["dev", "test"]
         container_name: ${CONTAINER_NAME}_env_mailhog
         ports:
-            - "8013:8025" # Web UI
-            - "8014:1025" # SMTP server
+            - "${MAILHOG_WEB_PORT:-8013}:8025" # Web UI
+            - "${MAILHOG_SMTP_PORT:-8014}:1025" # SMTP server
         environment:
             - MH_STORAGE=maildir
             - MH_MAILDIR_PATH=/maildir

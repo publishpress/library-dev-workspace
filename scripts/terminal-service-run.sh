@@ -10,9 +10,9 @@ UPDATE_CHECK_INTERVAL=$ONE_DAY_IN_SECONDS
 
 run_terminal_service() {
     if [ $# -eq 0 ]; then
-        docker compose -f docker/compose.yaml run -e DROPBOX_ACCESS_TOKEN=$DROPBOX_ACCESS_TOKEN --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
+        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run -e DROPBOX_ACCESS_TOKEN=$DROPBOX_ACCESS_TOKEN --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
     else
-        docker compose -f docker/compose.yaml run -e DROPBOX_ACCESS_TOKEN=$DROPBOX_ACCESS_TOKEN --rm terminal sh -c '
+        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run -e DROPBOX_ACCESS_TOKEN=$DROPBOX_ACCESS_TOKEN --rm terminal sh -c '
             export DEV_WORKSPACE_DIR="/project/vendor/publishpress/dev-workspace"
             export PATH="$DEV_WORKSPACE_DIR/scripts:$PATH"
             [ -n "$GIT_USER_NAME" ] && git config --global user.name "$GIT_USER_NAME"
