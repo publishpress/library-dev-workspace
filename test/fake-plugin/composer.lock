@@ -5925,7 +5925,7 @@
             "source": {
                 "type": "git",
                 "url": "../..",
-                "reference": "c5de021a38e7c48d95266efa00d0ea3a9bf2b2cd"
+                "reference": "59d1cf1a55c0a61011bd18e2b7b13d57c69dadbf"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -5965,7 +5965,6 @@
                 "wp-cli/wp-cli-bundle": "^2.10",
                 "wp-coding-standards/wpcs": "^3"
             },
-            "default-branch": true,
             "type": "composer-plugin",
             "extra": {
                 "class": "PublishPress\\DevWorkspace\\Plugin"
@@ -6287,7 +6286,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Shared Composer scripts for PublishPress plugins",
-            "time": "2026-04-03T19:03:41+00:00"
+            "time": "2026-04-03T19:06:41+00:00"
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
