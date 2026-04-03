@@ -260,7 +260,7 @@
         "translate:mo": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
         "translate:json": "vendor/publishpress/dev-workspace/scripts/run.sh bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh",
         "translate:php": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
-        "config:phpcs": "phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
+        "config:phpcs": "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
         "post-install-cmd": [
             "@config:phpcs"
         ],
