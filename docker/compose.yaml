@@ -74,9 +74,6 @@ services:
           - ../../../../tests/Support/Data/plugins/pre-tests:/var/www/html/wp-content/plugins/pre-tests
           - ./wp/wordpress/conf.d/98-xdebug.ini:/usr/local/etc/php/conf.d/98-xdebug.ini
           - ./wp/wordpress/conf.d/99-custom.ini:/usr/local/etc/php/conf.d/99-custom.ini
-          - ./wp/wordpress/mu-plugins/load-spatie-ray.php:/var/www/html/wp-content/mu-plugins/load-spatie-ray.php
-          - ./wp/wordpress/mu-plugins/pp-mailhog.php:/var/www/html/wp-content/mu-plugins/pp-mailhog.php
-          - ./wp/wordpress/ray.php:/var/www/html/ray.php
         depends_on:
             db_test:
                 condition: service_healthy
