@@ -5925,7 +5925,7 @@
             "source": {
                 "type": "git",
                 "url": "../..",
-                "reference": "6a7a72fdbd2c8c64ce0abdbd4f7ce440126f5b7e"
+                "reference": "f3914dc77cefa6cdb27da08f5ec9b25e7494561b"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -6287,7 +6287,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Shared Composer scripts for PublishPress plugins",
-            "time": "2026-04-03T19:28:47+00:00"
+            "time": "2026-04-03T19:48:40+00:00"
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
