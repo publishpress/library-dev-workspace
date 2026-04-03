@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.1.3] - 03 April, 2026
+
+- Fixed: Docker service ports (db_test, mailhog) are now configurable via environment variables (`DB_TESTS_PORT`, `MAILHOG_WEB_PORT`, `MAILHOG_SMTP_PORT`) with backward-compatible defaults.
+- Fixed: All `docker compose` commands now explicitly pass `--env-file` to ensure the plugin's `.env` is always used for variable interpolation.
+- Fixed: Replaced individual file bind mounts for mu-plugins and ray.php with file copies into the cache directory, fixing "mountpoint outside of rootfs" errors on Docker Desktop for Mac with virtiofs.
+- Added: Integration and unit test scaffolding for the fake-plugin test project.
+
 [1.1.2] - 03 April, 2026
 
 - Fixed: Enhanced management of mounted files and directories to avoid write errors affecting the global git configuration and zsh history files.
