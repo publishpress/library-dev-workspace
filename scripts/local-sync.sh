@@ -12,6 +12,7 @@ fi
 # Function to perform the sync
 sync_files() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Syncing files..."
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Destination: ${LOCAL_SYNC_TARGET_DIR}"
   rsync -avz --exclude-from=.rsync-filters-dev-sync ./ ${LOCAL_SYNC_TARGET_DIR}
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sync complete."
 }
