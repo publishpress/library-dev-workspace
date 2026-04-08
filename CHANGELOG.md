@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.1.5] - 07 April, 2026
+
+- Fixed: Added an environment variable to control JSON translation generation; it is now disabled by default.
+
 [1.1.4] - 07 April, 2026
 
 - Changed: Display the destination path in the output of the local-sync.sh script.

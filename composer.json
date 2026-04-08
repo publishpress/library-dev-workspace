@@ -258,7 +258,8 @@
         ],
         "translate:pot": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,dist,tests,lib,tmp,doc,*.js,*.js.map --allow-root",
         "translate:mo": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
-        "translate:json": "vendor/publishpress/dev-workspace/scripts/run.sh bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh",
+        "translate:json": "[[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && vendor/publishpress/dev-workspace/scripts/run.sh bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
+
         "translate:php": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
         "config:phpcs": "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
         "post-install-cmd": [
