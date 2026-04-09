@@ -246,7 +246,7 @@
             "bash vendor/publishpress/dev-workspace/scripts/after-pr-merge.sh"
         ],
         "translate": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --languages=de_DE,fi,fil,id_ID,ja,ko_KR,nl_NL,ru_RU,yor",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/publishpress-translate-locales.sh",
             "@translate:audit"
         ],
         "translate:audit": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
