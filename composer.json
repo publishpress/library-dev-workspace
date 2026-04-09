@@ -246,25 +246,25 @@
             "bash vendor/publishpress/dev-workspace/scripts/after-pr-merge.sh"
         ],
         "translate": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (default locales)\" vendor/bin/publishpress-translate --languages=de_DE,fi,fil,id_ID,ja,ko_KR,nl_NL,ru_RU,yor",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --languages=de_DE,fi,fil,id_ID,ja,ko_KR,nl_NL,ru_RU,yor",
             "@translate:audit"
         ],
-        "translate:audit": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"wp i18n audit (languages/)\" wp i18n audit ./languages --allow-root",
+        "translate:audit": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
         "translate:dry-run": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (dry run)\" vendor/bin/publishpress-translate --dry-run",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --dry-run",
             "@translate:audit"
         ],
         "translate:download": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (download PO)\" vendor/bin/publishpress-translate --download",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --download",
             "@translate:audit"
         ],
-        "translate:upload": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (upload)\" vendor/bin/publishpress-translate --upload",
-        "translate:custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (custom locales)\" vendor/bin/publishpress-translate --languages",
+        "translate:upload": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --upload",
+        "translate:custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --languages",
         "translate:force": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (force)\" vendor/bin/publishpress-translate --force",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force",
             "@translate:audit"
         ],
-        "translate:force-custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"PublishPress Translate (force, custom locales)\" vendor/bin/publishpress-translate --force --languages",
+        "translate:force-custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force --languages",
         "translate:compile": [
             "@translate:mo",
             "@translate:json",
@@ -272,19 +272,19 @@
             "@translate:audit"
         ],
         "translate:pot": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"wp i18n make-pot\" wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root",
+            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root",
             "@translate:audit"
         ],
         "translate:mo": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"wp i18n make-mo (PO → MO)\" wp i18n make-mo ./languages ./languages --allow-root",
+            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
             "@translate:audit"
         ],
         "translate:json": [
-            "[[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"Generate JSON from PO (JS bundles)\" bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
+            "[[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && vendor/publishpress/dev-workspace/scripts/run.sh bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
             "@translate:audit"
         ],
         "translate:php": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-step.sh \"wp i18n make-php (WP 6.5+ l10n.php)\" wp i18n make-php ./languages --allow-root",
+            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
             "@translate:audit"
         ],
         "config:phpcs": "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
