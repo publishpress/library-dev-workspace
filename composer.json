@@ -271,22 +271,11 @@
             "@translate:php",
             "@translate:audit"
         ],
-        "translate:pot": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root",
-            "@translate:audit"
-        ],
-        "translate:mo": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
-            "@translate:audit"
-        ],
-        "translate:json": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh [[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && wp i18n make-json ./languages || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
-            "@translate:audit"
-        ],
-        "translate:php": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
-            "@translate:audit"
-        ],
+        "translate:pot": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root",
+        "translate:mo": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
+        "translate:json": "vendor/publishpress/dev-workspace/scripts/run.sh [[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && wp i18n make-json ./languages || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
+        "translate:php": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
+        "translate:cleanup": "rm languages/*.json languages/*.mo languages/*.php",
         "config:phpcs": "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
         "post-install-cmd": [
             "@config:phpcs"
