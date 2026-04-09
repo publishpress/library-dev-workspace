@@ -280,7 +280,7 @@
             "@translate:audit"
         ],
         "translate:json": [
-            "[[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && vendor/publishpress/dev-workspace/scripts/run.sh wp i10n make-json ./languages || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
+            "vendor/publishpress/dev-workspace/scripts/run.sh [[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && wp i10n make-json ./languages || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
             "@translate:audit"
         ],
         "translate:php": [
