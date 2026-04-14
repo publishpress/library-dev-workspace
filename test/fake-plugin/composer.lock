@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90106c7752ebd12495db302b1e3e184e",
+    "content-hash": "cade0fcfdc3344643983e0565798bafe",
     "packages": [],
     "packages-dev": [
         {
@@ -5921,7 +5921,7 @@
             "source": {
                 "type": "git",
                 "url": "../..",
-                "reference": "d92c95d908515e3f6a8bd2fc0f3b83e1a7479839"
+                "reference": "d2a7b3266258de5c701c5d675356af365b60621e"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -5951,7 +5951,7 @@
                 "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^10",
                 "publishpress/publishpress-phpcs-standards": "^1",
-                "publishpress/translations": "^1",
+                "publishpress/translations": "dev-andergmartins/catalog-ast",
                 "spatie/ray": "^1.41",
                 "squizlabs/php_codesniffer": "^3.8",
                 "symfony/http-client": "^7.1",
@@ -6224,7 +6224,7 @@
                     "bash vendor/publishpress/dev-workspace/scripts/after-pr-merge.sh"
                 ],
                 "translate": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/publishpress-translate-locales.sh",
+                    "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-locales.sh",
                     "@translate:audit"
                 ],
                 "translate:audit": [
@@ -6258,20 +6258,19 @@
                     "@translate:audit"
                 ],
                 "translate:pot": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root",
-                    "@translate:audit"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-pot . ./languages/${PP_PLUGIN_LANG_DOMAIN}.pot --domain=${PP_PLUGIN_LANG_DOMAIN} --exclude=vendor,.wordpress-org,.github,.cursor,.claude,dist,tests,lib,tmp,doc,.cache,dev-workspace-cache,.node_modules,.git,.zed,docs,languages. --allow-root"
                 ],
                 "translate:mo": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root",
-                    "@translate:audit"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-mo ./languages ./languages --allow-root"
                 ],
                 "translate:json": [
-                    "[[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && vendor/publishpress/dev-workspace/scripts/run.sh bash ./vendor/publishpress/dev-workspace/scripts/lang-make-json.sh || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\"",
-                    "@translate:audit"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh [[ $(grep -E '^GENERATE_TRANSLATION_JSON=(1|true)$' .env 2>/dev/null) ]] && wp i18n make-json ./languages || echo \"Skipping JSON translation generation (set GENERATE_TRANSLATION_JSON=1 in .env to enable)\""
                 ],
                 "translate:php": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
-                    "@translate:audit"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root"
+                ],
+                "translate:cleanup": [
+                    "rm languages/*.json languages/*.mo languages/*.php"
                 ],
                 "config:phpcs": [
                     "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\""
@@ -6296,7 +6295,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Shared Composer scripts for PublishPress plugins",
-            "time": "2026-04-09T17:11:03+00:00"
+            "time": "2026-04-09T19:50:06+00:00"
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
@@ -6346,20 +6345,21 @@
         },
         {
             "name": "publishpress/translations",
-            "version": "1.0.3",
+            "version": "dev-andergmartins/catalog-ast",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "ea40919b8737a17e7dd6453b438854a0e8036278"
+                "reference": "ce6727e88dc92a223a0875ebf52bea4a315558be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/ea40919b8737a17e7dd6453b438854a0e8036278",
-                "reference": "ea40919b8737a17e7dd6453b438854a0e8036278",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/ce6727e88dc92a223a0875ebf52bea4a315558be",
+                "reference": "ce6727e88dc92a223a0875ebf52bea4a315558be",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "gettext/gettext": "^4.8 || ^5.7",
                 "guzzlehttp/guzzle": "^7.0",
                 "php": ">=7.2.5"
             },
@@ -6368,7 +6368,6 @@
                 "overtrue/phplint": "^2.1",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.0",
                 "publishpress/publishpress-phpcs-standards": "dev-main",
                 "sirbrillig/phpcs-variable-analysis": "^2.11",
                 "squizlabs/php_codesniffer": "^3.8",
@@ -6397,9 +6396,9 @@
             "description": "AI-powered translation automation for PublishPress plugins using Potomatic",
             "support": {
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
-                "source": "https://github.com/publishpress/library-publishpress-translator/tree/1.0.3"
+                "source": "https://github.com/publishpress/library-publishpress-translator/tree/andergmartins/catalog-ast"
             },
-            "time": "2026-03-24T12:44:13+00:00"
+            "time": "2026-04-09T21:11:59+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

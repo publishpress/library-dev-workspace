@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Fake Plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/project\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-04-09T17:46:53+00:00\n"
+"PO-Revision-Date: 2026-04-09 21:13+0000\n"
+"Language: th\n"
+"X-Generator: WP-CLI 2.13.0-alpha\n"
+"X-Domain: fake-plugin\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: fake-plugin.php:3
+msgid "Fake Plugin"
+msgstr "ปลั๊กอินปลอม"
+
+#. Plugin URI of the plugin
+#: fake-plugin.php:4
+#, fuzzy
+msgid "https://publishpress.com"
+msgstr "https://publishpress.com"
+
+#. Description of the plugin
+#: fake-plugin.php:5
+msgid "A minimal fake WordPress plugin used to test publishpress/dev-workspace locally."
+msgstr "ปลั๊กอิน WordPress ปลอมที่มีขนาดเล็ก ใช้สำหรับทดสอบ publishpress/dev-workspace ในเครื่อง"
+
+#. Author of the plugin
+#: fake-plugin.php:7
+#, fuzzy
+msgid "PublishPress"
+msgstr "PublishPress"
+
+#: fake-plugin.php:25
+msgid "This is the first sample string for plain gettext."
+msgstr "นี่คือตัวอย่างสตริงแรกสำหรับ gettext ธรรมดา"
+
+#: fake-plugin.php:26
+msgid "This is the second sample string for plain gettext."
+msgstr "นี่คือตัวอย่างสตริงที่สองสำหรับ gettext ธรรมดา"
+
+#: fake-plugin.php:27
+msgid "This is the third sample string for plain gettext."
+msgstr "นี่คือตัวอย่างสตริงที่สามสำหรับ gettext ธรรมดา"
+
+#: fake-plugin.php:31
+msgid "This sentence is printed with gettext using immediate echo."
+msgstr "ประโยคนี้พิมพ์ด้วย gettext โดยใช้ echo ทันที"
+
+#: fake-plugin.php:35
+msgid "This line uses esc_html_e so unsafe markup cannot break the layout."
+msgstr "บรรทัดนี้ใช้ esc_html_e ดังนั้น markup ที่ไม่ปลอดภัยจึงไม่สามารถทำลายเลย์เอาต์ได้"
+
+#: fake-plugin.php:39
+msgid "This value uses esc_attr_e and belongs inside an HTML attribute."
+msgstr "ค่าตัวนี้ใช้ esc_attr_e และอยู่ภายในคุณสมบัติ HTML"
+
+#: fake-plugin.php:43
+msgid "This line uses esc_html__ and returns a value instead of echoing it."
+msgstr "บรรทัดนี้ใช้ esc_html__ และส่งค่ากลับแทนการ echo"
+
+#: fake-plugin.php:44
+msgid "This line uses esc_attr__ for text stored in an attribute."
+msgstr "บรรทัดนี้ใช้ esc_attr__ สำหรับข้อความที่เก็บอยู่ในคุณสมบัติ"
+
+#. translators: %d: number of items
+#: fake-plugin.php:69
+#, php-format
+msgid "There is %d item in this plural-form test."
+msgid_plural "There are %d items in this plural-form test."
+msgstr[0] "มี %d รายการในทดสอบแบบพหูพจน์นี้"
+
+#. translators: %s: a short word inserted into the sentence
+#: fake-plugin.php:92
+#, php-format
+msgid "This sentence has one slot for a word: today we say %s."
+msgstr "ประโยคนี้มีช่องสำหรับคำหนึ่งคำ: วันนี้เราพูดว่า %s."
+
+#. translators: %1$s: earlier phrase, %2$s: later phrase (translators may reorder)
+#: fake-plugin.php:98
+#, php-format
+msgid "We name two things in source order: first %1$s, then %2$s."
+msgstr "เรากล่าวถึงสองสิ่งในลำดับที่ตั้งไว้: ก่อน %1$s, แล้ว %2$s."
+
+#. translators: %1$s and %2$s appear out of numerical order on purpose
+#: fake-plugin.php:105
+#, php-format
+msgid "The later clause mentions %2$s before the earlier clause mentions %1$s."
+msgstr "วลีที่ตามมากล่าวถึง %2$s ก่อนที่จะกล่าวถึง %1$s"
+
+#. translators: %1$s is the product name, %2$s is the star rating markup or label
+#: fake-plugin.php:113
+#, php-format
+msgid "If you like %1$s, please leave us a %2$s rating. Thank you!"
+msgstr "ถ้าคุณชอบ %1$s, กรุณาให้คะแนนเรา %2$s ขอบคุณ!"
+
+#. translators: %s: module title — control next to %1$s/%2$s strings (issue #81 compares these)
+#: fake-plugin.php:120
+#, php-format
+msgid "About %s"
+msgstr "เกี่ยวกับ %s"
+
+#. translators: %1$s: name, %2$s: place, %3$s: time word (order may change per language)
+#: fake-plugin.php:126
+#, php-format
+msgid "Meet %1$s from %2$s at %3$s."
+msgstr "พบกับ %1$s จาก %2$s ที่ %3$s."
+
+#. translators: %1$d: count, %2$s: unit label
+#: fake-plugin.php:134
+#, php-format
+msgid "We counted %1$d items and labeled the batch as %2$s."
+msgstr "เรานับ %1$d รายการและทำป้ายชุดเป็น %2$s."
+
+#. translators: Numbered placeholders split across a line break in the source (multiline msgid).
+#: fake-plugin.php:141
+#, php-format
+msgid ""
+"The first line names %1$s,\n"
+"and the second line names %2$s."
+msgstr ""
+"บรรทัดแรกชื่อ %1$s,\n"
+"และบรรทัดที่สองชื่อ %2$s."
+
+#. translators: %d: a whole number in a test phrase
+#: fake-plugin.php:152
+#, php-format
+msgid "The integer placeholder in this test reads exactly %d."
+msgstr "ตัวเลขที่เป็นจำนวนเต็มในข้อความทดสอบนี้อ่านได้ว่า %d."
+
+#: fake-plugin.php:158
+msgid "Quotes inside one string can mix apostrophes and double quotes, like it's short and \"quoted\"."
+msgstr "คำพูดภายในสตริงหนึ่งสามารถผสมเครื่องหมายอ apostrophe และเครื่องหมายคำพูดคู่ เช่น มันสั้นและ \"มีการอ้างอิง\"."
+
+#: fake-plugin.php:164
+msgid ""
+"This message is split across two lines in the source file.\n"
+"Please translate it as one natural sentence, not two separate labels."
+msgstr ""
+"ข้อความนี้ถูกแบ่งออกเป็นสองบรรทัดในไฟล์ต้นฉบับ\n"
+"โปรดแปลเป็นประโยคธรรมชาติเดียว ไม่ใช่สองป้ายแยกต่างหาก."
+
+#: assets/main.js:9
+msgid "Fake Plugin main script loaded."
+msgstr "สคริปต์หลักของปลอมปลั๊กอินถูกโหลดแล้ว."
+
+#: assets/main.js:10
+msgid "Save changes from the main panel."
+msgstr "บันทึกการเปลี่ยนแปลงจากแผงหลัก."
+
+#. translators: %d: number of items
+#: assets/main.js:13
+msgid "One item selected in the main view."
+msgid_plural "%d items selected in the main view."
+msgstr[0] "เลือกหนึ่งรายการในมุมมองหลัก."
+
+#: assets/menu.js:9
+msgid "Open the fake plugin menu."
+msgstr "เปิดเมนูปลั๊กอินปลอม."
+
+#: assets/menu.js:10
+msgid "Settings for the fake plugin."
+msgstr "การตั้งค่าสำหรับปลั๊กอินปลอม."
+
+#: fake-plugin.php:47
+msgctxt "Button label: start recording audio or video."
+msgid "Record"
+msgstr "บันทึก"
+
+#: fake-plugin.php:52
+msgctxt "Noun: a single audio or video recording you can play back."
+msgid "Record"
+msgstr "บันทึก"
+
+#: fake-plugin.php:59
+msgctxt "Button label: close the dialog without keeping changes."
+msgid "Leave"
+msgstr "ออก"
+
+#. translators: %s: number of messages
+#: fake-plugin.php:80
+#, php-format
+msgctxt "Count of admin notices about translation tests."
+msgid "You have %d message that needs gettext context."
+msgid_plural "You have %d messages that need gettext context."
+msgstr[0] "คุณมี %d ข้อความที่ต้องการบริบท gettext."
+
+#: assets/main.js:11
+msgctxt "Button label in main script"
+msgid "Close"
+msgstr "ปิด"
+
+#: assets/menu.js:11
+msgctxt "Admin sidebar navigation label"
+msgid "Menu"
+msgstr "เมนู"

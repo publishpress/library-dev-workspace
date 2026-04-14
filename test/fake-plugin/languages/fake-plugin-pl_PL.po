@@ -1,0 +1,208 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Fake Plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/project\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-04-09T17:46:53+00:00\n"
+"PO-Revision-Date: 2026-04-09 21:13+0000\n"
+"Language: pl_PL\n"
+"X-Generator: WP-CLI 2.13.0-alpha\n"
+"X-Domain: fake-plugin&& (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);(n%100<10 || n%100>=20) ? 1: 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);\n"
+
+#. Plugin Name of the plugin
+#: fake-plugin.php:3
+msgid "Fake Plugin"
+msgstr "Fałszywy Plugin"
+
+#. Plugin URI of the plugin
+#: fake-plugin.php:4
+#, fuzzy
+msgid "https://publishpress.com"
+msgstr "https://publishpress.com"
+
+#. Description of the plugin
+#: fake-plugin.php:5
+msgid "A minimal fake WordPress plugin used to test publishpress/dev-workspace locally."
+msgstr "Minimalny fałszywy plugin WordPress używany do testowania publishpress/dev-workspace lokalnie."
+
+#. Author of the plugin
+#: fake-plugin.php:7
+#, fuzzy
+msgid "PublishPress"
+msgstr "PublishPress"
+
+#: fake-plugin.php:25
+msgid "This is the first sample string for plain gettext."
+msgstr "To jest pierwszy przykładowy ciąg dla zwykłego gettext."
+
+#: fake-plugin.php:26
+msgid "This is the second sample string for plain gettext."
+msgstr "To jest drugi przykładowy ciąg dla zwykłego gettext."
+
+#: fake-plugin.php:27
+msgid "This is the third sample string for plain gettext."
+msgstr "To jest trzeci przykładowy ciąg dla zwykłego gettext."
+
+#: fake-plugin.php:31
+msgid "This sentence is printed with gettext using immediate echo."
+msgstr "To zdanie jest wyświetlane z gettext przy użyciu natychmiastowego echo."
+
+#: fake-plugin.php:35
+msgid "This line uses esc_html_e so unsafe markup cannot break the layout."
+msgstr "Ta linia używa esc_html_e, więc niebezpieczny markup nie może zepsuć układu."
+
+#: fake-plugin.php:39
+msgid "This value uses esc_attr_e and belongs inside an HTML attribute."
+msgstr "Ta wartość używa esc_attr_e i należy do atrybutu HTML."
+
+#: fake-plugin.php:43
+msgid "This line uses esc_html__ and returns a value instead of echoing it."
+msgstr "Ta linia używa esc_html__ i zwraca wartość zamiast ją wyświetlać."
+
+#: fake-plugin.php:44
+msgid "This line uses esc_attr__ for text stored in an attribute."
+msgstr "Ta linia używa esc_attr__ dla tekstu przechowywanego w atrybucie."
+
+#. translators: %d: number of items
+#: fake-plugin.php:69
+#, php-format
+msgid "There is %d item in this plural-form test."
+msgid_plural "There are %d items in this plural-form test."
+msgstr[0] "Jest %d przedmiot w tym teście formy mnogiej."
+msgstr[1] "Jest %d przedmioty w tym teście formy mnogiej."
+msgstr[2] "Jest %d przedmiotów w tym teście formy mnogiej."
+
+#. translators: %s: a short word inserted into the sentence
+#: fake-plugin.php:92
+#, php-format
+msgid "This sentence has one slot for a word: today we say %s."
+msgstr "To zdanie ma jedno miejsce na słowo: dziś mówimy %s."
+
+#. translators: %1$s: earlier phrase, %2$s: later phrase (translators may reorder)
+#: fake-plugin.php:98
+#, php-format
+msgid "We name two things in source order: first %1$s, then %2$s."
+msgstr "Nazwamy dwie rzeczy w kolejności źródłowej: najpierw %1$s, potem %2$s."
+
+#. translators: %1$s and %2$s appear out of numerical order on purpose
+#: fake-plugin.php:105
+#, php-format
+msgid "The later clause mentions %2$s before the earlier clause mentions %1$s."
+msgstr "Późniejszy fragment wspomina o %2$s przed wcześniejszym fragmentem, który wspomina o %1$s."
+
+#. translators: %1$s is the product name, %2$s is the star rating markup or label
+#: fake-plugin.php:113
+#, php-format
+msgid "If you like %1$s, please leave us a %2$s rating. Thank you!"
+msgstr "Jeśli lubisz %1$s, prosimy o pozostawienie nam oceny %2$s. Dziękujemy!"
+
+#. translators: %s: module title — control next to %1$s/%2$s strings (issue #81 compares these)
+#: fake-plugin.php:120
+#, php-format
+msgid "About %s"
+msgstr "O %s"
+
+#. translators: %1$s: name, %2$s: place, %3$s: time word (order may change per language)
+#: fake-plugin.php:126
+#, php-format
+msgid "Meet %1$s from %2$s at %3$s."
+msgstr "Spotkaj %1$s z %2$s o %3$s."
+
+#. translators: %1$d: count, %2$s: unit label
+#: fake-plugin.php:134
+#, php-format
+msgid "We counted %1$d items and labeled the batch as %2$s."
+msgstr "Policzyliśmy %1$d przedmiotów i oznaczyliśmy partię jako %2$s."
+
+#. translators: Numbered placeholders split across a line break in the source (multiline msgid).
+#: fake-plugin.php:141
+#, php-format
+msgid ""
+"The first line names %1$s,\n"
+"and the second line names %2$s."
+msgstr ""
+"Pierwsza linia nazywa %1$s,  \n"
+"a druga linia nazywa %2$s."
+
+#. translators: %d: a whole number in a test phrase
+#: fake-plugin.php:152
+#, php-format
+msgid "The integer placeholder in this test reads exactly %d."
+msgstr "Placeholder całkowity w tym teście brzmi dokładnie %d."
+
+#: fake-plugin.php:158
+msgid "Quotes inside one string can mix apostrophes and double quotes, like it's short and \"quoted\"."
+msgstr "Cytaty wewnątrz jednego ciągu mogą mieszać apostrofy i cudzysłowy, jak to jest krótkie i \"cytowane\"."
+
+#: fake-plugin.php:164
+msgid ""
+"This message is split across two lines in the source file.\n"
+"Please translate it as one natural sentence, not two separate labels."
+msgstr ""
+"Ta wiadomość jest podzielona na dwie linie w pliku źródłowym.  \n"
+"Proszę przetłumaczyć to jako jedno naturalne zdanie, a nie dwie oddzielne etykiety."
+
+#: assets/main.js:9
+msgid "Fake Plugin main script loaded."
+msgstr "Główny skrypt wtyczki fałszywej załadowany."
+
+#: assets/main.js:10
+msgid "Save changes from the main panel."
+msgstr "Zapisz zmiany z głównego panelu."
+
+#. translators: %d: number of items
+#: assets/main.js:13
+msgid "One item selected in the main view."
+msgid_plural "%d items selected in the main view."
+msgstr[0] "Wybrano jeden element w głównym widoku.|"
+msgstr[1] "Wybrano %d elementy w głównym widoku."
+msgstr[2] "Wybrano %d elementów w głównym widoku."
+
+#: assets/menu.js:9
+msgid "Open the fake plugin menu."
+msgstr "Otwórz menu fałszywej wtyczki."
+
+#: assets/menu.js:10
+msgid "Settings for the fake plugin."
+msgstr "Ustawienia dla fałszywej wtyczki."
+
+#: fake-plugin.php:47
+msgctxt "Button label: start recording audio or video."
+msgid "Record"
+msgstr "Nagraj"
+
+#: fake-plugin.php:52
+msgctxt "Noun: a single audio or video recording you can play back."
+msgid "Record"
+msgstr "Nagraj"
+
+#: fake-plugin.php:59
+msgctxt "Button label: close the dialog without keeping changes."
+msgid "Leave"
+msgstr "Opuszcz"
+
+#. translators: %s: number of messages
+#: fake-plugin.php:80
+#, php-format
+msgctxt "Count of admin notices about translation tests."
+msgid "You have %d message that needs gettext context."
+msgid_plural "You have %d messages that need gettext context."
+msgstr[0] "Masz %d wiadomość, która wymaga kontekstu gettext.|"
+msgstr[1] "Masz %d wiadomości, które wymagają kontekstu gettext."
+msgstr[2] "Masz %d wiadomości, które wymagają kontekstu gettext."
+
+#: assets/main.js:11
+msgctxt "Button label in main script"
+msgid "Close"
+msgstr "Zamknij"
+
+#: assets/menu.js:11
+#, fuzzy
+msgctxt "Admin sidebar navigation label"
+msgid "Menu"
+msgstr "Menu"

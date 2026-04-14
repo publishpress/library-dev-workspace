@@ -1,5 +1,3 @@
-# Copyright (C) 2026 PublishPress
-# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Fake Plugin 1.0.0\n"
@@ -9,35 +7,33 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-09T14:01:25+00:00\n"
-"PO-Revision-Date: 2026-04-09 14:08+0000\n"
+"POT-Creation-Date: 2026-04-09T17:46:53+00:00\n"
+"PO-Revision-Date: 2026-04-09 21:13+0000\n"
+"Language: de-DE\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: fake-plugin\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: de-DE\n"
 
-#: fake-plugin.php:3
-#: fake-plugin.php:3, fuzzy
 #. Plugin Name of the plugin
+#: fake-plugin.php:3
+#, fuzzy
 msgid "Fake Plugin"
 msgstr "Fake Plugin"
 
-#: fake-plugin.php:4, fuzzy
 #. Plugin URI of the plugin
+#: fake-plugin.php:4
+#, fuzzy
 msgid "https://publishpress.com"
 msgstr "https://publishpress.com"
 
-#: fake-plugin.php:5
 #. Description of the plugin
-msgid ""
-"A minimal fake WordPress plugin used to test publishpress/dev-workspace "
-"locally."
-msgstr ""
-"Ein minimaler Fake WordPress-Plugin, der verwendet wird, um "
-"publishpress/dev-workspace lokal zu testen."
+#: fake-plugin.php:5
+msgid "A minimal fake WordPress plugin used to test publishpress/dev-workspace locally."
+msgstr "Ein minimaler Fake WordPress-Plugin, der verwendet wird, um publishpress/dev-workspace lokal zu testen."
 
-#: fake-plugin.php:7, fuzzy
 #. Author of the plugin
+#: fake-plugin.php:7
+#, fuzzy
 msgid "PublishPress"
 msgstr "PublishPress"
 
@@ -55,15 +51,11 @@ msgstr "Dies ist die dritte Beispielzeichenfolge für einfaches gettext."
 
 #: fake-plugin.php:31
 msgid "This sentence is printed with gettext using immediate echo."
-msgstr ""
-"Dieser Satz wird mit gettext unter Verwendung von sofortigem Echo "
-"ausgegeben."
+msgstr "Dieser Satz wird mit gettext unter Verwendung von sofortigem Echo ausgegeben."
 
 #: fake-plugin.php:35
 msgid "This line uses esc_html_e so unsafe markup cannot break the layout."
-msgstr ""
-"Diese Zeile verwendet esc_html_e, sodass unsichere Markups das Layout nicht "
-"brechen können."
+msgstr "Diese Zeile verwendet esc_html_e, sodass unsichere Markups das Layout nicht brechen können."
 
 #: fake-plugin.php:39
 msgid "This value uses esc_attr_e and belongs inside an HTML attribute."
@@ -71,98 +63,108 @@ msgstr "Dieser Wert verwendet esc_attr_e und gehört in ein HTML-Attribut."
 
 #: fake-plugin.php:43
 msgid "This line uses esc_html__ and returns a value instead of echoing it."
-msgstr ""
-"Diese Zeile verwendet esc_html__ und gibt einen Wert zurück, anstatt ihn "
-"auszugeben."
+msgstr "Diese Zeile verwendet esc_html__ und gibt einen Wert zurück, anstatt ihn auszugeben."
 
 #: fake-plugin.php:44
 msgid "This line uses esc_attr__ for text stored in an attribute."
-msgstr ""
-"Diese Zeile verwendet esc_attr__ für Text, der in einem Attribut "
-"gespeichert ist."
+msgstr "Diese Zeile verwendet esc_attr__ für Text, der in einem Attribut gespeichert ist."
 
-#: fake-plugin.php:69
 #. translators: %d: number of items
+#: fake-plugin.php:69
 #, php-format
 msgid "There is %d item in this plural-form test."
 msgid_plural "There are %d items in this plural-form test."
 msgstr[0] "Es gibt %d Element in diesem Pluralform-Test."
 msgstr[1] "Es gibt %d Elemente in diesem Pluralform-Test."
 
-#: fake-plugin.php:92
 #. translators: %s: a short word inserted into the sentence
+#: fake-plugin.php:92
 #, php-format
 msgid "This sentence has one slot for a word: today we say %s."
 msgstr "Dieser Satz hat einen Platz für ein Wort: heute sagen wir %s."
 
-#: fake-plugin.php:98
 #. translators: %1$s: earlier phrase, %2$s: later phrase (translators may reorder)
+#: fake-plugin.php:98
 #, php-format
 msgid "We name two things in source order: first %1$s, then %2$s."
 msgstr "Wir nennen zwei Dinge in der Quellreihenfolge: zuerst %1$s, dann %2$s."
 
-#: fake-plugin.php:105
 #. translators: %1$s and %2$s appear out of numerical order on purpose
+#: fake-plugin.php:105
 #, php-format
 msgid "The later clause mentions %2$s before the earlier clause mentions %1$s."
 msgstr "Die spätere Klausel erwähnt %2$s vor der früheren Klausel, die %1$s erwähnt."
 
-#: fake-plugin.php:113
 #. translators: %1$s is the product name, %2$s is the star rating markup or label
+#: fake-plugin.php:113
 #, php-format
 msgid "If you like %1$s, please leave us a %2$s rating. Thank you!"
-msgstr ""
-"Wenn Ihnen %1$s gefällt, hinterlassen Sie uns bitte eine %2$s Bewertung. "
-"Vielen Dank!"
+msgstr "Wenn Ihnen %1$s gefällt, hinterlassen Sie uns bitte eine %2$s Bewertung. Vielen Dank!"
 
-#: fake-plugin.php:120
 #. translators: %s: module title — control next to %1$s/%2$s strings (issue #81 compares these)
+#: fake-plugin.php:120
 #, php-format
 msgid "About %s"
 msgstr "Über %s"
 
-#: fake-plugin.php:126
 #. translators: %1$s: name, %2$s: place, %3$s: time word (order may change per language)
+#: fake-plugin.php:126
 #, php-format
 msgid "Meet %1$s from %2$s at %3$s."
 msgstr "Treffen Sie %1$s aus %2$s um %3$s."
 
-#: fake-plugin.php:134
 #. translators: %1$d: count, %2$s: unit label
+#: fake-plugin.php:134
 #, php-format
 msgid "We counted %1$d items and labeled the batch as %2$s."
 msgstr "Wir haben %1$d Elemente gezählt und die Charge als %2$s gekennzeichnet."
 
-#: fake-plugin.php:141
 #. translators: Numbered placeholders split across a line break in the source (multiline msgid).
+#: fake-plugin.php:141
 #, php-format
 msgid ""
 "The first line names %1$s,\n"
 "and the second line names %2$s."
 msgstr "Die erste Zeile nennt %1$s, und die zweite Zeile nennt %2$s."
 
-#: fake-plugin.php:152
 #. translators: %d: a whole number in a test phrase
+#: fake-plugin.php:152
 #, php-format
 msgid "The integer placeholder in this test reads exactly %d."
 msgstr "Der ganzzahlige Platzhalter in diesem Test lautet genau %d."
 
 #: fake-plugin.php:158
-msgid ""
-"Quotes inside one string can mix apostrophes and double quotes, like it's "
-"short and \"quoted\"."
-msgstr ""
-"Anführungszeichen innerhalb eines Strings können Apostrophe und doppelte "
-"Anführungszeichen mischen, wie es's kurz und \"zitiert\"."
+msgid "Quotes inside one string can mix apostrophes and double quotes, like it's short and \"quoted\"."
+msgstr "Anführungszeichen innerhalb eines Strings können Apostrophe und doppelte Anführungszeichen mischen, wie es's kurz und \"zitiert\"."
 
 #: fake-plugin.php:164
 msgid ""
 "This message is split across two lines in the source file.\n"
 "Please translate it as one natural sentence, not two separate labels."
-msgstr ""
-"Diese Nachricht ist im Quelltext über zwei Zeilen verteilt. Bitte "
-"übersetzen Sie sie als einen natürlichen Satz, nicht als zwei separate "
-"Labels."
+msgstr "Diese Nachricht ist im Quelltext über zwei Zeilen verteilt. Bitte übersetzen Sie sie als einen natürlichen Satz, nicht als zwei separate Labels."
+
+#: assets/main.js:9
+msgid "Fake Plugin main script loaded."
+msgstr "Falsches Plugin-Hauptskript geladen."
+
+#: assets/main.js:10
+msgid "Save changes from the main panel."
+msgstr "Änderungen vom Hauptpanel speichern."
+
+#. translators: %d: number of items
+#: assets/main.js:13
+msgid "One item selected in the main view."
+msgid_plural "%d items selected in the main view."
+msgstr[0] "Ein Element in der Hauptansicht ausgewählt."
+msgstr[1] "%d Elemente in der Hauptansicht ausgewählt."
+
+#: assets/menu.js:9
+msgid "Open the fake plugin menu."
+msgstr "Öffnen Sie das Falsches Plugin-Menü."
+
+#: assets/menu.js:10
+msgid "Settings for the fake plugin."
+msgstr "Einstellungen für das falsche Plugin."
 
 #: fake-plugin.php:47
 msgctxt "Button label: start recording audio or video."
@@ -179,11 +181,21 @@ msgctxt "Button label: close the dialog without keeping changes."
 msgid "Leave"
 msgstr "Verlassen"
 
-#: fake-plugin.php:80
 #. translators: %s: number of messages
+#: fake-plugin.php:80
 #, php-format
 msgctxt "Count of admin notices about translation tests."
 msgid "You have %d message that needs gettext context."
 msgid_plural "You have %d messages that need gettext context."
 msgstr[0] "Sie haben %d Nachricht, die gettext-Kontext benötigt."
 msgstr[1] "Sie haben %d Nachrichten, die gettext-Kontext benötigen."
+
+#: assets/main.js:11
+msgctxt "Button label in main script"
+msgid "Close"
+msgstr "Schließen"
+
+#: assets/menu.js:11
+msgctxt "Admin sidebar navigation label"
+msgid "Menu"
+msgstr "Menü"

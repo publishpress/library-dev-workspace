@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-09T14:01:25+00:00\n"
+"POT-Creation-Date: 2026-04-09T17:46:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: fake-plugin\n"
@@ -162,4 +162,37 @@ msgstr ""
 msgid ""
 "This message is split across two lines in the source file.\n"
 "Please translate it as one natural sentence, not two separate labels."
+msgstr ""
+
+#: assets/main.js:9
+msgid "Fake Plugin main script loaded."
+msgstr ""
+
+#: assets/main.js:10
+msgid "Save changes from the main panel."
+msgstr ""
+
+#: assets/main.js:11
+msgctxt "Button label in main script"
+msgid "Close"
+msgstr ""
+
+#. translators: %d: number of items
+#: assets/main.js:13
+msgid "One item selected in the main view."
+msgid_plural "%d items selected in the main view."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/menu.js:9
+msgid "Open the fake plugin menu."
+msgstr ""
+
+#: assets/menu.js:10
+msgid "Settings for the fake plugin."
+msgstr ""
+
+#: assets/menu.js:11
+msgctxt "Admin sidebar navigation label"
+msgid "Menu"
 msgstr ""
