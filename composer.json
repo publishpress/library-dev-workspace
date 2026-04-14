@@ -50,6 +50,8 @@
         "wp-cli/wp-cli-bundle": "^2.10",
         "wp-coding-standards/wpcs": "^3"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
