@@ -16,8 +16,7 @@
     },
     "require-dev": {
         "publishpress/dev-workspace": "dev-development",
-        "wp-coding-standards/wpcs": "^3",
-        "publishpress/translations": "^1"
+        "wp-coding-standards/wpcs": "^3"
     },
     "repositories": [
         {
