@@ -107,7 +107,7 @@
         "check:php-8.4": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs --standard=.phpcs-php-compatibility.xml --runtime-set testVersion 8.4",
         "check:php-8.5": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs --standard=.phpcs-php-compatibility.xml --runtime-set testVersion 8.5",
         "lint:php": "vendor/publishpress/dev-workspace/scripts/run.sh phplint --no-cache",
-        "check:deps": "vendor/publishpress/dev-workspace/scripts/run.sh php ./vendor/publishpress/dev-workspace/scripts/check-dependencies.sh ./lib ${PP_PLUGIN_COMPOSER_PACKAGE}",
+        "check:deps": "vendor/publishpress/dev-workspace/scripts/run.sh php ./vendor/publishpress/dev-workspace/scripts/check-dependencies.php ./lib ${PP_PLUGIN_COMPOSER_PACKAGE}",
         "check:longpath": "vendor/publishpress/dev-workspace/scripts/run.sh composer pack:dir && vendor/publishpress/dev-workspace/scripts/run.sh longpath dist/${PP_PLUGIN_SLUG}",
         "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs",
         "qa:phpstan": "vendor/publishpress/dev-workspace/scripts/run.sh phpstan",

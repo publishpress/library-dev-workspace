@@ -3,12 +3,15 @@
 
 function show_help()
 {
-    echo "Usage: check-dependencies.sh BASE_DIR NAMESPACE/PLUGIN_NAME\n";
+    echo "Usage: check-dependencies.sh [BASE_DIR] [NAMESPACE/PLUGIN_NAME]\n";
     echo "Options:\n";
     echo "  -h, --help        Display this help message.\n";
-    echo "  BASE_DIR          Specify the directory to search for files.\n";
-    echo "  NAMESPACE         Specify the namespace of the plugin.\n";
-    echo "  PLUGIN_NAME       Specify the plugin name.\n";
+    echo "  BASE_DIR          Directory to search for files (default: ./lib).\n";
+    echo "  NAMESPACE         Namespace of the plugin.\n";
+    echo "  PLUGIN_NAME       Plugin name.\n";
+    echo "\n";
+    echo "Environment variables (used when args are not provided):\n";
+    echo "  PP_PLUGIN_COMPOSER_PACKAGE  The NAMESPACE/PLUGIN_NAME value.\n";
 }
 
 // Check if the -h or --help option is given
@@ -17,16 +20,11 @@ if (in_array('-h', $argv) || in_array('--help', $argv)) {
     exit(0);
 }
 
-$baseDir = $argv[1] ?? '';
-if (empty($baseDir)) {
-    echo "Error: Please provide a base dir.\n";
-    show_help();
-    exit(1);
-}
+$baseDir = $argv[1] ?? './lib';
 
-$plugin = $argv[2] ?? '';
+$plugin = $argv[2] ?? getenv('PP_PLUGIN_COMPOSER_PACKAGE');
 if (empty($plugin)) {
-    echo "Error: Please provide a plugin name.\n";
+    echo "Error: Please provide a plugin name via argument or set PP_PLUGIN_COMPOSER_PACKAGE.\n";
     show_help();
     exit(1);
 }
