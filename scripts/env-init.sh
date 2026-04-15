@@ -19,3 +19,6 @@ set +a
 if [[ "$CACHE_PATH" != /* ]]; then
     CACHE_PATH="$REPO_ROOT/$CACHE_PATH"
 fi
+
+export DEFAULT_LANG_LOCALES="${DEFAULT_LANG_LOCALES:-ja es_ES de_DE fr_FR pt_BR it_IT nl_NL ru_RU pl_PL tr_TR vi fa_IR id_ID cs_CZ pt_PT zh_CN sv_SE hu_HU da_DK ar he_IL ko_KR ro_RO el th fi}"
+export LANG_LOCALES="${LANG_LOCALES:-$DEFAULT_LANG_LOCALES}"
