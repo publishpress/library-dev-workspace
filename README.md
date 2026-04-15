@@ -79,7 +79,16 @@ Set the following keys in the plugin's `composer.json` `extra` section so the wo
 }
 ```
 
-Update **`.env.example`** (committed template) and **`.env`** (local, not committed) at the plugin root. Keep the same keys in both; use real values for your plugin. At minimum, include:
+Each plugin root must have two environment files:
+
+- **`.env.example`** — committed template with placeholder or default values; keep it in the repository so contributors know what variables are required.
+- **`.env`** — your local copy with real values; never commit it (add `.env` to `.gitignore`).
+
+The canonical reference for all keys and their expected format is the fake-plugin template in this repository:
+
+[github.com/publishpress/dev-workspace/blob/development/test/fake-plugin/.env.example](https://github.com/publishpress/dev-workspace/blob/development/test/fake-plugin/.env.example)
+
+Copy that file into the plugin root, rename it to `.env.example`, and fill in the values for your plugin. At minimum, set:
 
 ```bash
 PLUGIN_NAME="PublishPress Future"
@@ -97,6 +106,8 @@ Use the **same** `TERMINAL_IMAGE_NAME`, `WP_IMAGE_NAME`, and `WPCLI_IMAGE_NAME` 
 
 After editing `.env.example`, copy it to `.env`.
 
+Both `.env` and `.env.example` must be excluded from the built/distributed package. They are already listed in `.rsync-filters-pre-build.default` and `.rsync-filters-post-build.default` (the rsync filter files used during packaging), so no extra action is required as long as the plugin uses the standard build pipeline from this package.
+
 ### `dev-workspace-cache` directory
 
 Tools from this package create a `dev-workspace-cache` folder at the project root (or the path set by `CACHE_PATH` in `.env`). It holds local-only data: Docker volume data (for example WordPress and MySQL test instances), npm and shell caches inside containers, deploy debug logs, and similar artifacts. It is regenerated as needed and must not be committed.
@@ -106,6 +117,8 @@ Add it to the plugin repository’s `.gitignore`:
 ```
 dev-workspace-cache/
 ```
+
+It is also excluded from the built/distributed package — it is listed in both `.rsync-filters-pre-build.default` and `.rsync-filters-post-build.default`, so no extra action is required when using the standard build pipeline.
 
 ### Docker image cleanup
 
