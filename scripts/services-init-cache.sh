@@ -14,7 +14,14 @@ fi
 [[ -d $CACHE_PATH/.npm/_logs ]] || mkdir -p $CACHE_PATH/.npm/_logs
 [[ -d $CACHE_PATH/.composer/cache ]] || mkdir -p $CACHE_PATH/.composer/cache
 [[ -d $CACHE_PATH/.oh-my-zsh/log ]] || mkdir -p $CACHE_PATH/.oh-my-zsh/log
+if [[ -e "$CACHE_PATH/.gitconfig" && ! -d "$CACHE_PATH/.gitconfig" ]]; then
+    rm -rf "$CACHE_PATH/.gitconfig"
+fi
 [[ -d $CACHE_PATH/.gitconfig ]] || mkdir -p $CACHE_PATH/.gitconfig
+# Recover from stale cache state where config was created with the wrong type.
+if [[ -e "$CACHE_PATH/.gitconfig/config" && ! -f "$CACHE_PATH/.gitconfig/config" ]]; then
+    rm -rf "$CACHE_PATH/.gitconfig/config"
+fi
 # Docker bind-mount directories for test containers must be pre-created by the host user
 # so containers (mariadb, wordpress) get correct ownership on first start.
 [[ -d $CACHE_PATH/db_test ]] || mkdir -p $CACHE_PATH/db_test
