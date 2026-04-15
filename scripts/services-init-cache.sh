@@ -14,6 +14,18 @@ fi
 [[ -d $CACHE_PATH/.npm/_logs ]] || mkdir -p $CACHE_PATH/.npm/_logs
 [[ -d $CACHE_PATH/.composer/cache ]] || mkdir -p $CACHE_PATH/.composer/cache
 [[ -d $CACHE_PATH/.oh-my-zsh/log ]] || mkdir -p $CACHE_PATH/.oh-my-zsh/log
+# Backward compatibility for older mount layout that binds
+# $CACHE_PATH/.git/config to /root/.gitconfig.
+if [[ -e "$CACHE_PATH/.git" && ! -d "$CACHE_PATH/.git" ]]; then
+    rm -rf "$CACHE_PATH/.git"
+fi
+[[ -d $CACHE_PATH/.git ]] || mkdir -p $CACHE_PATH/.git
+if [[ -e "$CACHE_PATH/.git/config" && ! -f "$CACHE_PATH/.git/config" ]]; then
+    rm -rf "$CACHE_PATH/.git/config"
+fi
+[[ -f $CACHE_PATH/.git/config ]] || touch $CACHE_PATH/.git/config
+
+# Current mount layout uses $CACHE_PATH/.gitconfig as a directory volume.
 if [[ -e "$CACHE_PATH/.gitconfig" && ! -d "$CACHE_PATH/.gitconfig" ]]; then
     rm -rf "$CACHE_PATH/.gitconfig"
 fi
