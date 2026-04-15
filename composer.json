@@ -119,7 +119,7 @@
         "fix:deps": "vendor/publishpress/dev-workspace/scripts/run.sh php ./vendor/publishpress/dev-workspace/scripts/merge-dependencies.sh ./lib ${PP_PLUGIN_COMPOSER_PACKAGE}",
         "metrics": "vendor/publishpress/dev-workspace/scripts/run.sh phpmetrics --report-html=metrics --exclude=vendor,lib/vendor,tests,dist,.claude,.cursor,.github,.wordpress-org,.git,.zed,docs,languages.",
         "sync:local": [
-            "bash vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/ensure-not-container.sh",
+            "bash vendor/publishpress/dev-workspace/scripts/ensure-not-container.sh",
             "bash vendor/publishpress/dev-workspace/scripts/local-sync.sh --watch"
         ],
         "sync:local:once": [
