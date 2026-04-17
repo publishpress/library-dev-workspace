@@ -282,12 +282,12 @@
         "post-install-cmd": [
             "@config:phpcs",
             "[ -f vendor/publishpress/translations/potomatic/potomatic.js ] && chmod +x vendor/publishpress/translations/potomatic/potomatic.js || true",
-            "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
+            "echo 'Making scripts executable' && chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
         ],
         "post-update-cmd": [
             "@config:phpcs",
             "[ -f vendor/publishpress/translations/potomatic/potomatic.js ] && chmod +x vendor/publishpress/translations/potomatic/potomatic.js || true",
-            "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
+            "echo 'Making scripts executable' && chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
         ],
         "pre-autoload-dump": "[ -f lib/composer.json ] && composer dumpautoload --working-dir=./lib || true",
         "pre-update-cmd": "[ -f lib/composer.json ] && composer update --working-dir=./lib || true",
