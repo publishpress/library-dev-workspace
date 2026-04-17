@@ -16,6 +16,7 @@ services:
             - |
               [ -n "$$GIT_USER_NAME" ] && git config --global user.name "$$GIT_USER_NAME"
               [ -n "$$GIT_USER_EMAIL" ] && git config --global user.email "$$GIT_USER_EMAIL"
+              export PATH=/project/vendor/publishpress/dev-workspace/scripts:$PATH
               exec zsh
         stdin_open: true
         tty: true
@@ -31,7 +32,6 @@ services:
             - INSIDE_DEV_CONTAINER=true
             - GIT_CONFIG_GLOBAL=/root/.gitconfig-vol/config
             - HISTFILE=/root/.zsh-vol/.zsh_history
-            - PATH=/project/vendor/publishpress/dev-workspace/scripts:$PATH
     ##############################################################################
     # Tests
     ##############################################################################
