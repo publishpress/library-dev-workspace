@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.1.9] - 22 April, 2026
+
+- Added: Introduced the `translate:repair` command in composer.json to automatically fix pluralization issues in translation files.
+
 [1.1.8] - 17 April, 2026
 
 - Fixed: Ensure the `.gitconfig` cache path is always a regular file during cache init, preventing Docker Desktop/WSL bind-mount errors ("not a directory" for `/root/.gitconfig`).

@@ -1,7 +1,7 @@
 {
     "name": "publishpress/dev-workspace",
     "type": "composer-plugin",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "description": "Shared Composer scripts for PublishPress plugins",
     "license": "GPL-2.0-or-later",
     "autoload": {
@@ -278,6 +278,7 @@
         "translate:json": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/lang-make-json.sh",
         "translate:php": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n make-php ./languages --allow-root",
         "translate:cleanup": "rm languages/*.json languages/*.mo languages/*.php",
+        "translate:repair": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --repair-plurals",
         "config:phpcs": "vendor/bin/phpcs --config-set installed_paths \"../../phpcsstandards/phpcsutils,../../phpcsstandards/phpcsextra,../../automattic/vipwpcs,../../phpcompatibility/php-compatibility,../../sirbrillig/phpcs-variable-analysis,../../publishpress/publishpress-phpcs-standards/standards,../../wp-coding-standards/wpcs\"",
         "post-install-cmd": [
             "@config:phpcs",
