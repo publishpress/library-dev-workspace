@@ -16,13 +16,13 @@ show_help() {
 }
 
 run_in_dev_workspace() {
-    if [ -z "$INSIDE_DEV_CONTAINER" ]; then
+    if [ -n "$INSIDE_DEV_CONTAINER" ] || [ "${GITHUB_ACTIONS}" = "true" ]; then
+        export PATH="$DEV_SCRIPTS_DIR:$PATH"
+        "$@"
+    else
         echo "Initializing dev-workspace environment. Please wait..."
         cd "$DEV_WORKSPACE_DIR"
         bash ./scripts/terminal-service-run.sh "$@"
-    else
-        export PATH="$DEV_SCRIPTS_DIR:$PATH"
-        "$@"
     fi
 }
 
