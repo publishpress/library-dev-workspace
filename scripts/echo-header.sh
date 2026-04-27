@@ -18,7 +18,7 @@ fi
 
 echo ""
 echo "======================================================================="
-echo "                      DEV-WORKSPACE ENVIRONMENT"
+echo "                        PUBLISHPRESS BUILDER"
 echo "======================================================================="
 echo ""
 echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
