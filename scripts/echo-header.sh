@@ -16,12 +16,23 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     exit 0
 fi
 
-echo "PUBLISHPRESS PLUGIN BUILDER - Dev-workspace ${DEV_WORKSPACE_VERSION}"
+echo "                                                                       ";
+echo "                                                                       ";
+echo "█████▄ ▄▄ ▄▄ ▄▄▄▄  ▄▄    ▄▄  ▄▄▄▄ ▄▄ ▄▄ █████▄ ▄▄▄▄  ▄▄▄▄▄  ▄▄▄▄  ▄▄▄▄ ";
+echo "██▄▄█▀ ██ ██ ██▄██ ██    ██ ███▄▄ ██▄██ ██▄▄█▀ ██▄█▄ ██▄▄  ███▄▄ ███▄▄ ";
+echo "██     ▀███▀ ██▄█▀ ██▄▄▄ ██ ▄▄██▀ ██ ██ ██     ██ ██ ██▄▄▄ ▄▄██▀ ▄▄██▀ ";
+echo "                                                                       ";
+echo "       __                                                              ";
+echo "     .' o)=-                                                           ";
+echo "     /.-.'     █████▄ ▄▄ ▄▄ ▄▄ ▄▄    ▄▄▄▄  ▄▄▄▄▄ ▄▄▄▄                  ";
+echo "   ///  |\\    ██▄▄██ ██ ██ ██ ██    ██▀██ ██▄▄  ██▄█▄                 ";
+echo "    ||  |'     ██▄▄█▀ ▀███▀ ██ ██▄▄▄ ████▀ ██▄▄▄ ██ ██                 ";
+echo "  _,:|_/_                                                              ";
+echo "
+echo "               Dev-workspace ${DEV_WORKSPACE_VERSION}"
 echo-separator.sh
-echo "      __"
-echo "    .' o)=-     Plugin name: $(plugin-name.sh)"
-echo "    /.-.'       Plugin slug: $(plugin-slug.sh)"
-echo "  ///  |\\       Plugin folder: $(plugin-folder.sh)"
-echo "   ||  |'       Plugin version: $(plugin-version.sh)"
-echo " _,:|_/_        "
-echo ""
+echo "Plugin name: $(plugin-name.sh)"
+echo "Plugin slug: $(plugin-slug.sh)"
+echo "Plugin folder: $(plugin-folder.sh)"
+echo "Plugin version: $(plugin-version.sh)"
+echo-separator.sh
