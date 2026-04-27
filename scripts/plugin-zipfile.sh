@@ -3,7 +3,7 @@
 # Script to get the plugin ZIP file name in the dist dir.
 
 # Set the SOURCE_PATH variable to the current directory or use the passed argument.
-DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-'/project'}"
+DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
 
 # Show the usage information.

@@ -7,7 +7,7 @@ bash ./scripts/services-init-cache.sh
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400
 UPDATE_CHECK_INTERVAL=$ONE_DAY_IN_SECONDS
-DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-'/project'}"
+DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 
 run_terminal_service() {
     if [ $# -eq 0 ]; then

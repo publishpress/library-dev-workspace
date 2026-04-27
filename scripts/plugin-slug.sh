@@ -2,7 +2,7 @@
 
 # Script to get the plugin slug from composer.json file.
 
-DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-'/project'}"
+DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
 COMPOSER_FILE="${SOURCE_PATH}/composer.json"
 
