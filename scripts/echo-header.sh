@@ -21,7 +21,11 @@ echo "======================================================================="
 echo "                        PUBLISHPRESS BUILDER"
 echo "======================================================================="
 echo ""
-echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
+
+if [ "${DEV_WORKSPACE_VERSION}" != "1" ]; then
+    echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
+fi
+
 echo ""
 echo "   Plugin Information:"
 echo "     - Name   : $(plugin-name.sh)"
