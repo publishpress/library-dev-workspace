@@ -30,13 +30,6 @@ configure_git_identity_existing_container() {
 
 bash ./scripts/services-pull-images.sh --daily
 
-if [ "${GITHUB_ACTIONS}" = "true" ]; then
-    # We are inside a GitHub Actions workflow, so we just run the command directly without the terminal.
-    echo "Running command directly without the terminal"
-    "$@"
-    exit 0
-fi
-
 RUNNING_CONTAINER=$(bash ./scripts/terminal-detect-running-container.sh)
 
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
