@@ -30,7 +30,7 @@ for locale in "${LOCALES[@]}"; do
     echo "[${processed_count}/${TOTAL_LOCALES}] Processing locale: ${locale}"
 
     PO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.po"
-    PHP_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.php"
+    PHP_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.l10n.php"
 
     if [ ! -f "${PO_FILE}" ]; then
         echo "MISSING PO - ${PO_FILE}"
