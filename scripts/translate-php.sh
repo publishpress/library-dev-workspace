@@ -41,11 +41,11 @@ for locale in "${LOCALES[@]}"; do
     fi
 
     if [ -f "${PHP_FILE}" ]; then
-        echo "JSON file already exists, deleting it..."
+        echo "PHP file already exists, deleting it..."
         rm "${PHP_FILE}"
     fi
 
-    if wp i18n make-php ./languages --allow-root; then
+    if wp i18n make-php "${PO_FILE}" "${BASE_DIR}/languages" --allow-root; then
         echo "Completed successfully"
     else
         echo "FAILED TO GENERATE PHP - ${PHP_FILE}"
