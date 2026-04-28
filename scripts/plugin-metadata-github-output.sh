@@ -4,16 +4,16 @@
 
 # Show the usage information.
 usage() {
-    echo "Usage: plugin-meta-github-output.sh"
+    echo "Usage: plugin-metadata-github-output.sh"
 }
 
 # Output metadata fields to GitHub Actions output in a clear, expanded way.
-plugin_slug=$(plugin-slug.sh)
-plugin_folder=$(plugin-folder.sh)
-plugin_name=$(plugin-name.sh)
-plugin_version=$(plugin-version.sh)
+PLUGIN_SLUG=$(plugin-slug.sh)
+PLUGIN_FOLDER=$(plugin-folder.sh)
+PLUGIN_NAME=$(plugin-name.sh)
+PLUGIN_VERSION=$(plugin-version.sh)
 
-echo "plugin_slug=${plugin_slug}" >> "$GITHUB_OUTPUT"
-echo "plugin_folder=${plugin_folder}" >> "$GITHUB_OUTPUT"
-echo "plugin_name=${plugin_name}" >> "$GITHUB_OUTPUT"
-echo "plugin_version=${plugin_version}" >> "$GITHUB_OUTPUT"
+echo "plugin-slug=${PLUGIN_SLUG}" >> "$GITHUB_OUTPUT"
+echo "plugin-folder=${PLUGIN_FOLDER}" >> "$GITHUB_OUTPUT"
+echo "plugin-name=${PLUGIN_NAME}" >> "$GITHUB_OUTPUT"
+echo "plugin-version=${PLUGIN_VERSION}" >> "$GITHUB_OUTPUT"
