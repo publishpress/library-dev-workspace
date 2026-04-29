@@ -18,56 +18,34 @@ echo "Plugin: ${PLUGIN_SLUG}"
 echo "Locales to process: ${TOTAL_LOCALES}"
 echo "========================================"
 
-processed_count=0
-generated_count=0
-missing_count=0
-skipped_count=0
-failed_count=0
-
-for locale in "${LOCALES[@]}"; do
-    processed_count=$((processed_count + 1))
+for index in "${!LOCALES[@]}"; do
+    locale="${LOCALES[${index}]}"
+    progress=$((index + 1))
     echo ""
-    echo "[${processed_count}/${TOTAL_LOCALES}] Processing locale: ${locale}"
+    echo "[${progress}/${TOTAL_LOCALES}] Processing locale: ${locale}"
 
     PO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.po"
     PHP_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.l10n.php"
 
     if [ ! -f "${PO_FILE}" ]; then
-        echo "MISSING PO - ${PO_FILE}"
-        echo "Skipping..."
-        skipped_count=$((skipped_count + 1))
-        missing_count=$((missing_count + 1))
-        continue
+        echo "ERROR: Missing PO file: ${PO_FILE}"
+        exit 1
     fi
 
-    if [ -f "${PHP_FILE}" ]; then
-        echo "PHP file already exists, deleting it..."
-        rm "${PHP_FILE}"
+    if ! wp i18n make-php "${PO_FILE}" "${BASE_DIR}/languages" --allow-root; then
+        echo "ERROR: Failed to generate PHP file from ${PO_FILE}"
+        exit 2
     fi
 
-    if wp i18n make-php "${PO_FILE}" "${BASE_DIR}/languages" --allow-root; then
-        echo "Completed successfully"
-    else
-        echo "FAILED TO GENERATE PHP - ${PHP_FILE}"
-        failed_count=$((failed_count + 1))
-        continue
+    if [ ! -f "${PHP_FILE}" ]; then
+        echo "ERROR: PHP file was not created: ${PHP_FILE}"
+        exit 3
     fi
 
-    if [ -f "${PHP_FILE}" ]; then
-        echo "PHP file created: ${PHP_FILE}"
-        generated_count=$((generated_count + 1))
-    else
-        echo "FAILED TO CREATE PHP - ${PHP_FILE}"
-        failed_count=$((failed_count + 1))
-    fi
+    echo "PHP file created: ${PHP_FILE}"
 done
 
 echo ""
 echo "========================================"
-echo "PHP generation finished"
-echo "Processed: ${processed_count}"
-echo "Generated: ${generated_count}"
-echo "Missing PO: ${missing_count}"
-echo "Skipped: ${skipped_count}"
-echo "Failed: ${failed_count}"
+echo "PHP generation finished successfully"
 echo "========================================"

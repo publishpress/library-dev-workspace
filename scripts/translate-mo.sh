@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 BASE_DIR="/project"
 PLUGIN_SLUG="$(plugin-slug.sh)"
@@ -16,57 +17,34 @@ echo "Plugin: ${PLUGIN_SLUG}"
 echo "Locales to process: ${TOTAL_LOCALES}"
 echo "========================================"
 
-processed_count=0
-compiled_count=0
-missing_count=0
-skipped_count=0
-failed_count=0
-
-for locale in "${LOCALES[@]}"; do
-    processed_count=$((processed_count + 1))
+for index in "${!LOCALES[@]}"; do
+    locale="${LOCALES[${index}]}"
+    progress=$((index + 1))
     echo ""
-    echo "[${processed_count}/${TOTAL_LOCALES}] Processing locale: ${locale}"
+    echo "[${progress}/${TOTAL_LOCALES}] Processing locale: ${locale}"
 
     PO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.po"
     MO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.mo"
 
     if [ ! -f "${PO_FILE}" ]; then
-        echo "MISSING PO - ${PO_FILE}"
-        echo "Skipping..."
-        skipped_count=$((skipped_count + 1))
-        missing_count=$((missing_count + 1))
-        continue
+        echo "ERROR: Missing PO file: ${PO_FILE}"
+        exit 1
     fi
 
-    if [ -f "${MO_FILE}" ]; then
-        echo "MO file already exists, deleting it..."
-        rm "${MO_FILE}"
+    if ! wp i18n make-mo "${PO_FILE}" "${BASE_DIR}/languages" --allow-root; then
+        echo "ERROR: Failed to create MO file from ${PO_FILE}"
+        exit 2
     fi
 
-    if wp i18n make-mo "${PO_FILE}" "${BASE_DIR}/languages" --allow-root; then
-        echo "Completed successfully"
-    else
-        echo "FAILED TO CREATE MO - ${MO_FILE}"
-        failed_count=$((failed_count + 1))
-        continue
+    if [ ! -f "${MO_FILE}" ]; then
+        echo "ERROR: MO file was not created: ${MO_FILE}"
+        exit 3
     fi
 
-    if [ -f "${MO_FILE}" ]; then
-        echo "MO file created: ${MO_FILE}"
-        compiled_count=$((compiled_count + 1))
-    else
-        echo "FAILED TO CREATE MO - ${MO_FILE}"
-        failed_count=$((failed_count + 1))
-        continue
-    fi
+    echo "MO file created: ${MO_FILE}"
 done
 
 echo ""
 echo "========================================"
-echo "MO compilation finished"
-echo "Processed: ${processed_count}"
-echo "Compiled: ${compiled_count}"
-echo "Missing PO: ${missing_count}"
-echo "Skipped: ${skipped_count}"
-echo "Failed: ${failed_count}"
+echo "MO compilation finished successfully"
 echo "========================================"

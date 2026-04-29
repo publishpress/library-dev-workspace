@@ -25,56 +25,38 @@ echo "Plugin: ${PLUGIN_SLUG}"
 echo "Locales to process: ${TOTAL_LOCALES}"
 echo "========================================"
 
-processed_count=0
-generated_count=0
-missing_count=0
-skipped_count=0
-failed_count=0
-
-for locale in "${LOCALES[@]}"; do
-    processed_count=$((processed_count + 1))
+for index in "${!LOCALES[@]}"; do
+    locale="${LOCALES[${index}]}"
+    progress=$((index + 1))
     echo ""
-    echo "[${processed_count}/${TOTAL_LOCALES}] Processing locale: ${locale}"
+    echo "[${progress}/${TOTAL_LOCALES}] Processing locale: ${locale}"
 
     PO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.po"
     JSON_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.json"
 
     if [ ! -f "${PO_FILE}" ]; then
-        echo "MISSING PO - ${PO_FILE}"
-        echo "Skipping..."
-        skipped_count=$((skipped_count + 1))
-        missing_count=$((missing_count + 1))
-        continue
+        echo "ERROR: Missing PO file: ${PO_FILE}"
+        exit 1
     fi
 
-    if [ -f "${JSON_FILE}" ]; then
-        echo "JSON file already exists, deleting it..."
-        rm "${JSON_FILE}"
-    fi
+    tmp_json="$(mktemp)"
 
-    if npx po2json "${PO_FILE}" > "${JSON_FILE}"; then
-        echo "Completed successfully"
-    else
-        echo "FAILED TO GENERATE JSON - ${JSON_FILE}"
-        failed_count=$((failed_count + 1))
-        continue
-    fi
-
-    if [ -f "${JSON_FILE}" ]; then
+    if npx po2json "${PO_FILE}" > "${tmp_json}"; then
+        mv "${tmp_json}" "${JSON_FILE}"
         echo "JSON file created: ${JSON_FILE}"
-        generated_count=$((generated_count + 1))
     else
-        echo "FAILED TO CREATE JSON - ${JSON_FILE}"
-        failed_count=$((failed_count + 1))
+        rm -f "${tmp_json}"
+        echo "ERROR: Failed to generate JSON from ${PO_FILE}"
+        exit 2
+    fi
+
+    if [ ! -f "${JSON_FILE}" ]; then
+        echo "ERROR: JSON file was not created: ${JSON_FILE}"
+        exit 3
     fi
 done
 
 echo ""
 echo "========================================"
-echo "JSON generation finished"
-echo "Processed: ${processed_count}"
-echo "Generated: ${generated_count}"
-echo "Missing PO: ${missing_count}"
-echo "Skipped: ${skipped_count}"
-echo "Failed: ${failed_count}"
+echo "JSON generation finished successfully"
 echo "========================================"

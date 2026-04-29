@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 BASE_DIR="/project"
 
@@ -15,9 +16,15 @@ if wp i18n make-pot . "${POT_FILE}" \
     --domain=${LANG_DOMAIN} \
     --exclude=vendor,.wordpress-org,.github,.cursor,.claude,.vscode,dist,tests,lib/vendor,tmp,doc,docs,.cache,dev-workspace-cache,.node_modules,.git,.zed,languages \
     --allow-root; then
-    echo "POT file created: ${POT_FILE}"
-    echo "Completed successfully"
+    if [ ! -f "${POT_FILE}" ]; then
+        echo "ERROR: POT file was not created: ${POT_FILE}"
+        exit 2
+    fi
 else
-    echo "FAILED TO CREATE POT - ${POT_FILE}"
+    echo "ERROR: Failed to create POT file: ${POT_FILE}"
+    exit 1
 fi
+
+echo "POT file created: ${POT_FILE}"
+echo "Completed successfully"
 echo "========================================"
