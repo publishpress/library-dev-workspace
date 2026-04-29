@@ -26,7 +26,8 @@ done
 set -- "${pack_args[@]}"
 
 command=${1:-}
-source_path="/project"
+default_source_path="/project"
+source_path="${GITHUB_WORKSPACE:-$default_source_path}"
 dist_path="${source_path}/dist"
 cols=$(terminal-cols.sh)
 

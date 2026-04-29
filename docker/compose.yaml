@@ -27,9 +27,10 @@ services:
             - ${CACHE_PATH}/.gitconfig:/root/.gitconfig-vol
             - ${CACHE_PATH}/.zsh:/root/.zsh-vol
         environment:
-            - INSIDE_DEV_CONTAINER=true
-            - GIT_CONFIG_GLOBAL=/root/.gitconfig-vol/config
-            - HISTFILE=/root/.zsh-vol/.zsh_history
+            INSIDE_DEV_CONTAINER: "true"
+            GIT_CONFIG_GLOBAL: "/root/.gitconfig-vol/config"
+            HISTFILE: "/root/.zsh-vol/.zsh_history"
+            DEV_WORKSPACE_VERSION: "1.2.0"
     ##############################################################################
     # Tests
     ##############################################################################

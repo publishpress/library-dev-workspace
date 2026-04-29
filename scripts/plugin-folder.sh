@@ -3,7 +3,8 @@
 # Script to get the plugin folder from composer.json file.
 
 # Set the SOURCE_PATH variable to the current directory or use the passed argument.
-SOURCE_PATH=${1:-/project}
+DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
+SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
 
 # Show the usage information.
 usage() {

@@ -16,12 +16,22 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     exit 0
 fi
 
-echo "PUBLISHPRESS PLUGIN BUILDER - Dev-workspace ${DEV_WORKSPACE_VERSION}"
+echo ""
+echo "======================================================================="
+echo "                        PUBLISHPRESS BUILDER"
+echo "======================================================================="
+echo ""
+
+if [ "${DEV_WORKSPACE_VERSION}" != "1" ]; then
+    echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
+fi
+
+echo ""
+echo "   Plugin Information:"
+echo "     - Name   : $(plugin-name.sh)"
+echo "     - Slug   : $(plugin-slug.sh)"
+echo "     - Folder : $(plugin-folder.sh)"
+echo "     - Version: $(plugin-version.sh)"
+echo ""
 echo-separator.sh
-echo "      __"
-echo "    .' o)=-     Plugin name: $(plugin-name.sh)"
-echo "    /.-.'       Plugin slug: $(plugin-slug.sh)"
-echo "  ///  |\\       Plugin folder: $(plugin-folder.sh)"
-echo "   ||  |'       Plugin version: $(plugin-version.sh)"
-echo " _,:|_/_        "
 echo ""

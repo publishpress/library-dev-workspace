@@ -1,7 +1,12 @@
 #!/usr/bin/php
 <?php
 
-define('BASE_PATH', '/project');
+if ($_ENV['GITHUB_WORKSPACE']) {
+    define('BASE_PATH', $_ENV['GITHUB_WORKSPACE']);
+} else {
+    define('BASE_PATH', '/project');
+}
+
 define('COMPOSER_JSON_PATH', BASE_PATH . '/composer.json');
 
 function getExtraInfoFromComposerJson($composerJsonPath): array

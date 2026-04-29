@@ -37,7 +37,10 @@ class Plugin implements PluginInterface, Capable
         $extra = $root->getExtra();
 
         $map = [
-            'plugin-slug'        => 'PP_PLUGIN_SLUG',
+            'plugin-slug' => 'PP_PLUGIN_SLUG',
+            'plugin-name' => 'PP_PLUGIN_NAME',
+            'plugin-folder' => 'PP_PLUGIN_FOLDER',
+            'version-constant' => 'PP_VERSION_CONSTANT',
             'plugin-lang-domain' => 'PP_PLUGIN_LANG_DOMAIN',
             'plugin-github-repo' => 'PP_PLUGIN_GITHUB_REPO',
             'plugin-composer-package' => 'PP_PLUGIN_COMPOSER_PACKAGE',
