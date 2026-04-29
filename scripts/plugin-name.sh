@@ -2,6 +2,7 @@
 
 # Script to get the plugin name from composer.json file.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Set the SOURCE_PATH variable to the current directory or use the passed argument.
 DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
@@ -29,4 +30,4 @@ if [ ! -f "${SOURCE_PATH}/composer.json" ]; then
 fi
 
 # Get the plugin name from the composer.json file.
-parse-json.sh "${SOURCE_PATH}/composer.json" "extra.plugin-name"
+"$SCRIPT_DIR/parse-json.sh" "${SOURCE_PATH}/composer.json" "extra.plugin-name"

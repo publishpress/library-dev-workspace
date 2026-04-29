@@ -2,7 +2,8 @@
 
 # Script to create zip file from built directory
 # Requires: source_path, dist_path, plugin_folder
-# Requires: echo-step.sh, plugin-zipfile.sh in PATH
+# Uses sibling helper scripts from this script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
     echo "Usage: pack-built-dir.sh <source_path> <dist_path> <plugin_folder>"
@@ -35,18 +36,18 @@ if [ -z "${source_path}" ] || [ -z "${dist_path}" ] || [ -z "${plugin_folder}" ]
 fi
 
 # Get zip filename using plugin-zipfile.sh script
-zip_filename=$(plugin-zipfile.sh ${source_path})
+zip_filename=$("$SCRIPT_DIR/plugin-zipfile.sh" "$source_path")
 zip_path="${dist_path}/${zip_filename}"
 
-echo-step.sh "Removing old zip file, if exists"
+"$SCRIPT_DIR/echo-step.sh" "Removing old zip file, if exists"
 rm -f "${zip_path}" || exit 1
 pushd "${dist_path}" >/dev/null 2>&1 || exit 2
 
 # Normalize permissions before zipping
-echo-step.sh "Normalizing file permissions"
+"$SCRIPT_DIR/echo-step.sh" "Normalizing file permissions"
 find ./${plugin_folder} -type f -exec chmod 644 {} \;
 find ./${plugin_folder} -type d -exec chmod 755 {} \;
 
-echo-step.sh "Creating the zip file on dist/${zip_filename} with normalized permissions"
+"$SCRIPT_DIR/echo-step.sh" "Creating the zip file on dist/${zip_filename} with normalized permissions"
 zip -qr "${zip_path}" ./${plugin_folder} || exit 3
 popd >/dev/null 2>&1 || exit 4

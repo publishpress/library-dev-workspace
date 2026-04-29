@@ -5,4 +5,4 @@ cd "$DEV_WORKSPACE_DIR"
 
 DB_EXPORT_FILE=/var/www/html/wp-content/plugins/$PLUGIN_SLUG/tests/Support/Data/dump.sql
 
-bash ./scripts/tests-wp-cli.sh wp_test_cli db import $DB_EXPORT_FILE
+bash "$DEV_SCRIPTS_DIR/tests-wp-cli.sh" wp_test_cli db import "$DB_EXPORT_FILE"

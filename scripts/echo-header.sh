@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Script to display the formatted plugin builder header
-# Requires: echo-box-line.sh, workspace-version.sh, plugin-name.sh, plugin-version.sh, plugin-slug.sh, plugin-folder.sh in PATH
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
     echo "Usage: echo-header.sh"
@@ -28,10 +29,10 @@ fi
 
 echo ""
 echo "   Plugin Information:"
-echo "     - Name   : $(plugin-name.sh)"
-echo "     - Slug   : $(plugin-slug.sh)"
-echo "     - Folder : $(plugin-folder.sh)"
-echo "     - Version: $(plugin-version.sh)"
+echo "     - Name   : $("$SCRIPT_DIR/plugin-name.sh")"
+echo "     - Slug   : $("$SCRIPT_DIR/plugin-slug.sh")"
+echo "     - Folder : $("$SCRIPT_DIR/plugin-folder.sh")"
+echo "     - Version: $("$SCRIPT_DIR/plugin-version.sh")"
 echo ""
-echo-separator.sh
+"$SCRIPT_DIR/echo-separator.sh"
 echo ""

@@ -3,7 +3,7 @@
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
 cd "$DEV_WORKSPACE_DIR"
 
-bash ./scripts/services-init-cache.sh
+bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
 
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400

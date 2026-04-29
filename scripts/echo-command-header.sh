@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Script to display command header with rocket emoji
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
     echo "Usage: echo-command-header.sh <command>"
@@ -20,6 +21,6 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-echo-separator.sh
+"$SCRIPT_DIR/echo-separator.sh"
 echo "🚀" " ${1}"
 echo ""

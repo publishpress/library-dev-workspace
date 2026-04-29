@@ -2,9 +2,10 @@
 
 # Script to get the plugin version.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
-PLUGIN_SLUG=$(plugin-slug.sh ${SOURCE_PATH})
+PLUGIN_SLUG=$("$SCRIPT_DIR/plugin-slug.sh" "$SOURCE_PATH")
 PLUGIN_FILE_PATH="${SOURCE_PATH}/${PLUGIN_SLUG}.php"
 
 usage() {

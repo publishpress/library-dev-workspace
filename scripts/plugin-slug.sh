@@ -2,6 +2,7 @@
 
 # Script to get the plugin slug from composer.json file.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
 SOURCE_PATH="${1:-$DEFAULT_SOURCE_PATH}"
 COMPOSER_FILE="${SOURCE_PATH}/composer.json"
@@ -15,4 +16,4 @@ usage() {
 
 [[ ! -f "$COMPOSER_FILE" ]] && { echo "Error: composer.json not found in ${SOURCE_PATH}"; exit 1; }
 
-parse-json.sh "$COMPOSER_FILE" "extra.plugin-slug"
+"$SCRIPT_DIR/parse-json.sh" "$COMPOSER_FILE" "extra.plugin-slug"

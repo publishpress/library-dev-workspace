@@ -124,7 +124,7 @@ service_info() {
 }
 
 if [[ $1 == "up" ]]; then
-  bash ./scripts/services-init-cache.sh
+  bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
   mkdir -p "$MAILHOG_CACHE/maildir"
 
   service_up

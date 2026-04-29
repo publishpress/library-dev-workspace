@@ -9,7 +9,7 @@ if [[ "${GENERATE_TRANSLATION_JSON:-}" != "1" && "${GENERATE_TRANSLATION_JSON:-}
 fi
 
 BASE_DIR="/project"
-PLUGIN_SLUG="$(plugin-slug.sh)"
+PLUGIN_SLUG="$("$DEV_SCRIPTS_DIR/plugin-slug.sh")"
 
 read -r -a LOCALES <<< "${LANG_LOCALES:-}"
 TOTAL_LOCALES="${#LOCALES[@]}"

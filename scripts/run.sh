@@ -22,7 +22,7 @@ run_in_dev_workspace() {
     else
         echo "Initializing dev-workspace environment. Please wait..."
         cd "$DEV_WORKSPACE_DIR"
-        bash ./scripts/terminal-service-run.sh "$@"
+        bash "$DEV_SCRIPTS_DIR/terminal-service-run.sh" "$@"
     fi
 }
 

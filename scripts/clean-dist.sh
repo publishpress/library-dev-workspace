@@ -2,7 +2,8 @@
 
 # Script to remove temporary build directories
 # Requires: tmp_build_dir variable
-# Requires: echo-step.sh in PATH
+# Uses sibling helper scripts from this script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
     echo "Usage: clean-dist.sh [tmp_build_dir]"
@@ -33,5 +34,5 @@ if [ -z "${tmp_build_dir}" ]; then
     exit 1
 fi
 
-echo-step.sh "Removing the folder ${tmp_build_dir} if exists"
+"$SCRIPT_DIR/echo-step.sh" "Removing the folder ${tmp_build_dir} if exists"
 rm -rf "${tmp_build_dir}" "${tmp_build_dir}-tmp"

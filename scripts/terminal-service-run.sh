@@ -2,7 +2,7 @@
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
 
-bash ./scripts/services-init-cache.sh
+bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
 
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400
@@ -28,9 +28,9 @@ configure_git_identity_existing_container() {
     docker exec -i "$container_id" zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi'
 }
 
-bash ./scripts/services-pull-images.sh --daily
+bash "$DEV_SCRIPTS_DIR/services-pull-images.sh" --daily
 
-RUNNING_CONTAINER=$(bash ./scripts/terminal-detect-running-container.sh)
+RUNNING_CONTAINER=$(bash "$DEV_SCRIPTS_DIR/terminal-detect-running-container.sh")
 
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [--new|-n|--help|-h]"

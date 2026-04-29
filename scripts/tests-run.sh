@@ -14,7 +14,7 @@ CACHE_DB="$CACHE_PATH/db_test"
 
 if [[ ! -d "$CACHE_DB" ]] || [[ -z "$(ls -A "$CACHE_DB" 2>/dev/null)" ]]; then
     echo "Test DB cache not found — starting test environment..."
-    (cd "$DEV_WORKSPACE_DIR" && bash ./scripts/server.sh up test)
+    bash "$DEV_SCRIPTS_DIR/server.sh" up test
 fi
 
 (cd "$REPO_ROOT" && vendor/bin/codecept run "$@")

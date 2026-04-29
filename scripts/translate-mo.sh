@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
+
 BASE_DIR="/project"
-PLUGIN_SLUG="$(plugin-slug.sh)"
+PLUGIN_SLUG="$("$DEV_SCRIPTS_DIR/plugin-slug.sh")"
 read -r -a LOCALES <<< "${LANG_LOCALES:-}"
 TOTAL_LOCALES="${#LOCALES[@]}"
 
