@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.2.0] - 29 April, 2026
+
+- Added: New script `plugin-metadata-github-output.sh` to extract plugin metadata from the Composer file and export it for use as GitHub Actions outputs.
+- Added: Introduced dedicated scripts for generating `.mo`, `.php`, and `.pot` files: `translate-mo.sh`, `translate-php.sh`, and `translate-pot.sh`.
+- Changed: Renamed `lang-make-json.sh` to `translate-json.sh` for clarity.
+- Changed: Streamlined and clarified the builder script header output.
+- Changed: Refactored compiled file generation to process each language individually, with improved progress feedback and early exit if any file is missing or an error occurs.
+- Fixed: Resolved inconsistent generation of compiled files—ensuring all `.php`, `.json`, and `.mo` files are reliably created.
+
 [1.1.9] - 22 April, 2026
 
 - Added: Introduced the `translate:repair` command in composer.json to automatically fix pluralization issues in translation files.
