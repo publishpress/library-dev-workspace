@@ -20,7 +20,7 @@ show_help() {
 }
 
 run_in_dev_workspace() {
-    if [ -n "$INSIDE_DEV_CONTAINER" ]; then
+    if [ -n "${INSIDE_DEV_CONTAINER:-}" ]; then
         export PATH="$DEV_SCRIPTS_DIR:$PATH"
         "$@"
     else
