@@ -14,7 +14,6 @@ if [ "${TOTAL_LOCALES}" -eq 0 ]; then
 fi
 
 $SCRIPT_DIR/echo-title.sh "PublishPress Translation: MO Compilation for Plugin"
-echo ""
 echo "Plugin   : ${PLUGIN_SLUG}"
 echo "Locales  : ${TOTAL_LOCALES} ($(IFS=,; echo "${LOCALES[*]}"))"
 $SCRIPT_DIR/echo-separator.sh

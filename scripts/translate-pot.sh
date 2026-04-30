@@ -7,7 +7,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/env-bootstrap.sh"
 
 $SCRIPT_DIR/echo-title.sh "PublishPress Translation: POT Generation for Plugin"
-echo ""
 echo "Domain: ${LANG_DOMAIN}"
 $SCRIPT_DIR/echo-separator.sh
 
