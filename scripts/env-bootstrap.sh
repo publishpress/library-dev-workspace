@@ -16,11 +16,6 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-if [ -z "$arg1" ]; then
-    show_help
-    exit 1
-fi
-
 DEV_SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Assuming the script is run from the dev-workspace/scripts directory.
 DEV_WORKSPACE_DIR="$(cd "$DEV_SCRIPTS_DIR/.." && pwd)"
