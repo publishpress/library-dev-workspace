@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Changed: Renamed `env-init.sh` to `env-bootstrap.sh` for clearer script purpose and consistency.
 - Changed: Now requires both `LANG_LOCALES` and `PLUGIN_NAME` to be set in the `.env` file.
+- Changed: Added missing help instructions for available commands to improve usability.
+- Changed: Output formatting for all commands has been standardized for clarity and consistency.
 
 [1.2.0] - 29 April, 2026
 
