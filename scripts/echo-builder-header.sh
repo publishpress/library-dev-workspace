@@ -25,7 +25,7 @@ $SCRIPT_DIR/echo-title.sh "PublishPress Builder"
 
 if [ "${DEV_WORKSPACE_VERSION}" != "1" ]; then
     echo ""
-    echo "Version: ${DEV_WORKSPACE_VERSION}"
+    echo "Dev-workspace Version: ${DEV_WORKSPACE_VERSION}"
     echo "${separator1}"
 fi
 
