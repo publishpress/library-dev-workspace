@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+show_help() {
+    echo "Script to sync the plugin with the dev site using rsync and excluding files/directories listed on .rsync-filters-dev-sync"
+    echo "Usage: local-sync.sh [--watch]"
+    echo ""
+    echo "Example:"
+    echo "local-sync.sh"
+    echo "local-sync.sh --watch"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
+
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
 # Load the .env file
 source .env
 
@@ -9,12 +33,21 @@ if [[ $1 == "--watch" ]]; then
   SHOULD_WATCH="true"
 fi
 
+separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
+
+$SCRIPT_DIR/echo-title.sh "Local Sync"
+
+echo "Destination: ${LOCAL_SYNC_TARGET_DIR}"
+echo "${separator1}"
+
 # Function to perform the sync
 sync_files() {
-  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Syncing files..."
+  echo "${separator1}"
+  "$SCRIPT_DIR/echo-step.sh" "Syncing files..."
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Destination: ${LOCAL_SYNC_TARGET_DIR}"
   rsync -avz --exclude-from=.rsync-filters-dev-sync ./ ${LOCAL_SYNC_TARGET_DIR}
-  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Sync complete."
+  "$SCRIPT_DIR/echo-success.sh" "Sync complete."
+  echo "${separator1}"
 }
 
 # Sync the plugin with the dev site using rsync and excluding files/directories listed on .rsync-filters-dev-sync
@@ -25,12 +58,12 @@ if [[ $SHOULD_WATCH == "true" ]]; then
   # Perform initial sync
   sync_files
 
-  echo "Watching for file changes..."
+  "$SCRIPT_DIR/echo-step.sh" "Watching for file changes..."
 
   if [[ "$OS" == "Linux" ]]; then
     # Check if inotifywait is installed
     if ! command -v inotifywait &> /dev/null; then
-      echo "Error: inotifywait is not installed. Install it with: sudo apt-get install inotify-tools"
+      "$SCRIPT_DIR/echo-error.sh" "Error: inotifywait is not installed. Install it with: sudo apt-get install inotify-tools"
       exit 1
     fi
 
@@ -49,7 +82,7 @@ if [[ $SHOULD_WATCH == "true" ]]; then
   elif [[ "$OS" == "Darwin" ]]; then
     # Check if fswatch is installed
     if ! command -v fswatch &> /dev/null; then
-      echo "Error: fswatch is not installed. Install it with: brew install fswatch"
+      "$SCRIPT_DIR/echo-error.sh" "Error: fswatch is not installed. Install it with: brew install fswatch"
       exit 1
     fi
 
@@ -66,7 +99,7 @@ if [[ $SHOULD_WATCH == "true" ]]; then
     done
 
   else
-    echo "Error: Unsupported operating system: $OS"
+    "$SCRIPT_DIR/echo-error.sh" "Error: Unsupported operating system: $OS"
     exit 1
   fi
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
 
 # If the legacy dir "cache" exists, move its content to $CACHE_PATH and remove it.
 if [[ -d "cache" ]]; then

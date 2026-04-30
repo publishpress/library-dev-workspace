@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+show_help() {
+    echo "Script to ensure that the script is not running inside the dev-workspace container"
+    echo "Usage: ensure-not-container.sh"
+    echo ""
+    echo "Example:"
+    echo "ensure-not-container.sh"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
+
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
 if [ -n "$INSIDE_DEV_CONTAINER" ]; then
     RED='\033[0;31m'
     YELLOW='\033[1;33m'

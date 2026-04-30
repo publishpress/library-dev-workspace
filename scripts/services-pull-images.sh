@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
+
 cd "$DEV_WORKSPACE_DIR"
 
-bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
+bash "$SCRIPT_DIR/services-init-cache.sh"
 
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400

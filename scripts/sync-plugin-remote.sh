@@ -7,6 +7,9 @@ set -a
 source .env
 set +a
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
+
 # Configuration
 SOURCE_DIR=$REMOTE_SYNC_SOURCE_DIR
 REMOTE_HOST=$REMOTE_SYNC_REMOTE_HOST
@@ -27,7 +30,7 @@ NC='\033[0m' # No Color
 
 # Function to sync files
 sync_files() {
-    echo -e "${BLUE}[$(date '+%Y-%m-%d %H:%M:%S')] Syncing files to remote...${NC}"
+    $SCRIPT_DIR/echo-step.sh "Syncing files to remote..."
 
     # Create target directory on remote if it doesn't exist
     ssh -i "$SSH_KEY_PATH" -p "$REMOTE_PORT" $SSH_OPTIONS "$REMOTE_HOST" "mkdir -p '$REMOTE_TARGET_DIR'"
@@ -38,9 +41,9 @@ sync_files() {
         --exclude-from="$SOURCE_DIR/$EXCLUDE_FILE" \
         "$SOURCE_DIR/" "$REMOTE_HOST:$REMOTE_TARGET_DIR/"; then
 
-        echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')] Remote sync completed successfully${NC}"
+        $SCRIPT_DIR/echo-success.sh "Remote sync completed successfully"
     else
-        echo -e "${RED}[$(date '+%Y-%m-%d %H:%M:%S')] Remote sync failed${NC}"
+        $SCRIPT_DIR/echo-error.sh "Remote sync failed"
     fi
 }
 
@@ -58,37 +61,39 @@ check_file_watcher() {
     detect_os
 
     if ! command -v "$FILE_WATCHER" &> /dev/null; then
-        echo -e "${RED}Error: $FILE_WATCHER is not installed.${NC}"
+        $SCRIPT_DIR/echo-error.sh "Error: $FILE_WATCHER is not installed."
         if [[ "$FILE_WATCHER" == "fswatch" ]]; then
-            echo "Please install it with: brew install fswatch"
+            $SCRIPT_DIR/echo-error.sh "Please install it with: brew install fswatch"
         else
-            echo "Please install it with: sudo apt-get install inotify-tools"
+            $SCRIPT_DIR/echo-error.sh "Please install it with: sudo apt-get install inotify-tools"
         fi
-        exit 1
+        exit 2
     fi
 
-    echo -e "${GREEN}Using file watcher: $FILE_WATCHER${NC}"
+    $SCRIPT_DIR/echo-success.sh "Using file watcher: $FILE_WATCHER"
 }
 
 # Function to test SSH connection
 test_ssh_connection() {
-    echo -e "${BLUE}Testing SSH connection to $REMOTE_HOST...${NC}"
+    $SCRIPT_DIR/echo-step.sh "Testing SSH connection to $REMOTE_HOST..."
     if ssh -i "$SSH_KEY_PATH" -p "$REMOTE_PORT" $SSH_OPTIONS "$REMOTE_HOST" "echo 'SSH connection successful'" 2>/dev/null; then
-        echo -e "${GREEN}SSH connection test successful${NC}"
+        $SCRIPT_DIR/echo-success.sh "SSH connection test successful"
         return 0
     else
-        echo -e "${RED}SSH connection test failed${NC}"
+        $SCRIPT_DIR/echo-error.sh "SSH connection test failed"
+        echo ""
         echo "Please check your SSH configuration:"
         echo "  - SSH key path: $SSH_KEY_PATH"
         echo "  - Remote host: $REMOTE_HOST"
         echo "  - Remote port: $REMOTE_PORT"
         echo "  - Make sure your SSH key is added to the remote server"
-        return 1
+        exit 3
     fi
 }
 
 # Function to show usage
-show_usage() {
+show_help() {
+    echo "Script to sync the plugin with the remote site using rsync and excluding files/directories listed on .rsync-filters-sync"
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "Options:"
@@ -119,7 +124,7 @@ TEST_SSH=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)
-            show_usage
+            show_help
             exit 0
             ;;
         -o|--once)
@@ -136,23 +141,24 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            show_usage
-            exit 1
+            show_help
+            exit 4
             ;;
     esac
 done
 
 # Check if source directory exists
 if [ ! -d "$SOURCE_DIR" ]; then
-    echo -e "${RED}Error: Source directory does not exist: $SOURCE_DIR${NC}"
-    exit 1
+    $SCRIPT_DIR/echo-error.sh "Error: Source directory does not exist: $SOURCE_DIR"
+    exit 5
 fi
 
 # Check if SSH key exists
 if [ ! -f "$SSH_KEY_PATH" ]; then
-    echo -e "${RED}Error: SSH key not found: $SSH_KEY_PATH${NC}"
-    echo "Please update the SSH_KEY_PATH variable in this script"
-    exit 1
+    $SCRIPT_DIR/echo-error.sh "Error: SSH key not found: $SSH_KEY_PATH"
+    echo ""
+    echo "Please update the SSH_KEY_PATH variable"
+    exit 6
 fi
 
 # Test SSH connection if requested
@@ -176,15 +182,15 @@ if ! test_ssh_connection; then
 fi
 
 # Initial sync
-echo -e "${YELLOW}Performing initial sync...${NC}"
+$SCRIPT_DIR/echo-step.sh "Performing initial sync..."
 sync_files
 
 if [ "$WATCH_MODE" = false ]; then
-    echo -e "${GREEN}One-time sync completed. Exiting.${NC}"
+    $SCRIPT_DIR/echo-success.sh "One-time sync completed. Exiting."
     exit 0
 fi
 
-echo -e "${YELLOW}Watching for changes... (Press Ctrl+C to stop)${NC}"
+$SCRIPT_DIR/echo-step.sh "Watching for changes... (Press Ctrl+C to stop)"
 echo ""
 
 # Watch for changes based on OS

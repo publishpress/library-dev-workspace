@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
 
-bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
+bash "$SCRIPT_DIR/services-init-cache.sh"
 
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400
@@ -28,12 +29,23 @@ configure_git_identity_existing_container() {
     docker exec -i "$container_id" zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi'
 }
 
-bash "$DEV_SCRIPTS_DIR/services-pull-images.sh" --daily
+bash "$SCRIPT_DIR/services-pull-images.sh" --daily
 
-RUNNING_CONTAINER=$(bash "$DEV_SCRIPTS_DIR/terminal-detect-running-container.sh")
+RUNNING_CONTAINER=$(bash "$SCRIPT_DIR/terminal-detect-running-container.sh")
 
-if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-    echo "Usage: $0 [--new|-n|--help|-h]"
+show_help() {
+    echo "Script to run the terminal service"
+    echo "Usage: terminal-service-run.sh [--new|-n|--help|-h]"
+    echo ""
+    echo "Example:"
+    echo "terminal-service-run.sh --new"
+    echo "terminal-service-run.sh -n"
+    echo "terminal-service-run.sh --help"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
     exit 0
 fi
 
@@ -47,17 +59,17 @@ done
 
 if [ "$1" = "--new" ] || [ "$1" = "-n" ]; then
     if [ "$HAS_NO_COMMAND" = false ]; then
-        echo "Running new container"
+        $SCRIPT_DIR/echo-step.sh "Running new container"
     fi
     run_terminal_service "${@:2}"
 elif [ -z "$RUNNING_CONTAINER" ]; then
     if [ "$HAS_NO_COMMAND" = false ]; then
-        echo "Running new container"
+        $SCRIPT_DIR/echo-step.sh "Running new container"
     fi
     run_terminal_service "$@"
 else
     if [ "$HAS_NO_COMMAND" = false ]; then
-        echo "Running existing container"
+        $SCRIPT_DIR/echo-step.sh "Running existing container"
     fi
     configure_git_identity_existing_container "$RUNNING_CONTAINER"
     if [ $# -eq 0 ]; then

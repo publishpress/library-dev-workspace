@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# Script to display error messages with X mark
+set -euo pipefail
 
 show_help() {
+    echo "Script to display error messages with X mark"
     echo "Usage: echo-error.sh <message>"
     echo ""
     echo "Example:"
@@ -10,14 +11,16 @@ show_help() {
     echo ""
 }
 
-if [ -z "$1" ]; then
+arg1="${1:-}"
+
+if [ -z "$arg1" ]; then
     show_help
     exit 1
 fi
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-echo "❌" " ${1}"
+echo "❌" " ${arg1}"

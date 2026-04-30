@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-# Script to parse JSON files and extract property values using jq.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
+    echo "Script to parse JSON files and extract property values using jq"
     echo "Usage: parse-json.sh <json_file_path> <property_path>"
     echo ""
     echo "Arguments:"
@@ -14,24 +17,25 @@ show_help() {
 }
 
 # Check for help flag
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
 # Check if required arguments are provided
-if [ $# -ne 2 ]; then
-    echo "Usage: parse-json.sh <json_file_path> <property_path>"
+if [ -z "$arg1" ] || [ -z "$arg2" ]; then
+    show_help
     exit 1
 fi
 
-json_file="$1"
-property_path="$2"
+json_file="$arg1"
+property_path="$arg2"
 
 # Check if the JSON file exists
 if [ ! -f "$json_file" ]; then
-    echo "Error: JSON file not found: $json_file"
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "Error: JSON file not found: $json_file"
+    exit 2
 fi
 
 # Convert dot notation to jq path format
@@ -59,13 +63,13 @@ result=$(jq -r "$jq_path // empty" "$json_file" 2>/dev/null)
 
 # Check if jq command was successful and returned a value
 if [ $? -ne 0 ]; then
-    echo "Error: Failed to parse JSON file"
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "Error: Failed to parse JSON file"
+    exit 3
 fi
 
 if [ -z "$result" ]; then
-    echo "Error: Property '$property_path' not found in the JSON file."
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "Error: Property '$property_path' not found in the JSON file."
+    exit 4
 fi
 
 # Output the result

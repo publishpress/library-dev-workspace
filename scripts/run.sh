@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
 
 show_help() {
+    echo "Script to run a command in the dev-workspace"
     echo "Usage: $0 [command]"
     echo ""
     echo "If you are outside the dev-workspace terminal, this script will start"
@@ -20,7 +24,7 @@ run_in_dev_workspace() {
         export PATH="$DEV_SCRIPTS_DIR:$PATH"
         "$@"
     else
-        echo "Initializing dev-workspace environment. Please wait..."
+        "$SCRIPT_DIR/echo-step.sh" "Initializing dev-workspace environment. Please wait..."
         cd "$DEV_WORKSPACE_DIR"
         bash "$DEV_SCRIPTS_DIR/terminal-service-run.sh" "$@"
     fi

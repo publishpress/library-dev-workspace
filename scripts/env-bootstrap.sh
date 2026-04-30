@@ -1,10 +1,32 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+show_help() {
+    echo "Script to bootstrap the environment"
+    echo "Usage: env-bootstrap.sh"
+    echo ""
+    echo "Example:"
+    echo "env-bootstrap.sh"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
+
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
 DEV_SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Assuming the script is run from the dev-workspace/scripts directory.
 DEV_WORKSPACE_DIR="$(cd "$DEV_SCRIPTS_DIR/.." && pwd)"
+# Assuming the script is run from the dev-workspace directory from inside vendor/publishpress/dev-workspace.
 REPO_ROOT="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd)"
 
-# Subprocesses (e.g. pack.sh spawned from run.sh) must inherit these paths.
 export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR REPO_ROOT
 
 if [[ ! -f "$REPO_ROOT/.env" ]]; then

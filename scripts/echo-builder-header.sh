@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# Script to display the formatted plugin builder header
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
+    echo "Script to display the formatted plugin builder header"
     echo "Usage: echo-builder-header.sh"
     echo ""
     echo "Example:"
@@ -12,27 +13,28 @@ show_help() {
     echo ""
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-echo ""
-echo "======================================================================="
-echo "                        PUBLISHPRESS BUILDER"
-echo "======================================================================="
-echo ""
+separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
+
+$SCRIPT_DIR/echo-title.sh "PublishPress Builder"
 
 if [ "${DEV_WORKSPACE_VERSION}" != "1" ]; then
     echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
+    echo "${separator1}"
 fi
 
+marker="●"
+indent="    "
+echo "Plugin Information:"
 echo ""
-echo "   Plugin Information:"
-echo "     - Name   : $("$SCRIPT_DIR/plugin-name.sh")"
-echo "     - Slug   : $("$SCRIPT_DIR/plugin-slug.sh")"
-echo "     - Folder : $("$SCRIPT_DIR/plugin-folder.sh")"
-echo "     - Version: $("$SCRIPT_DIR/plugin-version.sh")"
+echo "${indent}$marker Name   : $("$SCRIPT_DIR/plugin-name.sh")"
+echo "${indent}$marker Slug   : $("$SCRIPT_DIR/plugin-slug.sh")"
+echo "${indent}$marker Folder : $("$SCRIPT_DIR/plugin-folder.sh")"
+echo "${indent}$marker Version: $("$SCRIPT_DIR/plugin-version.sh")"
 echo ""
-"$SCRIPT_DIR/echo-separator.sh"
-echo ""
+echo "${separator1}"

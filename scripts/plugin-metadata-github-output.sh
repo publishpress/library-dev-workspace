@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
-# Script to get plugin metadata from composer.json file and output it to the GitHub Actions output.
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Show the usage information.
-usage() {
+show_help() {
+    echo "Script to get plugin metadata from composer.json file and output it to the GitHub Actions output."
     echo "Usage: plugin-metadata-github-output.sh"
 }
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
 
 # Output metadata fields to GitHub Actions output in a clear, expanded way.
 PLUGIN_SLUG=$("$SCRIPT_DIR/plugin-slug.sh")

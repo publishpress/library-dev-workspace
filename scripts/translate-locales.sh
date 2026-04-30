@@ -3,10 +3,18 @@
 # LANG_LOCALES should be set and env-bootstrap.sh sourced before running.
 set -euo pipefail
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
+
 CSV="$("$SCRIPT_DIR/spaces-to-csv.sh" "${LANG_LOCALES}")"
 
-exec "vendor/bin/publishpress-translate" --languages="$CSV"
+if exec "$REPO_ROOT/vendor/bin/publishpress-translate" --languages="$CSV"; then
+    echo ""
+    $SCRIPT_DIR/echo-separator.sh
+    $SCRIPT_DIR/echo-success.sh "Translation locales completed successfully"
+else
+    echo ""
+    $SCRIPT_DIR/echo-separator.sh
+    $SCRIPT_DIR/echo-error.sh "Translation locales failed"
+    exit 1
+fi

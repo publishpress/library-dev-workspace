@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# Script to display success messages with checkmark
+set -euo pipefail
 
 show_help() {
+    echo "Script to display success messages with checkmark"
     echo "Usage: echo-success.sh <message>"
     echo ""
     echo "Example:"
@@ -10,14 +11,15 @@ show_help() {
     echo ""
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-if [ -z "$1" ]; then
+if [ -z "$arg1" ]; then
     show_help
     exit 1
 fi
 
-echo "✅" " ${1}"
+echo "✅" " ${arg1}"

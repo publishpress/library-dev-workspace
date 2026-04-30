@@ -6,6 +6,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
+    echo "Script to create zip file from built directory"
     echo "Usage: pack-built-dir.sh <source_path> <dist_path> <plugin_folder>"
     echo ""
     echo "Example:"
@@ -40,8 +41,14 @@ zip_filename=$("$SCRIPT_DIR/plugin-zipfile.sh" "$source_path")
 zip_path="${dist_path}/${zip_filename}"
 
 "$SCRIPT_DIR/echo-step.sh" "Removing old zip file, if exists"
-rm -f "${zip_path}" || exit 1
-pushd "${dist_path}" >/dev/null 2>&1 || exit 2
+if ! rm -f "${zip_path}"; then
+    "$SCRIPT_DIR/echo-error.sh" "Failed to remove old zip file"
+    exit 1
+fi
+if ! pushd "${dist_path}" >/dev/null 2>&1; then
+    "$SCRIPT_DIR/echo-error.sh" "Failed to pushd"
+    exit 2
+fi
 
 # Normalize permissions before zipping
 "$SCRIPT_DIR/echo-step.sh" "Normalizing file permissions"
@@ -49,5 +56,12 @@ find ./${plugin_folder} -type f -exec chmod 644 {} \;
 find ./${plugin_folder} -type d -exec chmod 755 {} \;
 
 "$SCRIPT_DIR/echo-step.sh" "Creating the zip file on dist/${zip_filename} with normalized permissions"
-zip -qr "${zip_path}" ./${plugin_folder} || exit 3
-popd >/dev/null 2>&1 || exit 4
+if ! zip -qr "${zip_path}" ./${plugin_folder}; then
+    "$SCRIPT_DIR/echo-error.sh" "Failed to create zip file"
+    exit 3
+fi
+
+if ! popd >/dev/null 2>&1; then
+    "$SCRIPT_DIR/echo-error.sh" "Failed to popd"
+    exit 4
+fi

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-# Script to display command header with rocket emoji
+set -euo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
+    echo "Script to display command header with rocket emoji"
     echo "Usage: echo-command-header.sh <command>"
     echo ""
     echo "Example:"

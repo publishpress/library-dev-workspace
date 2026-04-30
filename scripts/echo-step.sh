@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-
-# Script to display step messages with arrow prefix
+set -euo pipefail
 
 show_help() {
+    echo "Script to display step messages with arrow prefix"
     echo "Usage: echo-step.sh <message>"
     echo ""
     echo "Example:"
