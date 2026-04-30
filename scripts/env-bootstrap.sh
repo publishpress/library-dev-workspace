@@ -48,9 +48,6 @@ required_env_vars=(
     "LANG_DOMAIN"
     "LANG_DIR"
     "LANG_LOCALES"
-    "OPENAI_API_KEY"
-    "WEBLATE_API_TOKEN"
-    "WEBLATE_API_URL"
 )
 
 for var in "${required_env_vars[@]}"; do
