@@ -24,7 +24,8 @@ separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
 $SCRIPT_DIR/echo-title.sh "PublishPress Builder"
 
 if [ "${DEV_WORKSPACE_VERSION}" != "1" ]; then
-    echo "   Dev-workspace version: ${DEV_WORKSPACE_VERSION}"
+    echo ""
+    echo "Version: ${DEV_WORKSPACE_VERSION}"
     echo "${separator1}"
 fi
 
