@@ -19,8 +19,6 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
-
 $SCRIPT_DIR/echo-title.sh "Dependency Versions"
 
 marker="●"
