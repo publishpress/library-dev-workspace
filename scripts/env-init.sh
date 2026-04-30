@@ -8,7 +8,7 @@ REPO_ROOT="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd)"
 export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR REPO_ROOT
 
 if [[ ! -f "$REPO_ROOT/.env" ]]; then
-    echo "Error: .env file not found. Run 'cp .env.example .env' to create it."
+    $DEV_SCRIPTS_DIR/echo-error.sh "Error: Missing .env file in repository root ($REPO_ROOT). Create it with: cp .env.example .env"
     exit 1
 fi
 
