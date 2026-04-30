@@ -27,7 +27,8 @@ fi
 
 # Check if the directory is already in the safe.directory list
 if git config --global --get-all safe.directory | grep -Fxq "$arg1"; then
-    "$SCRIPT_DIR/echo-step.sh" "Git config for $arg1 already exists, skipping"
+    echo ""
+    $SCRIPT_DIR/echo-step.sh "Git config for $arg1 already exists, skipping"
 else
     "$SCRIPT_DIR/echo-step.sh" "Setting Git config for $arg1"
     echo ""

@@ -29,5 +29,6 @@ separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
 separator2="$($SCRIPT_DIR/echo-separator.sh 2)"
 
 echo "${separator2}"
+echo ""
 echo "${title}"
 echo "${separator2}"

@@ -25,5 +25,6 @@ if [ -z "$arg1" ]; then
 fi
 
 "$SCRIPT_DIR/echo-separator.sh"
+echo ""
 echo "🚀" " ${arg1}"
 echo ""

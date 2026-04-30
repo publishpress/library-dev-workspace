@@ -25,11 +25,11 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-if [ -z "${tmp_build_dir}" ]; then
+if [ -z "${tmp_build_dir:-}" ]; then
     tmp_build_dir="$arg1"
 fi
 
-if [ -z "${tmp_build_dir}" ]; then
+if [ -z "${tmp_build_dir:-}" ]; then
     "$SCRIPT_DIR/echo-error.sh" "Error: tmp_build_dir variable is empty or not set."
     show_help
     exit 1

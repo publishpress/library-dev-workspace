@@ -37,7 +37,5 @@ else
 fi
 
 echo ""
-echo ""
 "$SCRIPT_DIR/repeat.sh" "$separator_char" "${cols}"
-echo ""
 echo ""
