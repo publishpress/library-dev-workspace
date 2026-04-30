@@ -30,7 +30,7 @@ run_in_dev_workspace() {
     fi
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     show_help
     exit 0
 fi
