@@ -13,16 +13,17 @@ show_help() {
     echo ""
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-if [ -z "$1" ]; then
+if [ -z "$arg1" ]; then
     show_help
     exit 1
 fi
 
 "$SCRIPT_DIR/echo-separator.sh"
-echo "🚀" " ${1}"
+echo "🚀" " ${arg1}"
 echo ""

@@ -27,7 +27,7 @@ run_mysql_query() {
   docker exec -i $DB_CONTAINER_NAME bash -c "mysql -u root -proot -e '$1' 2>&1 | grep  -v \"Using a password\""
 }
 
-if [[ $1 == "off" ]]; then
+if [[ "$arg1" == "off" ]]; then
   run_mysql_query "SET GLOBAL general_log = OFF;"
   $SCRIPT_DIR/echo-success.sh "MySQL general log is disabled."
 else

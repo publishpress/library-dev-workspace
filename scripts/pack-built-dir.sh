@@ -14,21 +14,24 @@ show_help() {
     echo ""
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+arg2="${2:-}"
+arg3="${3:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-if [ -z "${source_path}" ]; then
-    source_path="$1"
+if [ -z "${source_path:-}" ]; then
+    source_path="$arg1"
 fi
 
-if [ -z "${dist_path}" ]; then
-    dist_path="$2"
+if [ -z "${dist_path:-}" ]; then
+    dist_path="$arg2"
 fi
 
-if [ -z "${plugin_folder}" ]; then
-    plugin_folder="$3"
+if [ -z "${plugin_folder:-}" ]; then
+    plugin_folder="$arg3"
 fi
 
 if [ -z "${source_path}" ] || [ -z "${dist_path}" ] || [ -z "${plugin_folder}" ]; then

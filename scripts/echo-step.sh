@@ -10,14 +10,15 @@ show_help() {
     echo ""
 }
 
-if [ -z "$1" ]; then
-    show_help
-    exit 1
-fi
-
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-echo "▶ ${1}"
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
+echo "▶ ${arg1}"

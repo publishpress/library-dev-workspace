@@ -103,7 +103,7 @@ if [[ ${command} == "-h" || ${command} == "--help" || -z "${command}" ]]; then
     exit 0
 fi
 
-if [ "${HIDE_HEADER}" != "1" ]; then
+if [ "${HIDE_HEADER:-}" != "1" ]; then
     "$SCRIPT_DIR/echo-builder-header.sh"
 fi
 

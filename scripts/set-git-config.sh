@@ -20,11 +20,16 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
 # Check if the directory is already in the safe.directory list
-if git config --global --get-all safe.directory | grep -Fxq "$1"; then
-    "$SCRIPT_DIR/echo-step.sh" "Git config for $1 already exists, skipping"
+if git config --global --get-all safe.directory | grep -Fxq "$arg1"; then
+    "$SCRIPT_DIR/echo-step.sh" "Git config for $arg1 already exists, skipping"
 else
-    "$SCRIPT_DIR/echo-step.sh" "Setting Git config for $1"
+    "$SCRIPT_DIR/echo-step.sh" "Setting Git config for $arg1"
     echo ""
-    git config --global --add safe.directory "$1"
+    git config --global --add safe.directory "$arg1"
 fi

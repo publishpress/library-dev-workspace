@@ -138,36 +138,36 @@ service_info() {
   echo ""
 }
 
-if [[ $1 == "up" ]]; then
+if [[ "$arg1" == "up" ]]; then
   bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
   mkdir -p "$MAILHOG_CACHE/maildir"
 
   service_up
 fi
 
-if [[ $1 == "stop" ]]; then
+if [[ "$arg1" == "stop" ]]; then
   service_stop
 fi
 
-if [[ $1 == "down" ]]; then
+if [[ "$arg1" == "down" ]]; then
   service_down
 fi
 
-if [[ $1 == "cleanup" ]]; then
+if [[ "$arg1" == "cleanup" ]]; then
   service_down
   rm -rf "$WP_CACHE" "$DB_CACHE" "$MAILHOG_CACHE"
 fi
 
-if [[ $1 == "refresh" ]]; then
+if [[ "$arg1" == "refresh" ]]; then
   service_cleanup
   service_up
 fi
 
-if [[ $1 == "info" ]]; then
+if [[ "$arg1" == "info" ]]; then
   service_info
 fi
 
-if [[ $1 == "restart" ]]; then
+if [[ "$arg1" == "restart" ]]; then
   service_stop
   service_up
 fi

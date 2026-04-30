@@ -17,9 +17,14 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
+if [ -z "$arg1" ]; then
+    show_help
+    exit 1
+fi
+
 cd "$DEV_WORKSPACE_DIR"
 
-SERVICE_NAME=$1
+SERVICE_NAME=$arg1
 shift 1
 
 # Check if wp-cli container is running, if not start it

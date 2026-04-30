@@ -19,12 +19,12 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-if [ -z "$1" ]; then
+if [ -z "$arg1" ]; then
     show_help
     exit 1
 fi
 
-title="${1}"
+title="${arg1}"
 separator1="$($SCRIPT_DIR/echo-separator.sh 1)"
 separator2="$($SCRIPT_DIR/echo-separator.sh 2)"
 
