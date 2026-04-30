@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[UNRELEASED]
+[1.2.1] - 30 April, 2026
 
 - Changed: Renamed `env-init.sh` to `env-bootstrap.sh` for clearer script purpose and consistency.
 - Changed: Now requires both `LANG_LOCALES` and `PLUGIN_NAME` to be set in the `.env` file.
