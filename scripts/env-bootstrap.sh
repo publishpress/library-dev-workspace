@@ -21,7 +21,19 @@ if [[ "$CACHE_PATH" != /* ]]; then
 fi
 
 required_env_vars=(
+    "PLUGIN_NAME"
+    "PLUGIN_TYPE"
+    "PLUGIN_SLUG"
+    "PLUGIN_COMPOSER_PACKAGE"
+    "CONTAINER_NAME"
+    "TERMINAL_IMAGE_NAME"
+    "CACHE_PATH"
+    "LANG_DOMAIN"
+    "LANG_DIR"
     "LANG_LOCALES"
+    "OPENAI_API_KEY"
+    "WEBLATE_API_TOKEN"
+    "WEBLATE_API_URL"
 )
 
 for var in "${required_env_vars[@]}"; do
