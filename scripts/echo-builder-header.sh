@@ -5,10 +5,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
-    echo "Usage: echo-header.sh"
+    echo "Usage: echo-builder-header.sh"
     echo ""
     echo "Example:"
-    echo "echo-header.sh"
+    echo "echo-builder-header.sh"
     echo ""
 }
 

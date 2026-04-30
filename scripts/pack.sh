@@ -98,14 +98,14 @@ check_composer_extra_info "${source_path}"
 
 # Check if user wants to see help or no command is provided
 if [[ ${command} == "-h" || ${command} == "--help" || -z "${command}" ]]; then
-    "$SCRIPT_DIR/echo-header.sh"
+    "$SCRIPT_DIR/echo-builder-header.sh"
     echo ""
     show_help
     exit 0
 fi
 
 if [ "${HIDE_HEADER}" != "1" ]; then
-    "$SCRIPT_DIR/echo-header.sh"
+    "$SCRIPT_DIR/echo-builder-header.sh"
 fi
 
 show_elapsed_time() {
