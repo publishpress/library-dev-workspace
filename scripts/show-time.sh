@@ -24,7 +24,7 @@ fi
 
 start_time=${arg1}
 
-if [ "${HIDE_HEADER}" != "1" ]; then
+if [ "${HIDE_HEADER:-}" != "1" ]; then
     end_time=$(date +%s)
     runtime_seconds=$((end_time - start_time))
 
