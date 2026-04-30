@@ -1,7 +1,7 @@
 {
     "name": "publishpress/dev-workspace",
     "type": "composer-plugin",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Shared Composer scripts for PublishPress plugins",
     "license": "GPL-2.0-or-later",
     "autoload": {
@@ -81,7 +81,6 @@
         ],
         "profile:js": "vendor/publishpress/dev-workspace/scripts/run.sh cross-env NODE_ENV=production npx webpack --profile",
         "watch:js": "vendor/publishpress/dev-workspace/scripts/run.sh cross-env NODE_ENV=development npx webpack --watch --progress",
-        "get:version": "@pack version",
         "check:all": [
             "@check:php",
             "@lint:php",
@@ -313,7 +312,6 @@
         "build:js": "Build JavaScript for production and development",
         "profile:js": "Profile the JavaScript webpack build",
         "watch:js": "Watch JavaScript sources and rebuild on change",
-        "get:version": "Print the plugin version from the build metadata",
         "check:all": "Run PHP compatibility, phplint, PHPCS, and long-path checks",
         "check:php": "Run PHP compatibility checks for all configured PHP versions",
         "check:php-5.6": "Check PHP 5.6 compatibility (main plugin file only)",

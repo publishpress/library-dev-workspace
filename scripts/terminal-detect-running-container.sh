@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+show_help() {
+    echo "Script to detect the running container"
+    echo "Usage: terminal-detect-running-container.sh"
+    echo ""
+    echo "Example:"
+    echo "terminal-detect-running-container.sh"
+    echo ""
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
+
 # Check for running containers matching CONTAINER_NAME but exclude test containers
 docker ps --format "{{.Names}}" | grep -q "${CONTAINER_NAME}_term"
 

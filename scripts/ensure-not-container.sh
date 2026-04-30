@@ -1,11 +1,34 @@
 #!/usr/bin/env bash
 
-if [ -n "$INSIDE_DEV_CONTAINER" ]; then
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
+
+show_help() {
+    echo "Script to ensure that the script is not running inside the dev-workspace container"
+    echo "Usage: ensure-not-container.sh"
+    echo ""
+    echo "Example:"
+    echo "ensure-not-container.sh"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+    show_help
+    exit 0
+fi
+
+if [ -n "${INSIDE_DEV_CONTAINER:-}" ]; then
     RED='\033[0;31m'
     YELLOW='\033[1;33m'
     NC='\033[0m' # No Color
 
+    "$SCRIPT_DIR/echo-separator.sh"
+    echo ""
     echo -e "${RED}You are inside the dev-workspace terminal.${NC}"
+    echo ""
     echo -e "${YELLOW}⚠️  This command is not meant to be run inside the dev-workspace terminal. Please run it outside the dev-workspace terminal.${NC}"
+    echo ""
     exit 1
 fi

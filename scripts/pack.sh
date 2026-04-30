@@ -5,6 +5,8 @@
 # Enable pipefail so pipelines return the exit code of the first failing command
 set -o pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 start_time=$(date +%s)
 
 include_debug=0
@@ -29,19 +31,17 @@ command=${1:-}
 default_source_path="/project"
 source_path="${GITHUB_WORKSPACE:-$default_source_path}"
 dist_path="${source_path}/dist"
-cols=$(terminal-cols.sh)
 
-plugin_name=$(plugin-name.sh)
-plugin_slug=$(plugin-slug.sh)
-plugin_folder=$(plugin-folder.sh)
-plugin_version=$(plugin-version.sh)
+plugin_name=$("$SCRIPT_DIR/plugin-name.sh")
+plugin_slug=$("$SCRIPT_DIR/plugin-slug.sh")
+plugin_folder=$("$SCRIPT_DIR/plugin-folder.sh")
+plugin_version=$("$SCRIPT_DIR/plugin-version.sh")
 tmp_build_dir="${dist_path}/${plugin_folder}"
 tmp_internal_vendor_dir="${tmp_build_dir}/lib"
 
-# Utility scripts are in PATH, call them directly
-
 # Function to display help text
 show_help() {
+    echo "Script to pack the plugin to the dist directory or create a zip file"
     echo "Usage: pack.sh [command] [--with-debug]"
     echo "Commands:"
     echo "  dir          Pack the plugin to the dist directory."
@@ -58,19 +58,19 @@ show_help() {
 }
 
 check_composer_extra_info() {
-    echo "Checking composer extra info"
+    "$SCRIPT_DIR/echo-step.sh" "Checking composer extra info"
     local source_path=$1
 
     local composer_file="${source_path}/composer.json"
     if [ ! -f "$composer_file" ]; then
-        echo "Error: $composer_file does not exist."
-        exit 1
+        "$SCRIPT_DIR/echo-error.sh" "Error: $composer_file does not exist."
+        exit 2
     fi
 
     # Check if jq is installed for robust JSON parsing
     if ! command -v jq >/dev/null 2>&1; then
-        echo "Error: jq is required to validate extra fields in composer.json."
-        exit 1
+        "$SCRIPT_DIR/echo-error.sh" "Error: jq is required to validate extra fields in composer.json."
+        exit 3
     fi
 
     # Check for required fields in the "extra" object (paths are dot notation; jq keys are the segment after "extra.")
@@ -86,46 +86,68 @@ check_composer_extra_info() {
     done
 
     if [ "${#missing_fields[@]}" -ne 0 ]; then
-        echo "Error: The following required 'extra' fields are missing in $composer_file: ${missing_fields[*]}"
-        exit 1
+        "$SCRIPT_DIR/echo-error.sh" "Error: The following required 'extra' fields are missing in $composer_file: ${missing_fields[*]}"
+        exit 4
     fi
 
-    echo "All required 'extra' fields are present in $composer_file."
+    "$SCRIPT_DIR/echo-success.sh" "All required 'extra' fields are present in $composer_file."
 }
 
 check_composer_extra_info "${source_path}"
 
 # Check if user wants to see help or no command is provided
 if [[ ${command} == "-h" || ${command} == "--help" || -z "${command}" ]]; then
-    echo-header.sh
+    "$SCRIPT_DIR/echo-builder-header.sh"
     echo ""
     show_help
     exit 0
 fi
 
-if [ "${HIDE_HEADER}" != "1" ]; then
-    echo-header.sh
+if [ "${HIDE_HEADER:-}" != "1" ]; then
+    "$SCRIPT_DIR/echo-builder-header.sh"
 fi
 
 show_elapsed_time() {
-    show-time.sh ${start_time}
+    "$SCRIPT_DIR/show-time.sh" "${start_time}"
+}
+
+finish_success() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    show_elapsed_time
+    echo ""
+    echo "🎉" " Executed successfully!"
+    echo ""
+    exit 0
+}
+
+finish_invalid_command() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    echo ""
+    show_help
+    show_elapsed_time
+    echo ""
+    echo "⚠️  Error: Command '${command}' failed or is invalid. Please check your input and try again."
+    echo ""
+    exit 1
 }
 
 # Run a command with indented output (preserves colors)
 # Usage: run_indented <exit_code> <command> [args...]
 run_indented() {
     echo ""
+    echo "┌──"
     local exit_code=$1
     shift
     "$@" 2>&1 | while IFS= read -r line; do echo "│ $line"; done || exit $exit_code
+    echo "└──"
     echo ""
 }
 
 command_dir() {
-    echo-command-header.sh "Cleaning dist directory"
-    clean-dist.sh ${tmp_build_dir}
+    "$SCRIPT_DIR/echo-command-header.sh" "Cleaning dist directory"
+    "$SCRIPT_DIR/clean-dist.sh" "${tmp_build_dir}"
 
-    echo-command-header.sh "Building plugin to dist directory"
+    "$SCRIPT_DIR/echo-command-header.sh" "Building plugin to dist directory"
 
     pre_merge_count=0
     rsync_pre_filters=()
@@ -145,24 +167,31 @@ command_dir() {
     add_pre_merge "${source_path}/.rsync-filters-pre-build"
 
     if [[ "${pre_merge_count}" -eq 0 ]]; then
-        echo-error.sh "No pre-build rsync filter files found. Add vendor/publishpress/dev-workspace/.rsync-filters-pre-build.default and/or .rsync-filters-pre-build."
-        exit 998
+        "$SCRIPT_DIR/echo-error.sh" "No pre-build rsync filter files found. Add vendor/publishpress/dev-workspace/.rsync-filters-pre-build.default and/or .rsync-filters-pre-build."
+        exit 5
     fi
 
     if [[ "${include_debug}" == "1" ]]; then
-        echo-step.sh "Packing with debug assets (strip-debug filters skipped)"
+        "$SCRIPT_DIR/echo-step.sh" "Packing with debug assets (strip-debug filters skipped)"
     else
-        echo-step.sh "Packing in release style (debug assets excluded via strip-debug filters)"
+        "$SCRIPT_DIR/echo-step.sh" "Packing in release style (debug assets excluded via strip-debug filters)"
     fi
 
-    echo-step.sh "Copying plugin files to dist (layered pre-build rsync filters)"
-    mkdir -p "${tmp_build_dir}" || exit 999
-    rsync -r "${rsync_pre_filters[@]}" "${source_path}/" "${tmp_build_dir}" || exit 1000
+    "$SCRIPT_DIR/echo-step.sh" "Copying plugin files to dist (layered pre-build rsync filters)"
+    if ! mkdir -p "${tmp_build_dir}"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to create temporary build directory"
+        exit 6
+    fi
+
+    if ! rsync -r "${rsync_pre_filters[@]}" "${source_path}/" "${tmp_build_dir}"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to copy plugin files to temporary build directory"
+        exit 7
+    fi
 
     if [ -d "${tmp_internal_vendor_dir}" ]; then
-        echo-step.sh "Installing dependencies on ${tmp_internal_vendor_dir}/vendor"
+        "$SCRIPT_DIR/echo-step.sh" "Installing dependencies on ${tmp_internal_vendor_dir}/vendor"
         echo ""
-        run_indented 1002 composer install --no-dev --optimize-autoloader --classmap-authoritative --ansi --working-dir="${tmp_internal_vendor_dir}"
+        run_indented 8 composer install --no-dev --optimize-autoloader --classmap-authoritative --ansi --working-dir="${tmp_internal_vendor_dir}"
     fi
 
     post_merge_count=0
@@ -179,120 +208,105 @@ command_dir() {
     add_post_merge "${source_path}/.rsync-filters-post-build"
 
     if [[ "${post_merge_count}" -eq 0 ]]; then
-        echo-error.sh "No post-build rsync filter files found. Add vendor/publishpress/dev-workspace/.rsync-filters-post-build.default and/or .rsync-filters-post-build."
-        exit 1003
+        "$SCRIPT_DIR/echo-error.sh" "No post-build rsync filter files found. Add vendor/publishpress/dev-workspace/.rsync-filters-post-build.default and/or .rsync-filters-post-build."
+        exit 9
     fi
 
-    echo-step.sh "Removing files listed in layered post-build rsync filters"
-    rsync -r "${rsync_post_filters[@]}" "${tmp_build_dir}/" "${tmp_build_dir}-tmp" || exit 1004
-    rm -rf "${tmp_build_dir}" || exit 1005
+    "$SCRIPT_DIR/echo-step.sh" "Removing files listed in layered post-build rsync filters"
+    if ! rsync -r "${rsync_post_filters[@]}" "${tmp_build_dir}/" "${tmp_build_dir}-tmp"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to remove files listed in layered post-build rsync filters"
+        exit 10
+    fi
 
-    echo-command-header.sh "Moving the temporary build directory to the final build directory"
+    if ! rm -rf "${tmp_build_dir}"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to remove temporary build directory"
+        exit 11
+    fi
 
-    echo-step.sh "Moving to ${tmp_build_dir}"
-    mv "${tmp_build_dir}-tmp" "${tmp_build_dir}" || exit 1006
+    "$SCRIPT_DIR/echo-command-header.sh" "Moving the temporary build directory to the final build directory"
 
-    echo-command-header.sh "Verifying the build directory ${tmp_build_dir}"
+    "$SCRIPT_DIR/echo-step.sh" "Moving to ${tmp_build_dir}"
+    if ! mv "${tmp_build_dir}-tmp" "${tmp_build_dir}"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to move temporary build directory to final build directory"
+        exit 12
+    fi
+
+    "$SCRIPT_DIR/echo-command-header.sh" "Verifying the build directory ${tmp_build_dir}"
     if [ ! -d "${tmp_build_dir}" ]; then
-        echo-error.sh "Build directory ${tmp_build_dir} does not exist"
-        exit 1007
+        "$SCRIPT_DIR/echo-error.sh" "Build directory ${tmp_build_dir} does not exist"
+        exit 13
     else
-        echo-step.sh "Asserting that build directory ${tmp_build_dir} exists"
-        echo-step.sh "Listing the build directory ${tmp_build_dir}"
+        "$SCRIPT_DIR/echo-step.sh" "Asserting that build directory ${tmp_build_dir} exists"
+        "$SCRIPT_DIR/echo-step.sh" "Listing the build directory ${tmp_build_dir}"
         echo ""
-        run_indented 1007 ls -lha "${tmp_build_dir}"
+        run_indented 14 ls -lha "${tmp_build_dir}"
     fi
 }
 
 command_zip() {
-    echo-command-header.sh "Packaging plugin directory into zip archive"
+    "$SCRIPT_DIR/echo-command-header.sh" "Packaging plugin directory into zip archive"
 
-    zip_filename=$(plugin-zipfile.sh ${source_path})
+    zip_filename=$("$SCRIPT_DIR/plugin-zipfile.sh" "$source_path")
     zip_path="${dist_path}/${zip_filename}"
 
-    echo-step.sh "Removing old zip file on ${zip_path}, if exists"
-    rm -f "${zip_path}" || exit 1
-    pushd "${dist_path}" >/dev/null 2>&1 || exit 2
+    "$SCRIPT_DIR/echo-step.sh" "Removing old zip file on ${zip_path}, if exists"
+    if ! rm -f "${zip_path}"; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to remove old zip file"
+        exit 15
+    fi
 
-    echo-step.sh "Normalizing file permissions on ${plugin_folder}"
+    if ! pushd "${dist_path}" >/dev/null 2>&1; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to pushd"
+        exit 16
+    fi
+
+    "$SCRIPT_DIR/echo-step.sh" "Normalizing file permissions on ${plugin_folder}"
     find ./${plugin_folder} -type f -exec chmod 644 {} \;
     find ./${plugin_folder} -type d -exec chmod 755 {} \;
 
-    echo-step.sh "Creating the zip file on ${zip_path} with normalized permissions"
-    zip -qr "${zip_path}" ./${plugin_folder} || exit 3
-    popd >/dev/null 2>&1 || exit 4
+    "$SCRIPT_DIR/echo-step.sh" "Creating the zip file on ${zip_path} with normalized permissions"
+    if ! zip -qr "${zip_path}" ./${plugin_folder}; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to create zip file"
+        exit 17
+    fi
+    if ! popd >/dev/null 2>&1; then
+        "$SCRIPT_DIR/echo-error.sh" "Failed to popd"
+        exit 18
+    fi
 
-    echo-command-header.sh "Verifying the zip file ${zip_path}"
+    "$SCRIPT_DIR/echo-command-header.sh" "Verifying the zip file ${zip_path}"
     if [ ! -f "${zip_path}" ]; then
-        echo-error.sh "Zip file ${zip_path} does not exist"
-        exit 1008
+        "$SCRIPT_DIR/echo-error.sh" "Zip file ${zip_path} does not exist"
+        exit 19
     else
-        echo-step.sh "Asserting that zip file ${zip_path} exists"
-        echo-step.sh "Listing the zip file ${zip_path}"
+        "$SCRIPT_DIR/echo-step.sh" "Asserting that zip file ${zip_path} exists"
+        "$SCRIPT_DIR/echo-step.sh" "Listing the zip file ${zip_path}"
         echo ""
-        run_indented 1008 ls -lha "${zip_path}"
+        run_indented 20 ls -lha "${zip_path}"
     fi
 }
 
 case "${command}" in
-"dir")
-    set-git-config.sh ${source_path}
+"dir" | "zip")
+    "$SCRIPT_DIR/set-git-config.sh" "${source_path}"
     command_dir
-
-    echo-separator.sh
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
-    ;;
-"zip")
-    set-git-config.sh ${source_path}
-    command_dir
-    command_zip
-
-    echo-separator.sh
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    if [ "${command}" = "zip" ]; then
+        command_zip
+    fi
+    finish_success
     ;;
 "clean")
-    echo-command-header.sh "Cleaning dist directory"
-    clean-dist.sh ${tmp_build_dir}
-
-    echo-separator.sh
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    "$SCRIPT_DIR/echo-command-header.sh" "Cleaning dist directory"
+    "$SCRIPT_DIR/clean-dist.sh" "${tmp_build_dir}"
+    finish_success
     ;;
 "version")
-    echo-command-header.sh "Getting plugin version"
+    "$SCRIPT_DIR/echo-command-header.sh" "Getting plugin version"
     echo "${plugin_version}" > version.txt
-
-    echo-separator.sh
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    finish_success
     ;;
 *)
-    echo-error.sh "invalid option ${command}"
-    echo-separator.sh
-    echo ""
-    show_help
-    show_elapsed_time
-    echo ""
-    echo "⚠️  Error: Command '${command}' failed or is invalid. Please check your input and try again."
-    echo ""
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "invalid option ${command}"
+    finish_invalid_command
     ;;
 esac

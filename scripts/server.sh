@@ -1,16 +1,31 @@
 #!/usr/bin/env bash
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/env-bootstrap.sh"
+
 cd "$DEV_WORKSPACE_DIR"
 
 if ! docker info &>/dev/null; then
-  echo -e "\033[0;31mError: Docker is not running. Please start Docker and try again.\033[0m"
+  "$SCRIPT_DIR/echo-error.sh" "Error: Docker is not running. Please start Docker and try again."
   exit 1
 fi
 
-if [[ $# -eq 0 ]] || [[ $1 == "-h" ]]; then
-  echo "Usage: $0 [up|stop|down|clenaup|refresh|info]"
-  exit 1
+show_help() {
+  echo "Script to start, stop, or restart the dev-workspace"
+  echo "Usage: $0 [up|stop|down|cleanup|refresh|info]"
+  echo ""
+  echo "Options:"
+  echo "  up          Start the dev-workspace"
+  echo "  stop        Stop the dev-workspace"
+  echo "  down        Shutdown the dev-workspace"
+}
+
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
+  show_help
+  exit 0
 fi
 
 PROFILE="${2:-dev}"
@@ -123,36 +138,36 @@ service_info() {
   echo ""
 }
 
-if [[ $1 == "up" ]]; then
-  bash ./scripts/services-init-cache.sh
+if [[ "$arg1" == "up" ]]; then
+  bash "$DEV_SCRIPTS_DIR/services-init-cache.sh"
   mkdir -p "$MAILHOG_CACHE/maildir"
 
   service_up
 fi
 
-if [[ $1 == "stop" ]]; then
+if [[ "$arg1" == "stop" ]]; then
   service_stop
 fi
 
-if [[ $1 == "down" ]]; then
+if [[ "$arg1" == "down" ]]; then
   service_down
 fi
 
-if [[ $1 == "cleanup" ]]; then
+if [[ "$arg1" == "cleanup" ]]; then
   service_down
   rm -rf "$WP_CACHE" "$DB_CACHE" "$MAILHOG_CACHE"
 fi
 
-if [[ $1 == "refresh" ]]; then
+if [[ "$arg1" == "refresh" ]]; then
   service_cleanup
   service_up
 fi
 
-if [[ $1 == "info" ]]; then
+if [[ "$arg1" == "info" ]]; then
   service_info
 fi
 
-if [[ $1 == "restart" ]]; then
+if [[ "$arg1" == "restart" ]]; then
   service_stop
   service_up
 fi

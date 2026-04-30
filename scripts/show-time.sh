@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 
-# Script to display elapsed runtime
-# Requires start_time variable to be set
+set -euo pipefail
 
 show_help() {
-    echo "Usage: show-time.sh <start_time>"
+    echo "Script to display elapsed runtime"
+    echo "Usage: show-time.sh"
     echo ""
     echo "Example:"
-    echo "show-time.sh 1715904000"
+    echo "show-time.sh"
     echo ""
 }
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+arg1="${1:-}"
+if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
 fi
 
-if [ -z "$1" ]; then
+if [ -z "$arg1" ]; then
     show_help
     exit 1
 fi
 
-start_time=${1}
+start_time=${arg1}
 
-if [ "${HIDE_HEADER}" != "1" ]; then
+if [ "${HIDE_HEADER:-}" != "1" ]; then
     end_time=$(date +%s)
     runtime_seconds=$((end_time - start_time))
 
