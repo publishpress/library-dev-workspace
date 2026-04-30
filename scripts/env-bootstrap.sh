@@ -20,7 +20,13 @@ if [[ "$CACHE_PATH" != /* ]]; then
     CACHE_PATH="$REPO_ROOT/$CACHE_PATH"
 fi
 
-if [ -z "${LANG_LOCALES:-}" ]; then
-    $DEV_SCRIPTS_DIR/echo-error.sh "Error: LANG_LOCALES is not set. Please set it in the .env file."
-    exit 2
-fi
+required_env_vars=(
+    "LANG_LOCALES"
+)
+
+for var in "${required_env_vars[@]}"; do
+    if [ -z "${!var:-}" ]; then
+        $DEV_SCRIPTS_DIR/echo-error.sh "Error: $var is not set. Please set it in the .env file."
+        exit 2
+    fi
+done

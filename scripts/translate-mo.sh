@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
 
 BASE_DIR="/project"
 PLUGIN_SLUG="$("$DEV_SCRIPTS_DIR/plugin-slug.sh")"

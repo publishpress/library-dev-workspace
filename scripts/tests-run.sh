@@ -8,7 +8,7 @@
 # Usage: tests-run.sh [codecept args...]
 #
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
 
 CACHE_DB="$CACHE_PATH/db_test"
 

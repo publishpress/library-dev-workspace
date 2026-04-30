@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[UNRELEASED]
+
+- Changed: Renamed `env-init.sh` to `env-bootstrap.sh` for clearer script purpose and consistency.
+- Changed: Now requires both `LANG_LOCALES` and `PLUGIN_NAME` to be set in the `.env` file.
+
 [1.2.0] - 29 April, 2026
 
 - Added: New script `plugin-metadata-github-output.sh` to extract plugin metadata from the Composer file and export it for use as GitHub Actions outputs.

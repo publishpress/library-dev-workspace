@@ -3,7 +3,7 @@ set -euo pipefail
 
 BASE_DIR="/project"
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-init.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/env-bootstrap.sh"
 
 echo "========================================"
 echo "Starting POT generation"
