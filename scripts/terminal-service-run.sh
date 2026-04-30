@@ -57,7 +57,7 @@ for arg in "$@"; do
     fi
 done
 
-if [ "$1" = "--new" ] || [ "$1" = "-n" ]; then
+if [ "$arg1" = "--new" ] || [ "$arg1" = "-n" ]; then
     if [ "$HAS_NO_COMMAND" = false ]; then
         $SCRIPT_DIR/echo-step.sh "Running new container"
     fi
