@@ -14,11 +14,6 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-if [ -z "$arg1" ]; then
-    show_help
-    exit 1
-fi
-
 if [ -n "${INSIDE_DEV_CONTAINER:-}" ]; then
     RED='\033[0;31m'
     YELLOW='\033[1;33m'
