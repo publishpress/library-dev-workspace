@@ -18,6 +18,7 @@ show_help() {
 
 # Check for help flag
 arg1="${1:-}"
+arg2="${2:-}"
 if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     show_help
     exit 0
