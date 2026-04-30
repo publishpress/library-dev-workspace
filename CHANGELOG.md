@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.2.2] - 30 April, 2026
+
+- Changed: No longer require `OPENAI_API_KEY`, `WEBLATE_API_TOKEN`, and `WEBLATE_API_URL` as mandatory environment variables.
+
+
 [1.2.1] - 30 April, 2026
 
 - Changed: Renamed `env-init.sh` to `env-bootstrap.sh` for clearer script purpose and consistency.
