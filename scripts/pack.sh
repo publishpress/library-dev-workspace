@@ -111,6 +111,26 @@ show_elapsed_time() {
     "$SCRIPT_DIR/show-time.sh" "${start_time}"
 }
 
+finish_success() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    show_elapsed_time
+    echo ""
+    echo "🎉" " Executed successfully!"
+    echo ""
+    exit 0
+}
+
+finish_invalid_command() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    echo ""
+    show_help
+    show_elapsed_time
+    echo ""
+    echo "⚠️  Error: Command '${command}' failed or is invalid. Please check your input and try again."
+    echo ""
+    exit 1
+}
+
 # Run a command with indented output (preserves colors)
 # Usage: run_indented <exit_code> <command> [args...]
 run_indented() {
@@ -267,64 +287,26 @@ command_zip() {
 }
 
 case "${command}" in
-"dir")
+"dir" | "zip")
     "$SCRIPT_DIR/set-git-config.sh" "${source_path}"
     command_dir
-
-    "$SCRIPT_DIR/echo-separator.sh"
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
-    ;;
-"zip")
-    "$SCRIPT_DIR/set-git-config.sh" "${source_path}"
-    command_dir
-    command_zip
-
-    "$SCRIPT_DIR/echo-separator.sh"
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    if [ "${command}" = "zip" ]; then
+        command_zip
+    fi
+    finish_success
     ;;
 "clean")
     "$SCRIPT_DIR/echo-command-header.sh" "Cleaning dist directory"
     "$SCRIPT_DIR/clean-dist.sh" "${tmp_build_dir}"
-
-    "$SCRIPT_DIR/echo-separator.sh"
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    finish_success
     ;;
 "version")
     "$SCRIPT_DIR/echo-command-header.sh" "Getting plugin version"
     echo "${plugin_version}" > version.txt
-
-    "$SCRIPT_DIR/echo-separator.sh"
-    show_elapsed_time
-    echo ""
-
-    echo "🎉" " Executed successfully!"
-    echo ""
-    exit 0
+    finish_success
     ;;
 *)
     "$SCRIPT_DIR/echo-error.sh" "invalid option ${command}"
-    "$SCRIPT_DIR/echo-separator.sh"
-    echo ""
-    show_help
-    show_elapsed_time
-    echo ""
-    echo "⚠️  Error: Command '${command}' failed or is invalid. Please check your input and try again."
-    echo ""
-    exit 1
+    finish_invalid_command
     ;;
 esac
