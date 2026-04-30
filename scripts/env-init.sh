@@ -20,5 +20,11 @@ if [[ "$CACHE_PATH" != /* ]]; then
     CACHE_PATH="$REPO_ROOT/$CACHE_PATH"
 fi
 
+# Dynamically discover locales from .po files in the languages directory
+if [[ -d "$REPO_ROOT/languages" ]] && [[ -n "$PLUGIN_SLUG" ]]; then
+    DEFAULT_LANG_LOCALES=$(find "$REPO_ROOT/languages" -maxdepth 1 -name "${PLUGIN_SLUG}-*.po" -type f | sed "s|.*/||; s|^${PLUGIN_SLUG}-||; s|\.po$||" | sort | tr '\n' ' ' | sed 's/ $//')
+fi
+
+# Fallback to explicitly set value if directory doesn't exist or no .po files found
 export DEFAULT_LANG_LOCALES="${DEFAULT_LANG_LOCALES:-ja es_ES de_DE fr_FR pt_BR it_IT nl_NL ru_RU pl_PL tr_TR vi fa_IR id_ID cs_CZ pt_PT zh_CN sv_SE hu_HU da_DK ar he_IL ko_KR ro_RO el th fi}"
 export LANG_LOCALES="${LANG_LOCALES:-$DEFAULT_LANG_LOCALES}"
