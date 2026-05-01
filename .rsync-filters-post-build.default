@@ -7,3 +7,4 @@
 - .rsync-filters-pre-build
 - /lib/vendor/bin
 - composer.lock
+- translation-audit-report.*
