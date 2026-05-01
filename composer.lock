@@ -5869,12 +5869,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "6e1aac67726c88949d922057e13aa1bc8dd4e0df"
+                "reference": "7ca40e48916207d160277bd331a7ded040eb7d0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/6e1aac67726c88949d922057e13aa1bc8dd4e0df",
-                "reference": "6e1aac67726c88949d922057e13aa1bc8dd4e0df",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/7ca40e48916207d160277bd331a7ded040eb7d0d",
+                "reference": "7ca40e48916207d160277bd331a7ded040eb7d0d",
                 "shasum": ""
             },
             "require": {
@@ -5918,7 +5918,7 @@
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
                 "source": "https://github.com/publishpress/library-publishpress-translator/tree/andergmartins/translations-auditor"
             },
-            "time": "2026-05-01T16:33:32+00:00"
+            "time": "2026-05-01T16:58:34+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
