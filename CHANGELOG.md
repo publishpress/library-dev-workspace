@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.1] - 01 April, 2026
+
+- Fixed: Corrected the reference to the translations library.
+
 [1.3.0] - 01 April, 2026
 
 - Added: Upgraded the translator library and introduced the `composer translate:audit` and `composer translate:audit-report` commands for comprehensive language translation auditing.

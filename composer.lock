@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14b7072e0eaeb0723fe36dea04f66fd4",
+    "content-hash": "cdda4682be2e44cf0f6d756a30db1650",
     "packages": [
         {
             "name": "automattic/vipwpcs",
@@ -5865,16 +5865,16 @@
         },
         {
             "name": "publishpress/translations",
-            "version": "dev-andergmartins/translations-auditor",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "a02d88d2aa2a9a181baa0662dab56b58daba685e"
+                "reference": "7a76548afd6135a43dc7b34b1e4269d30d49cd05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/a02d88d2aa2a9a181baa0662dab56b58daba685e",
-                "reference": "a02d88d2aa2a9a181baa0662dab56b58daba685e",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/7a76548afd6135a43dc7b34b1e4269d30d49cd05",
+                "reference": "7a76548afd6135a43dc7b34b1e4269d30d49cd05",
                 "shasum": ""
             },
             "require": {
@@ -5916,9 +5916,9 @@
             "description": "AI-powered translation automation for PublishPress plugins using Potomatic",
             "support": {
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
-                "source": "https://github.com/publishpress/library-publishpress-translator/tree/andergmartins/translations-auditor"
+                "source": "https://github.com/publishpress/library-publishpress-translator/tree/v1.1.0"
             },
-            "time": "2026-05-01T17:39:33+00:00"
+            "time": "2026-05-01T18:19:23+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -13388,9 +13388,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "publishpress/translations": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
