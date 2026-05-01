@@ -254,7 +254,19 @@
             "@translate:compile",
             "@translate:audit"
         ],
-        "translate:audit": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
+        "translate:check": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
+        "translate:audit": [
+            "@translate:check",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=interactive"
+        ],
+        "translate:audit-report": [
+            "@translate:check",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=report --audit-report-format=html,ansi",
+            "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
+        ],
+        "translate:audit-view-report": [
+            "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
+        ],
         "translate:dry-run": [
             "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --dry-run",
             "@translate:audit"
