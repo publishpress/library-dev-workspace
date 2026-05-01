@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ab8d27141859989329bee275a9cd9dd",
+    "content-hash": "14b7072e0eaeb0723fe36dea04f66fd4",
     "packages": [
         {
             "name": "automattic/vipwpcs",
@@ -5869,12 +5869,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "6696e7fd8361dfccd7d85cefcf63ecb24221d701"
+                "reference": "a02d88d2aa2a9a181baa0662dab56b58daba685e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/6696e7fd8361dfccd7d85cefcf63ecb24221d701",
-                "reference": "6696e7fd8361dfccd7d85cefcf63ecb24221d701",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/a02d88d2aa2a9a181baa0662dab56b58daba685e",
+                "reference": "a02d88d2aa2a9a181baa0662dab56b58daba685e",
                 "shasum": ""
             },
             "require": {
@@ -5918,7 +5918,7 @@
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
                 "source": "https://github.com/publishpress/library-publishpress-translator/tree/andergmartins/translations-auditor"
             },
-            "time": "2026-05-01T17:24:45+00:00"
+            "time": "2026-05-01T17:39:33+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
