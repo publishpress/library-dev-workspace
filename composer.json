@@ -1,7 +1,7 @@
 {
     "name": "publishpress/dev-workspace",
     "type": "composer-plugin",
-    "version": "1.2.2",
+    "version": "1.3.0",
     "description": "Shared Composer scripts for PublishPress plugins",
     "license": "GPL-2.0-or-later",
     "autoload": {
@@ -39,7 +39,7 @@
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10",
         "publishpress/publishpress-phpcs-standards": "^1",
-        "publishpress/translations": "^1",
+        "publishpress/translations": "dev-andergmartins/translations-auditor",
         "spatie/ray": "^1.41",
         "squizlabs/php_codesniffer": "^3.8",
         "symfony/http-client": "^7.1",
@@ -254,7 +254,18 @@
             "@translate:compile",
             "@translate:audit"
         ],
-        "translate:audit": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
+        "translate:check": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
+        "translate:audit": [
+            "@translate:check",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=interactive"
+        ],
+        "translate:audit-report": [
+            "@translate:check",
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=report --audit-report-format=html,ansi"
+        ],
+        "translate:audit-view-report": [
+            "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
+        ],
         "translate:dry-run": [
             "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --dry-run",
             "@translate:audit"

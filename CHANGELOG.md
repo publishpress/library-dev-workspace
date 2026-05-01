@@ -3,10 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.0] - 01 April, 2026
+
+- Added: Upgraded the translator library and introduced the `composer translate:audit` and `composer translate:audit-report` commands for comprehensive language translation auditing.
+
 [1.2.2] - 30 April, 2026
 
 - Changed: No longer require `OPENAI_API_KEY`, `WEBLATE_API_TOKEN`, and `WEBLATE_API_URL` as mandatory environment variables.
-
 
 [1.2.1] - 30 April, 2026
 
