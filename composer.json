@@ -261,8 +261,7 @@
         ],
         "translate:audit-report": [
             "@translate:check",
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=report --audit-report-format=html,ansi",
-            "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --audit --audit-mode=report --audit-report-format=html,ansi"
         ],
         "translate:audit-view-report": [
             "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
