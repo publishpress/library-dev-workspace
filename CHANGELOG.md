@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [1.3.3] - 04 May, 2026
 
 - Fixed: Resolved "unbound variable" error for GITHUB_OUTPUT.
+- Changed: The script plugin-metadata-github-output.sh now provides a clear error message when executed outside a GitHub Actions workflow.
 
 [1.3.2] - 04 May, 2026
 

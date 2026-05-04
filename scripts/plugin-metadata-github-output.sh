@@ -16,6 +16,11 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
+if [ -z "${GITHUB_OUTPUT:-}" ]; then
+    echo "GITHUB_OUTPUT is not set. Please run this script from a GitHub Actions workflow."
+    exit 1
+fi
+
 # Output metadata fields to GitHub Actions output in a clear, expanded way.
 PLUGIN_SLUG=$("$SCRIPT_DIR/plugin-slug.sh")
 PLUGIN_FOLDER=$("$SCRIPT_DIR/plugin-folder.sh")
