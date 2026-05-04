@@ -22,7 +22,7 @@ PLUGIN_FOLDER=$("$SCRIPT_DIR/plugin-folder.sh")
 PLUGIN_NAME=$("$SCRIPT_DIR/plugin-name.sh")
 PLUGIN_VERSION=$("$SCRIPT_DIR/plugin-version.sh")
 
-echo "plugin-slug=${PLUGIN_SLUG}" >> "$GITHUB_OUTPUT"
-echo "plugin-folder=${PLUGIN_FOLDER}" >> "$GITHUB_OUTPUT"
-echo "plugin-name=${PLUGIN_NAME}" >> "$GITHUB_OUTPUT"
-echo "plugin-version=${PLUGIN_VERSION}" >> "$GITHUB_OUTPUT"
+echo "plugin-slug=${PLUGIN_SLUG}" >> "${GITHUB_OUTPUT}"
+echo "plugin-folder=${PLUGIN_FOLDER}" >> "${GITHUB_OUTPUT}"
+echo "plugin-name=${PLUGIN_NAME}" >> "${GITHUB_OUTPUT}"
+echo "plugin-version=${PLUGIN_VERSION}" >> "${GITHUB_OUTPUT}"
