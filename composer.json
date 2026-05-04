@@ -1,7 +1,7 @@
 {
     "name": "publishpress/dev-workspace",
     "type": "composer-plugin",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "description": "Shared Composer scripts for PublishPress plugins",
     "license": "GPL-2.0-or-later",
     "autoload": {
@@ -245,6 +245,7 @@
             "vendor/publishpress/dev-workspace/scripts/pr-link.sh"
         ],
         "deploy": "vendor/publishpress/dev-workspace/scripts/run.sh node vendor/publishpress/dev-workspace/scripts/custom-deploy/index.mjs",
+        "deploy:metadata-github-output": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/plugin-metadata-github-output.sh",
         "after-pr-merge": [
             "@not-container",
             "vendor/publishpress/dev-workspace/scripts/after-pr-merge.sh"
@@ -374,6 +375,7 @@
         "pre-release": "Prepare a release branch and open a pull request",
         "pr-link": "Print the release PR URL for the current branch",
         "deploy": "Run the interactive deployment helper",
+        "deploy:metadata-github-output": "Output plugin metadata to GitHub Actions output",
         "after-pr-merge": "Run repository post-merge housekeeping",
         "translate": "Run PublishPress Translate for the default language set",
         "translate:dry-run": "PublishPress Translate dry run",

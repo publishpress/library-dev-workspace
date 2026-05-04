@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.2] - 04 May, 2026
+
+- Fixed: Restored the missing "deploy:metadata-github-output" composer script to output project metadata for GitHub workflows.
+
 [1.3.1] - 01 April, 2026
 
 - Fixed: Corrected the reference to the translations library.
