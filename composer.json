@@ -244,7 +244,10 @@
             "vendor/publishpress/dev-workspace/scripts/pr-link.sh"
         ],
         "deploy": "vendor/publishpress/dev-workspace/scripts/run.sh node vendor/publishpress/dev-workspace/scripts/custom-deploy/index.mjs",
-        "deploy:metadata-github-output": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/plugin-metadata-github-output.sh",
+        "deploy:metadata-github-output": [
+            "@not-container",
+            "vendor/publishpress/dev-workspace/scripts/plugin-metadata-github-output.sh"
+        ],
         "after-pr-merge": [
             "@not-container",
             "vendor/publishpress/dev-workspace/scripts/after-pr-merge.sh"
