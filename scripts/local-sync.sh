@@ -67,8 +67,8 @@ if [[ $SHOULD_WATCH == "true" ]]; then
     while inotifywait -r -e modify,create,delete,move \
       --exclude '\.git' \
       --exclude 'node_modules' \
-      --exclude 'vendor' \
-      --exclude 'dist' \
+      --exclude '^\./vendor(/|$)' \
+      --exclude '^\./dist(/|$)' \
       --exclude '\.rsync-filters-dev-sync' \
       . 2>/dev/null; do
       sync_files
@@ -86,8 +86,8 @@ if [[ $SHOULD_WATCH == "true" ]]; then
     fswatch -o -r \
       --exclude '\.git' \
       --exclude 'node_modules' \
-      --exclude 'vendor' \
-      --exclude 'dist' \
+      --exclude '^\./vendor(/|$)' \
+      --exclude '^\./dist(/|$)' \
       --exclude '\.rsync-filters-dev-sync' \
       . | while read f; do
       sync_files

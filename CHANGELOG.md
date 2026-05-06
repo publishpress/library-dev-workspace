@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.9] - 06 May, 2026
+
+- Fixed: Local sync now correctly monitors the lib and vendor directories, ensuring all changes are detected and synced without omissions.
+
 [1.3.8] - 06 May, 2026
 
 - Fixed: Ensured consistent project path resolution both inside and outside the dev-workspace container, allowing reliable path handling in rsync filter files.
