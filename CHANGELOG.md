@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[UNRELEASED]
+
+- Changed: Moved PHPCS installed paths configuration into its own script to reduce clutter and improve output clarity.
+
 [1.3.4] - 05 May, 2026
 
 - Fixed: Ensured that plugin-metadata-github-output.sh is executed within the dev-workspace environment for proper operation.
