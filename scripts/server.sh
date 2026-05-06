@@ -105,6 +105,8 @@ service_info() {
   local GREEN='\033[0;32m'
   local YELLOW='\033[0;33m'
   local NC='\033[0m'
+  local admin_user="${WP_ADMIN_USER:-${WP_TESTS_ADMIN_USER:-admin}}"
+  local admin_password="${WP_ADMIN_PASSWORD:-${WP_TESTS_ADMIN_PASSWORD:-admin}}"
 
   WP_PORT=$(get_wp_port wp_${PROFILE})
   DB_PORT=$(get_db_port db_${PROFILE})
@@ -116,7 +118,7 @@ service_info() {
   echo -e "  ──────────────────────────────────────────"
   echo -e "  Site URL       ${CYAN}http://$WP_DOMAIN:$WP_PORT${NC}"
   echo -e "  Admin URL      ${CYAN}http://$WP_DOMAIN:$WP_PORT/wp-admin${NC}"
-  echo -e "  Login          ${GREEN}$WP_ADMIN_USER${NC} / ${GREEN}$WP_ADMIN_PASSWORD${NC}"
+  echo -e "  Login          ${GREEN}$admin_user${NC} / ${GREEN}$admin_password${NC}"
   echo -e "  Root dir       ${DIM}$WP_CACHE${NC}"
   echo -e "  Container      ${DIM}$(get_container_id wp_${PROFILE})${NC}"
   echo ""

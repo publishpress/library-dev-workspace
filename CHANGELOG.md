@@ -3,9 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[UNRELEASED]
+[1.3.5]
 
 - Changed: Moved PHPCS installed paths configuration into its own script to reduce clutter and improve output clarity.
+- Fixed: Resolved unbound variable error for WP_ADMIN_USER in server.sh.
 
 [1.3.4] - 05 May, 2026
 
