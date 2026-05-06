@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.7] - 06 May, 2026
+
+- Changed: Introduced a custom `.zshrc` that overrides the container image’s default, and enables plugins to provide their own `.zshrc` in the project root for automatic loading in the development shell.
+
 [1.3.6] - 05 May, 2026
 
 - Added: Included `.env` file for environment variable configuration in test services within the docker-compose configuration.
