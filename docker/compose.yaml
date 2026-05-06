@@ -21,6 +21,7 @@ services:
         working_dir: "/project"
         volumes:
             - ${REPO_ROOT}:/project
+            - ${REPO_ROOT}/vendor/publishpress/dev-workspace/docker/terminal/.zshrc:/root/.zshrc
             - ${CACHE_PATH}/.npm:/root/.npm
             - ${CACHE_PATH}/.oh-my-zsh/log:/root/.oh-my-zsh/log
             - ${CACHE_PATH}/.config/gh:/root/.config/gh
