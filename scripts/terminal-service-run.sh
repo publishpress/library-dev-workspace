@@ -8,14 +8,14 @@ bash "$SCRIPT_DIR/services-init-cache.sh"
 CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
 ONE_DAY_IN_SECONDS=86400
 UPDATE_CHECK_INTERVAL=$ONE_DAY_IN_SECONDS
-DEFAULT_SOURCE_PATH="${GITHUB_WORKSPACE:-/project}"
+SOURCE_PATH="/project"
 
 run_terminal_service() {
     if [ $# -eq 0 ]; then
         docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
     else
         docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal sh -c '
-            export DEV_WORKSPACE_DIR="$DEFAULT_SOURCE_PATH/vendor/publishpress/dev-workspace"
+            export DEV_WORKSPACE_DIR="$SOURCE_PATH/vendor/publishpress/dev-workspace"
             export PATH="$DEV_WORKSPACE_DIR/scripts:$PATH"
             [ -n "$GIT_USER_NAME" ] && git config --global user.name "$GIT_USER_NAME"
             [ -n "$GIT_USER_EMAIL" ] && git config --global user.email "$GIT_USER_EMAIL"
@@ -75,6 +75,11 @@ else
     if [ $# -eq 0 ]; then
         docker exec -it "$RUNNING_CONTAINER" zsh
     else
-        docker exec -it "$RUNNING_CONTAINER" "$@"
+        docker exec -it "$RUNNING_CONTAINER" sh -lc '
+            export DEV_WORKSPACE_DIR="/project/vendor/publishpress/dev-workspace"
+            export PATH="$DEV_WORKSPACE_DIR/scripts:$PATH"
+            cd /project
+            exec "$@"
+        ' _ "$@"
     fi
 fi

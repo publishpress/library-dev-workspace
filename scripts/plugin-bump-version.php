@@ -1,11 +1,7 @@
 #!/usr/bin/php
 <?php
 
-if ($_ENV['GITHUB_WORKSPACE']) {
-    define('BASE_PATH', $_ENV['GITHUB_WORKSPACE']);
-} else {
-    define('BASE_PATH', '/project');
-}
+define('BASE_PATH', '/project');
 
 define('COMPOSER_JSON_PATH', BASE_PATH . '/composer.json');
 
