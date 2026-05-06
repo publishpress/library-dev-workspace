@@ -3,7 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.3.5]
+[1.3.6] - 05 May, 2026
+
+- Added: Included `.env` file for environment variable configuration in test services within the docker-compose configuration.
+- Changed: Adjusted plugin volume paths in test services to enhance flexibility.
+- Changed: Modified the command for the `wp_test` service in docker-compose to reflect a plugin-free setup.
+
+[1.3.5] - 05 May, 2026
 
 - Changed: Moved PHPCS installed paths configuration into its own script to reduce clutter and improve output clarity.
 - Fixed: Resolved unbound variable error for WP_ADMIN_USER in server.sh.
