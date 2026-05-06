@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.8] - 06 May, 2026
+
+- Fixed: Ensured consistent project path resolution both inside and outside the dev-workspace container, allowing reliable path handling in rsync filter files.
+
 [1.3.7] - 06 May, 2026
 
 - Changed: Introduced a custom `.zshrc` that overrides the container image’s default, and enables plugins to provide their own `.zshrc` in the project root for automatic loading in the development shell.
