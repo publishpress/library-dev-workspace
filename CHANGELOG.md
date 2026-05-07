@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.11] - 07 May, 2026
+
+- Enhanced: Improved server and test scripts to validate required environment variables and guarantee Docker test stack is running during test execution.
+- Added: Error handling for missing environment variables in server.sh script.
+- Changed: Updated service start to wait for health checks before proceeding with test execution.
+
 [1.3.10] - 07 May, 2026
 
 - Fixed: Corrected JSON language file generation by updating the po2json output argument.
