@@ -37,16 +37,32 @@ WP_CACHE=$CACHE_BASE_PATH/wp_${PROFILE}
 DB_CACHE=$CACHE_BASE_PATH/db_${PROFILE}
 
 remove_port_from_domain() {
-  echo $1 | sed -E 's/:.*//'
+  echo "$1" | sed -E 's/:.*//'
 }
 
 if [[ ${PROFILE} == "test" ]]; then
-  WP_DOMAIN=$(remove_port_from_domain $WP_TESTS_DOMAIN)
+  if [ -z "${WP_TESTS_DOMAIN:-}" ]; then
+    "$SCRIPT_DIR/echo-error.sh" "Error: WP_TESTS_DOMAIN is not set. Define it in $REPO_ROOT/.env (copy from .env.example)."
+    exit 2
+  fi
+  if [ -z "${WP_TESTS_DB_URL:-}" ]; then
+    "$SCRIPT_DIR/echo-error.sh" "Error: WP_TESTS_DB_URL is not set. Define it in $REPO_ROOT/.env (copy from .env.example)."
+    exit 2
+  fi
+  WP_DOMAIN=$(remove_port_from_domain "$WP_TESTS_DOMAIN")
   WP_DB_URL=$WP_TESTS_DB_URL
 fi
 
 if [[ ${PROFILE} == "dev" ]]; then
-  WP_DOMAIN=$(remove_port_from_domain $WP_DEV_DOMAIN)
+  if [ -z "${WP_DEV_DOMAIN:-}" ]; then
+    "$SCRIPT_DIR/echo-error.sh" "Error: WP_DEV_DOMAIN is not set. Define it in $REPO_ROOT/.env (copy from .env.example)."
+    exit 2
+  fi
+  if [ -z "${WP_DEV_DB_URL:-}" ]; then
+    "$SCRIPT_DIR/echo-error.sh" "Error: WP_DEV_DB_URL is not set. Define it in $REPO_ROOT/.env (copy from .env.example)."
+    exit 2
+  fi
+  WP_DOMAIN=$(remove_port_from_domain "$WP_DEV_DOMAIN")
   WP_DB_URL=$WP_DEV_DB_URL
 fi
 
@@ -60,7 +76,8 @@ WP_DB_NAME=$(echo $WP_DB_URL | sed -E 's/mysql:\/\/.*@.*\/([^\/]+)$/\1/')
 
 service_up() {
   echo "Starting..."
-  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} up -d
+  # --wait: block until healthchecks pass so host-side PHPUnit/Codeception can reach MySQL.
+  docker compose --env-file "$COMPOSE_ENV_FILE" -f $COMPOSE_FILE --profile ${PROFILE} up -d --wait
 }
 
 service_stop() {

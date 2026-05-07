@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 #
 # Wrapper for Codeception test runs.
-# Auto-starts the test environment when the DB data directory is missing,
-# which prevents SQLSTATE[HY000] errno=1018 errors on the first run or
-# after composer test:clean-cache.
+# Always ensures the Docker test stack is up before Codeception runs. Previously we
+# only started it when the DB cache dir was empty; that skips `compose up` when the
+# host has leftover db_test data but containers are stopped, leading to SQLSTATE[HY000] 2002
+# Connection refused from WPLoader.
 #
 # Usage: tests-run.sh [codecept args...]
 #
@@ -26,12 +27,8 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-CACHE_DB="$CACHE_PATH/db_test"
-
-if [[ ! -d "$CACHE_DB" ]] || [[ -z "$(ls -A "$CACHE_DB" 2>/dev/null)" ]]; then
-    echo "Test DB cache not found — starting test environment..."
-    bash "$SCRIPT_DIR/server.sh" up test
-fi
+echo "Ensuring Docker test stack (MariaDB/WP/Mailhog) is running..."
+bash "$SCRIPT_DIR/server.sh" up test
 
 (cd "$REPO_ROOT" && vendor/bin/codecept run "$@")
 
