@@ -28,7 +28,7 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
 fi
 
 # If argument is explicitly "unit", don't bring up the test stack
-if [ "$1" != "Unit" ]; then
+if [ "${1:-}" != "Unit" ]; then
     echo "Ensuring Docker test stack (MariaDB/WP/Mailhog) is running..."
     bash "$SCRIPT_DIR/server.sh" up test
 fi

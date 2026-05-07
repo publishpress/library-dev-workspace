@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.12] - 07 May, 2026
+
+- Fixed: Resolved an error that occurred when running the "test" command without any arguments.
+
 [1.3.11] - 07 May, 2026
 
 - Enhanced: Server and test scripts now validate required environment variables and reliably ensure the Docker test stack runs for all tests except Unit tests.
