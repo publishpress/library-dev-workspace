@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.10] - 07 May, 2026
+
+- Fixed: Corrected JSON language file generation by updating the po2json output argument.
+
 [1.3.9] - 06 May, 2026
 
 - Fixed: Local sync now correctly monitors the lib and vendor directories, ensuring all changes are detected and synced without omissions.

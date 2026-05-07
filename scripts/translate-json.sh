@@ -61,7 +61,7 @@ for index in "${!LOCALES[@]}"; do
     fi
 
     tmp_json="$(mktemp)"
-    if npx po2json "${PO_FILE}" > "${tmp_json}" 2> /dev/null; then
+    if npx po2json "${PO_FILE}" "${tmp_json}" 2> /dev/null; then
         mv "${tmp_json}" "${JSON_FILE}"
         if [ -f "${JSON_FILE}" ]; then
             echo "JSON file created: ${JSON_FILE}"
