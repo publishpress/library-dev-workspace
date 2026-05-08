@@ -236,8 +236,7 @@
         "set:version": "vendor/publishpress/dev-workspace/scripts/run.sh php vendor/publishpress/dev-workspace/scripts/plugin-bump-version.php \"$@\"",
         "pre-release": [
             "@not-container",
-            "vendor/publishpress/dev-workspace/scripts/pre-release.sh \"$@\"",
-            "@translate:audit"
+            "vendor/publishpress/dev-workspace/scripts/pre-release.sh \"$@\""
         ],
         "pr-link": [
             "@not-container",
@@ -254,8 +253,7 @@
         ],
         "translate": [
             "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-locales.sh",
-            "@translate:compile",
-            "@translate:audit"
+            "@translate:compile"
         ],
         "translate:check": "vendor/publishpress/dev-workspace/scripts/run.sh wp i18n audit ./languages --allow-root",
         "translate:audit": [
@@ -270,25 +268,21 @@
             "vendor/publishpress/dev-workspace/scripts/run.sh more translation-audit-report.ansi.txt"
         ],
         "translate:dry-run": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --dry-run",
-            "@translate:audit"
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --dry-run"
         ],
         "translate:download": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --download",
-            "@translate:audit"
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --download"
         ],
         "translate:upload": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --upload",
         "translate:custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --languages",
         "translate:force": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force",
-            "@translate:audit"
+            "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force"
         ],
         "translate:force-custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force --languages",
         "translate:compile": [
             "@translate:mo",
             "@translate:json",
-            "@translate:php",
-            "@translate:audit"
+            "@translate:php"
         ],
         "translate:pot": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-pot.sh",
         "translate:mo": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-mo.sh",
