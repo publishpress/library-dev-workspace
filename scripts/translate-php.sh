@@ -48,7 +48,14 @@ for index in "${!LOCALES[@]}"; do
         exit 4
     fi
 
-    echo "PHP file created: ${PHP_FILE}"
+    # Check the file size is not zero
+    if [ ! -s "${PHP_FILE}" ]; then
+        $SCRIPT_DIR/echo-error.sh "PHP file is empty: ${PHP_FILE}"
+        exit 5
+    else
+        size_kb=$(awk "BEGIN {printf \"%.2f\", $(stat -c%s "${PHP_FILE}")/1024}")
+        echo "PHP file created: ${PHP_FILE} (size: ${size_kb} KB)"
+    fi
 done
 
 echo ""

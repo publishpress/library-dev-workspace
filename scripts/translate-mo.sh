@@ -47,7 +47,14 @@ for index in "${!LOCALES[@]}"; do
         exit 4
     fi
 
-    echo "MO file created: ${MO_FILE}"
+    # Check the file size is not zero
+    if [ ! -s "${MO_FILE}" ]; then
+        $SCRIPT_DIR/echo-error.sh "MO file is empty: ${MO_FILE}"
+        exit 5
+    else
+        size_kb=$(awk "BEGIN {printf \"%.2f\", $(stat -c%s "${MO_FILE}")/1024}")
+        echo "MO file created: ${MO_FILE} (size: ${size_kb} KB)"
+    fi
 done
 
 echo ""
