@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.14] - 08 May, 2026
+
+- Fixed: Corrected issues with JSON translation file generation.
+- Changed: Improved error handling for translation file generation by checking for empty output files.
+- Changed: Added file size information to the output for generated JSON, MO, and PHP translation files.
+
 [1.3.13] - 08 May, 2026
 
 - Changed: Removed translate:audit calls from other translate commands to prevent redundant execution and save time.
