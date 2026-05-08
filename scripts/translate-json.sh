@@ -61,11 +61,17 @@ for index in "${!LOCALES[@]}"; do
     fi
 
     tmp_json="$(mktemp)"
-    if npx po2json "${PO_FILE}" "${tmp_json}" 2> /dev/null; then
+    if npx po2json "${PO_FILE}" > "${tmp_json}" 2> /dev/null; then
         mv "${tmp_json}" "${JSON_FILE}"
         if [ -f "${JSON_FILE}" ]; then
-            echo "JSON file created: ${JSON_FILE}"
-
+            # Check the file size is not zero
+            if [ ! -s "${JSON_FILE}" ]; then
+                $SCRIPT_DIR/echo-error.sh "JSON file is empty: ${JSON_FILE}"
+                exit 5
+            else
+                size_kb=$(awk "BEGIN {printf \"%.2f\", $(stat -c%s "${JSON_FILE}")/1024}")
+                echo "JSON file created: ${JSON_FILE} (size: ${size_kb} KB)"
+            fi
         else
             $SCRIPT_DIR/echo-error.sh "JSON file not created: ${JSON_FILE}"
             exit 3
