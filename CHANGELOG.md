@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.3.13] - 08 May, 2026
+
+- Changed: Removed translate:audit calls from other translate commands to prevent redundant execution and save time.
+
 [1.3.12] - 07 May, 2026
 
 - Fixed: Resolved an error that occurred when running the "test" command without any arguments.
