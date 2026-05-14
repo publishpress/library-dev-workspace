@@ -274,6 +274,7 @@
             "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --download"
         ],
         "translate:upload": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --upload",
+        "translate:upload-pot": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --upload-pot",
         "translate:custom": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --languages",
         "translate:force": [
             "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --force"
@@ -377,6 +378,7 @@
         "translate:dry-run": "PublishPress Translate dry run",
         "translate:download": "Download translations via PublishPress Translate",
         "translate:upload": "Upload translations via PublishPress Translate",
+        "translate:upload-pot": "Upload the POT file via PublishPress Translate",
         "translate:custom": "PublishPress Translate with a custom language list",
         "translate:force": "PublishPress Translate with force overwrite",
         "translate:force-custom": "PublishPress Translate force mode for custom languages",
