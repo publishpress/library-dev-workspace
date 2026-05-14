@@ -3,7 +3,7 @@
 
 function show_help()
 {
-    echo "Script to merge dependencies from a plugin to the main composer.json file"
+    echo "Script to merge dependencies from a plugin to the main composer.json file\n";
     echo "Usage: merge-dependencies.sh BASE_DIR NAMESPACE/PLUGIN_NAME\n";
     echo "Options:\n";
     echo "  -h, --help        Display this help message.\n";
