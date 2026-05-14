@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added: Introduced `translate:upload-pot` composer command for seamlessly uploading the POT file to Weblate (PR #20).
 - Added: Introduced the script `scripts/plugin-lang-domain.sh` for extracting the `extra.lang-domain` data from the plugin's `composer.json` file.
 - Fixed: Resolved issues with the composer `fix:deps` command to ensure it works reliably (PR #19).
+- Fixed: Fixed JSON, MO, and PHP translation file generation for plugins when LANG_DOMAIN is different from PLUGIN_SLUG, using `extra.lang-domain` for naming the translation files.
 
 [1.3.14] - 08 May, 2026
 

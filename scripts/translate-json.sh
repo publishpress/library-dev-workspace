@@ -25,6 +25,7 @@ fi
 
 BASE_DIR="/project"
 PLUGIN_SLUG="$("$SCRIPT_DIR/plugin-slug.sh")"
+LANG_DOMAIN="$("$SCRIPT_DIR/plugin-lang-domain.sh")"
 
 read -r -a LOCALES <<< "${LANG_LOCALES:-}"
 TOTAL_LOCALES="${#LOCALES[@]}"
@@ -37,6 +38,7 @@ fi
 echo ""
 $SCRIPT_DIR/echo-title.sh "PublishPress Translation: JSON Generation for Plugin"
 echo "Plugin   : ${PLUGIN_SLUG}"
+echo "Domain   : ${LANG_DOMAIN}"
 echo "Locales  : ${TOTAL_LOCALES} ($(IFS=,; echo "${LOCALES[*]}"))"
 $SCRIPT_DIR/echo-separator.sh
 
@@ -47,8 +49,8 @@ for index in "${!LOCALES[@]}"; do
     echo ""
     $SCRIPT_DIR/echo-step.sh "$(printf "[%2d/%2d] %s" "${progress}" "${TOTAL_LOCALES}" "${locale}")"
 
-    PO_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.po"
-    JSON_FILE="${BASE_DIR}/languages/${PLUGIN_SLUG}-${locale}.json"
+    PO_FILE="${BASE_DIR}/languages/${LANG_DOMAIN}-${locale}.po"
+    JSON_FILE="${BASE_DIR}/languages/${LANG_DOMAIN}-${locale}.json"
 
     if [ ! -f "${PO_FILE}" ]; then
         $SCRIPT_DIR/echo-error.sh "PO file not found: ${PO_FILE}"
