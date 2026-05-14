@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.0] - 14 May, 2026
+
+- Added: Introduced `translate:upload-pot` command for seamlessly uploading the POT file to Weblate.
+
 [1.3.14] - 08 May, 2026
 
 - Fixed: Corrected issues with JSON translation file generation.
