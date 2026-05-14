@@ -5,7 +5,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.4.0] - 14 May, 2026
 
-- Added: Introduced `translate:upload-pot` command for seamlessly uploading the POT file to Weblate.
+- Added: Introduced `translate:upload-pot` command for seamlessly uploading the POT file to Weblate (PR #20).
+- Fixed: Resolved issues with the composer `fix:deps` command to ensure it works reliably (PR #19).
 
 [1.3.14] - 08 May, 2026
 
