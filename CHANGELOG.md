@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.1] - 15 May, 2026
+
+- Fixed: Corrected `/root/.composer` volume mounts to ensure GitHub token and cache data are properly persisted.
+
 [1.4.0] - 14 May, 2026
 
 - Added: Introduced `translate:upload-pot` composer command for seamlessly uploading the POT file to Weblate (PR #20).
