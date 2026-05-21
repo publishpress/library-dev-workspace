@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.2] - 21 May, 2026
+
+- Changed: Refactored the `check:php` command to delegate multiple version checks to a new `check-php.sh` script, eliminating the need to create a new container for each test and improving efficiency.
+
 [1.4.1] - 15 May, 2026
 
 - Fixed: Corrected `/root/.composer` volume mounts to ensure GitHub token and cache data are properly persisted.
