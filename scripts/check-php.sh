@@ -10,7 +10,7 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  --simple-versions=<csv>       Optional. Comma-separated PHP versions for main plugin file."
-    echo "  --full-versions=<csv>         Optional. Comma-separated PHP versions for project root."
+    echo "  --full-versions=<csv>         Optional. Comma-separated PHP versions for paths in .phpcs-php-compatibility.xml."
     echo "  -h, --help                    Show this help message."
     echo ""
     echo "Environment:"
@@ -71,16 +71,23 @@ fi
 
 run_check() {
     local version="$1"
-    local path="$2"
+    local path="${2:-}"
 
-    echo "Running PHP compatibility check for ${path} (PHP ${version})"
+    if [ -n "$path" ]; then
+        echo "Running PHP compatibility check for ${path} (PHP ${version})"
+        phpcs --standard=.phpcs-php-compatibility.xml \
+            --runtime-set testVersion "${version}" "${path}"
+        return
+    fi
+
+    echo "Running PHP compatibility check using .phpcs-php-compatibility.xml (PHP ${version})"
     phpcs --standard=.phpcs-php-compatibility.xml \
-        --runtime-set testVersion "${version}" "${path}"
+        --runtime-set testVersion "${version}"
 }
 
 run_checks_for_csv() {
     local csv="$1"
-    local path="$2"
+    local path="${2:-}"
     local php_version
 
     IFS=',' read -r -a versions <<< "$csv"
@@ -103,5 +110,5 @@ if [ -n "$simple_version_list" ]; then
 fi
 
 if [ -n "$full_version_list" ]; then
-    run_checks_for_csv "$full_version_list" "./"
+    run_checks_for_csv "$full_version_list"
 fi
