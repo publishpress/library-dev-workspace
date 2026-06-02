@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.3] - 02 Jun, 2026
+
+- Fixed: The `composer check:php` command now respects the `.phpcs-php-compatibility.xml` file and no longer runs full checks against `./` by default.
+
 [1.4.2] - 21 May, 2026
 
 - Changed: Refactored the `check:php` command to delegate multiple version checks to a new `check-php.sh` script, eliminating the need to create a new container for each test and improving efficiency.
