@@ -41,12 +41,14 @@ if [ ! -d "${PROJECT_DIR}/node_modules" ] || [ -z "$(ls -A "${PROJECT_DIR}/node_
     needs_install=1
 fi
 
-for required_bin in "${REQUIRED_BINS[@]}"; do
-    if [ ! -x "${PROJECT_DIR}/node_modules/.bin/${required_bin}" ]; then
-        needs_install=1
-        break
-    fi
-done
+if [ "${#REQUIRED_BINS[@]}" -gt 0 ]; then
+    for required_bin in "${REQUIRED_BINS[@]}"; do
+        if [ ! -x "${PROJECT_DIR}/node_modules/.bin/${required_bin}" ]; then
+            needs_install=1
+            break
+        fi
+    done
+fi
 
 if [ "${needs_install}" -eq 0 ]; then
     exit 0
