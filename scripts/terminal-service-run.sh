@@ -5,10 +5,6 @@ source "$SCRIPT_DIR/env-bootstrap.sh"
 
 bash "$SCRIPT_DIR/services-init-cache.sh"
 
-CACHE_NAME_LAST_UPDATE="$CACHE_PATH/.last_image_update_check"
-ONE_DAY_IN_SECONDS=86400
-UPDATE_CHECK_INTERVAL=$ONE_DAY_IN_SECONDS
-
 run_terminal_service() {
     if [ $# -eq 0 ]; then
         docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
