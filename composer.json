@@ -281,7 +281,7 @@
         "translate:php": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/translate-php.sh",
         "translate:cleanup": "rm languages/*.json languages/*.mo languages/*.php",
         "translate:repair": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --repair-plurals",
-        "config:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/config-phpcs-installed-paths.sh",
+        "config:phpcs": "vendor/publishpress/dev-workspace/scripts/config-phpcs-installed-paths.sh",
         "post-install-cmd": [
             "@config:phpcs",
             "[ -f vendor/publishpress/translations/potomatic/potomatic.js ] && chmod +x vendor/publishpress/translations/potomatic/potomatic.js || true",
