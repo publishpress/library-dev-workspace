@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.7] - 04, Jun, 2026
+
+- Fixed: `install-node-deps.sh` now skips execution if neither Yarn nor npm are available.
+
 [1.4.6] - 04, Jun, 2026
 
 - Fixed: Updated the `fix:cs` command to remove the hardcoded `.` directory, enabling support for custom configuration files.

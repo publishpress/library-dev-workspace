@@ -7,7 +7,7 @@ show_help() {
     echo "Usage: install-node-deps.sh [project_dir] [required_binary ...]"
     echo ""
     echo "Uses Yarn when available (preferred), otherwise npm."
-    echo "Skips when package.json is missing and dependencies are already satisfied."
+    echo "Skips when package.json is missing, dependencies are already satisfied, or neither Yarn nor npm is installed."
     echo "If required_binary names are given, install runs when any are missing from node_modules/.bin."
     echo ""
     echo "project_dir       Path containing package.json (default: dev-workspace root)"
@@ -79,6 +79,8 @@ run_npm_install() {
 
 if command -v yarn >/dev/null 2>&1; then
     run_yarn_install
-else
+elif command -v npm >/dev/null 2>&1; then
     run_npm_install
+else
+    exit 0
 fi
