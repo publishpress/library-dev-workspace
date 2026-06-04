@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.4] - 04 Jun, 2026
+
+- Fixed: `composer install` no longer requires Docker in CI; `config:phpcs` runs on the host again instead of via `run.sh`.
+
 [1.4.3] - 02 Jun, 2026
 
 - Fixed: The `composer check:php` command now respects the `.phpcs-php-compatibility.xml` file and no longer runs full checks against `./` by default.
