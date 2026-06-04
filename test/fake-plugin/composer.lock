@@ -5882,7 +5882,7 @@
             "source": {
                 "type": "git",
                 "url": "../..",
-                "reference": "f7e21e342316beea2beb596462332a44275a9296"
+                "reference": "fe0401e1e0f7f305c6b0dcffe20c9792cc00c68b"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -5921,6 +5921,7 @@
                 "wp-cli/wp-cli-bundle": "^2.10",
                 "wp-coding-standards/wpcs": "^3"
             },
+            "default-branch": true,
             "type": "composer-plugin",
             "extra": {
                 "class": "PublishPress\\DevWorkspace\\Plugin"
@@ -6241,17 +6242,22 @@
                     "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --repair-plurals"
                 ],
                 "config:phpcs": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/config-phpcs-installed-paths.sh"
+                    "vendor/publishpress/dev-workspace/scripts/config-phpcs-installed-paths.sh"
+                ],
+                "install:node-deps": [
+                    "[ -x scripts/install-node-deps.sh ] && scripts/install-node-deps.sh || vendor/publishpress/dev-workspace/scripts/install-node-deps.sh"
                 ],
                 "post-install-cmd": [
                     "@config:phpcs",
                     "[ -f vendor/publishpress/translations/potomatic/potomatic.js ] && chmod +x vendor/publishpress/translations/potomatic/potomatic.js || true",
-                    "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
+                    "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true",
+                    "@install:node-deps"
                 ],
                 "post-update-cmd": [
                     "@config:phpcs",
                     "[ -f vendor/publishpress/translations/potomatic/potomatic.js ] && chmod +x vendor/publishpress/translations/potomatic/potomatic.js || true",
-                    "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true"
+                    "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true",
+                    "@install:node-deps"
                 ],
                 "pre-autoload-dump": [
                     "[ -f lib/composer.json ] && composer dumpautoload --working-dir=./lib || true"
@@ -6267,7 +6273,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Shared Composer scripts for PublishPress plugins",
-            "time": "2026-06-02T17:30:41+00:00"
+            "time": "2026-06-04T14:41:32+00:00"
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
