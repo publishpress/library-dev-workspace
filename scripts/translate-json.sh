@@ -42,6 +42,23 @@ echo "Domain   : ${LANG_DOMAIN}"
 echo "Locales  : ${TOTAL_LOCALES} ($(IFS=,; echo "${LOCALES[*]}"))"
 $SCRIPT_DIR/echo-separator.sh
 
+PO2JSON_BIN="${DEV_WORKSPACE_DIR}/node_modules/.bin/po2json"
+
+if [ ! -x "${PO2JSON_BIN}" ]; then
+    if [ ! -f "${DEV_WORKSPACE_DIR}/package.json" ]; then
+        $SCRIPT_DIR/echo-error.sh "po2json not found. Missing ${DEV_WORKSPACE_DIR}/package.json"
+        exit 6
+    fi
+
+    $SCRIPT_DIR/echo-step.sh "Installing dev-workspace Node dependencies..."
+    "${SCRIPT_DIR}/install-node-deps.sh" "${DEV_WORKSPACE_DIR}" po2json
+
+    if [ ! -x "${PO2JSON_BIN}" ]; then
+        $SCRIPT_DIR/echo-error.sh "po2json not found after Node install. Expected: ${PO2JSON_BIN}"
+        exit 6
+    fi
+fi
+
 for index in "${!LOCALES[@]}"; do
     locale="${LOCALES[${index}]}"
     progress=$((index + 1))
@@ -63,7 +80,7 @@ for index in "${!LOCALES[@]}"; do
     fi
 
     tmp_json="$(mktemp)"
-    if npx po2json "${PO_FILE}" > "${tmp_json}" 2> /dev/null; then
+    if "${PO2JSON_BIN}" -f jed -d "${LANG_DOMAIN}" "${PO_FILE}" "${tmp_json}"; then
         mv "${tmp_json}" "${JSON_FILE}"
         if [ -f "${JSON_FILE}" ]; then
             # Check the file size is not zero

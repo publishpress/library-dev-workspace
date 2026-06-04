@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.5] - 04, Jun, 2026
+
+- Added: Generic `install-node-deps.sh` (Yarn preferred, then npm) for dev-workspace `package.json` dependencies; exposed as `composer install:node-deps`.
+- Changed: JSON translation generation uses `@connectedcars/po2json` from dev-workspace (Jed `locale_data` format for WordPress), with `extra.plugin-lang-domain` as the text domain. Plugins no longer need their own `package.json` for po2json.
+
 [1.4.4] - 04 Jun, 2026
 
 - Fixed: `composer install` no longer requires Docker in CI; `config:phpcs` runs on the host again instead of via `run.sh`.

@@ -1,0 +1,9 @@
+{
+  "name": "publishpress-dev-workspace",
+  "private": true,
+  "description": "Node tooling for PublishPress dev-workspace (PO to WordPress-compatible JSON)",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@connectedcars/po2json": "^2.0.0"
+  }
+}

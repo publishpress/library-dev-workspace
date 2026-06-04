@@ -8,7 +8,7 @@ Shared development tooling for PublishPress WordPress plugins. This Composer pac
 - **Build & pack** — JavaScript (webpack), zip/dir packaging, version helpers
 - **Quality** — PHP compatibility, PHPCS, phplint, PHPStan, PHP-CS-Fixer
 - **Tests** — Codeception workflows and Docker test stack helpers
-- **i18n** — POT/MO/JSON/PHP translation pipelines and PublishPress Translate hooks
+- **i18n** — POT/MO/JSON/PHP translation pipelines and PublishPress Translate hooks (JSON uses Jed `locale_data` via `@connectedcars/po2json` bundled in this package; plugins do not need their own `package.json`)
 - **Sync** — Optional rsync to local or remote WordPress installs
 
 ## Installing in a plugin
@@ -139,6 +139,8 @@ WPCLI_IMAGE_NAME="publishpress/dev-workspace-wpcli:wpcli-2-php-8.5"
 ```
 
 `PLUGIN_TYPE` is typically `FREE` or `PRO`. `PLUGIN_COMPOSER_PACKAGE` must match the package name in the plugin’s `composer.json` (and the `plugin-composer-package` value under `extra` when you set it). Adjust `PLUGIN_NAME` to the human-readable product name.
+
+Set `GENERATE_TRANSLATION_JSON=1` in `.env` to enable `composer translate:json`. Output files are WordPress-compatible Jed JSON: top-level `domain` and `locale_data[<text-domain>][<msgid>] = ["translation", ...]`, using `extra.plugin-lang-domain` as the text domain (for example `advanced-gutenberg`, not necessarily the plugin slug).
 
 Use the **same** `TERMINAL_IMAGE_NAME`, `WP_IMAGE_NAME`, and `WPCLI_IMAGE_NAME` values in every plugin; do not use per-plugin image tags. When these images are updated in `dev-workspace`, bump the tags here in `.env.example` (and your local `.env`) together with any release notes from this package.
 

@@ -1,4 +1,5 @@
 /vendor/
+/node_modules/
 dev-workspace-cache/
 test/fake-plugin/.env
 test/fake-plugin/dev-workspace-cache/
