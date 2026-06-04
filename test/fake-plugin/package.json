@@ -1,0 +1,11 @@
+{
+  "name": "publishpress-fake-plugin",
+  "version": "1.0.0",
+  "description": "A fake WordPress plugin used to test publishpress/dev-workspace locally",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "dependencies": {
+    "po2json": "^0.4.5"
+  }
+}
