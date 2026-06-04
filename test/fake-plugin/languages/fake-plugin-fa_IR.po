@@ -13,13 +13,13 @@ msgstr ""
 "PO-Revision-Date: 2026-06-04 14:21+0000\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: fake-plugin\n"
-"Language: yor\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: fake-plugin.php:3
 #. Plugin Name of the plugin
 msgid "Fake Plugin"
-msgstr "Fẹ́ẹ́kì Plugin"
+msgstr "افزونه جعلی"
 
 #: fake-plugin.php:4
 #. Plugin URI of the plugin
@@ -33,8 +33,8 @@ msgid ""
 "A minimal fake WordPress plugin used to test publishpress/dev-workspace "
 "locally."
 msgstr ""
-"Plugin WordPress aláìlò tó pẹ́tẹ́lẹ̀ tí a lo láti ṣe àyẹ̀wò "
-"publishpress/dev-workspace níbi àgbègbè."
+"یک افزونه جعلی حداقلی وردپرس که برای آزمایش publishpress/dev-workspace به "
+"صورت محلی استفاده می‌شود."
 
 #: fake-plugin.php:7
 #. Author of the plugin
@@ -44,86 +44,87 @@ msgstr "PublishPress"
 
 #: fake-plugin.php:25
 msgid "This is the first sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ àkọ́kọ́ fún gettext aláìlò."
+msgstr "این اولین رشته نمونه برای gettext ساده است."
 
 #: fake-plugin.php:26
 msgid "This is the second sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ keji fún gettext aláìlò."
+msgstr "این دومین رشته نمونه برای gettext ساده است."
 
 #: fake-plugin.php:27
 msgid "This is the third sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ kẹta fún gettext aláìlò."
+msgstr "این سومین رشته نمونه برای gettext ساده است."
 
 #: fake-plugin.php:31
 msgid "This sentence is printed with gettext using immediate echo."
-msgstr "Gbolohun yìí ni a tẹ̀jáde pẹ̀lú gettext nípasẹ̀ echo lẹ́sẹkẹsẹ."
+msgstr "این جمله با استفاده از gettext و با اکوی فوری چاپ می‌شود."
 
 #: fake-plugin.php:35
 msgid "This line uses esc_html_e so unsafe markup cannot break the layout."
 msgstr ""
-"Ìlà yìí nlo esc_html_e nítorí pé a kò fẹ́ kí àpẹẹrẹ tó jẹ́ aláìlera ba "
-"àtúnṣe rẹ̀ kọ́."
+"این خط از esc_html_e استفاده می‌کند تا نشانه‌گذاری ناامن نتواند طراحی را "
+"خراب کند."
 
 #: fake-plugin.php:39
 msgid "This value uses esc_attr_e and belongs inside an HTML attribute."
-msgstr "Ìlà yìí nlo esc_attr_e àti pé ó jẹ́ ti àtẹ̀jáde HTML kan."
+msgstr "این مقدار از esc_attr_e استفاده می‌کند و متعلق به یک ویژگی HTML است."
 
 #: fake-plugin.php:43
 msgid "This line uses esc_html__ and returns a value instead of echoing it."
-msgstr "Ìlà yìí nlo esc_html__ àti pé ó padà wá iye kan dípò kí ó tẹ̀jáde rẹ."
+msgstr "این خط از esc_html__ استفاده می‌کند و به جای اکوی آن، یک مقدار برمی‌گرداند."
 
 #: fake-plugin.php:44
 msgid "This line uses esc_attr__ for text stored in an attribute."
-msgstr "Ìlà yìí nlo esc_attr__ fún ọrọ tó wa nínú àtẹ̀jáde."
+msgstr "این خط از esc_attr__ برای متنی که در یک ویژگی ذخیره شده است استفاده می‌شود."
 
 #: fake-plugin.php:69
 #. translators: %d: number of items
 #, php-format
 msgid "There is %d item in this plural-form test."
 msgid_plural "There are %d items in this plural-form test."
-msgstr[0] "Ó ní %d ohun kan nínú àdánwò fọọ́mù púpọ̀ yìí."
+msgstr[0] "در این آزمایش فرم جمع، %d مورد وجود دارد."
+msgstr[1] ""
 
 #: fake-plugin.php:92
 #. translators: %s: a short word inserted into the sentence
 #, php-format
 msgid "This sentence has one slot for a word: today we say %s."
-msgstr "Gbolohun yìí ní ibè kan fún ọrọ: lónìí a sọ %s."
+msgstr "این جمله یک جایگاه برای یک کلمه دارد: امروز می‌گوییم %s."
 
 #: fake-plugin.php:98
 #. translators: %1$s: earlier phrase, %2$s: later phrase (translators may reorder)
 #, php-format
 msgid "We name two things in source order: first %1$s, then %2$s."
-msgstr "A ń pe ohun méjì ní ìtòsọ́kan orísun: àkọ́kọ́ %1$s, lẹ́yìn náà %2$s."
+msgstr "ما دو چیز را به ترتیب منبع نام می‌بریم: اول %1$s، سپس %2$s."
 
 #: fake-plugin.php:105
 #. translators: %1$s and %2$s appear out of numerical order on purpose
 #, php-format
 msgid "The later clause mentions %2$s before the earlier clause mentions %1$s."
-msgstr "Ìdí ni pé %2$s dúró níbẹ̀ kí %1$s tó dájú kí a mẹ́nu kàn."
+msgstr "بند بعدی عمداً به ترتیب عددی %2$s را قبل از %1$s ذکر می‌کند."
 
 #: fake-plugin.php:113
 #. translators: %1$s is the product name, %2$s is the star rating markup or label
 #, php-format
 msgid "If you like %1$s, please leave us a %2$s rating. Thank you!"
-msgstr "Tí o bá fẹ́ %1$s, jọ̀wọ́ fi %2$s àyẹ̀wò sílẹ̀ fún wa. Ẹ ṣéun!"
+msgstr "اگر از %1$s خوشتان می‌آید، لطفاً به ما یک امتیاز %2$s بدهید. متشکرم!"
 
 #: fake-plugin.php:120
 #. translators: %s: module title — control next to %1$s/%2$s strings (issue #81 compares these)
 #, php-format
 msgid "About %s"
-msgstr "Nípa %s"
+msgstr "درباره %s"
 
 #: fake-plugin.php:126
 #. translators: %1$s: name, %2$s: place, %3$s: time word (order may change per language)
 #, php-format
 msgid "Meet %1$s from %2$s at %3$s."
-msgstr "Pade %1$s láti %2$s ní %3$s."
+msgstr "با %1$s از %2$s در %3$s ملاقات کنید."
 
 #: fake-plugin.php:134
 #. translators: %1$d: count, %2$s: unit label
 #, php-format
 msgid "We counted %1$d items and labeled the batch as %2$s."
-msgstr "A ka %1$d ohun kan àti pé a dá àtẹ̀jáde náà sílẹ̀ gẹ́gẹ́ bí %2$s."
+msgstr "ما %1$d مورد را شمردیم و دسته را به عنوان %2$s نامگذاری کردیم."
 
 #: fake-plugin.php:141
 #. translators: Numbered placeholders split across a line break in the source (multiline msgid).
@@ -131,47 +132,44 @@ msgstr "A ka %1$d ohun kan àti pé a dá àtẹ̀jáde náà sílẹ̀ gẹ́g�
 msgid ""
 "The first line names %1$s,\n"
 "and the second line names %2$s."
-msgstr ""
-"Igbese akọkọ n pe %1$s,  \n"
-"igbese keji n pe %2$s."
+msgstr "خط اول نام %1$s را می‌آورد، و خط دوم نام %2$s را می‌آورد."
 
 #: fake-plugin.php:152
 #. translators: %d: a whole number in a test phrase
 #, php-format
 msgid "The integer placeholder in this test reads exactly %d."
-msgstr "Iye ti o wa ninu idanwo yii kaakiri %d."
+msgstr "جایگزین عدد صحیح در این آزمایش دقیقاً %d را نمایش می‌دهد."
 
 #: fake-plugin.php:158
 msgid ""
 "Quotes inside one string can mix apostrophes and double quotes, like it's "
 "short and \"quoted\"."
 msgstr ""
-"Awọn agbasọ inu okun kan le dapọ awọn apostrophes ati awọn agbasọ meji, "
-"gẹgẹ bi o ti jẹ kukuru ati \"quoted\"."
+"نقل قول‌ها در یک رشته می‌توانند آپاستروف‌ها و نقل قول‌های دوتایی را ترکیب "
+"کنند، مانند اینکه کوتاه است و \"نقل قول شده\"."
 
 #: fake-plugin.php:164
 msgid ""
 "This message is split across two lines in the source file.\n"
 "Please translate it as one natural sentence, not two separate labels."
 msgstr ""
-"Ifiranṣẹ yii pin ni awọn ila meji ninu faili orisun.  \n"
-"Jọwọ tumọ rẹ gẹgẹ bi gbolohun kan ti o jẹ adayeba, kii ṣe awọn aami meji ti "
-"o yato."
+"این پیام در فایل منبع به دو خط تقسیم شده است. لطفاً آن را به عنوان یک جمله "
+"طبیعی ترجمه کنید، نه دو برچسب جداگانه."
 
 #: fake-plugin.php:47
 msgctxt "Button label: start recording audio or video."
 msgid "Record"
-msgstr "Iwe akọọlẹ"
+msgstr "ضبط"
 
 #: fake-plugin.php:52
 msgctxt "Noun: a single audio or video recording you can play back."
 msgid "Record"
-msgstr "Iwe akọọlẹ"
+msgstr "ضبط"
 
 #: fake-plugin.php:59
 msgctxt "Button label: close the dialog without keeping changes."
 msgid "Leave"
-msgstr "Fi silẹ"
+msgstr "ترک"
 
 #: fake-plugin.php:80
 #. translators: %s: number of messages
@@ -179,4 +177,5 @@ msgstr "Fi silẹ"
 msgctxt "Count of admin notices about translation tests."
 msgid "You have %d message that needs gettext context."
 msgid_plural "You have %d messages that need gettext context."
-msgstr[0] "O ni %d ifiranṣẹ ti o nilo eto gettext."
+msgstr[0] "شما %d پیام دارید که نیاز به زمینه gettext دارد."
+msgstr[1] ""

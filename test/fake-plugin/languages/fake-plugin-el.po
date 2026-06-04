@@ -13,13 +13,13 @@ msgstr ""
 "PO-Revision-Date: 2026-06-04 14:21+0000\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: fake-plugin\n"
-"Language: yor\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: el\n"
 
 #: fake-plugin.php:3
 #. Plugin Name of the plugin
 msgid "Fake Plugin"
-msgstr "Fẹ́ẹ́kì Plugin"
+msgstr "Ψεύτικο Πρόγραμμα"
 
 #: fake-plugin.php:4
 #. Plugin URI of the plugin
@@ -33,8 +33,8 @@ msgid ""
 "A minimal fake WordPress plugin used to test publishpress/dev-workspace "
 "locally."
 msgstr ""
-"Plugin WordPress aláìlò tó pẹ́tẹ́lẹ̀ tí a lo láti ṣe àyẹ̀wò "
-"publishpress/dev-workspace níbi àgbègbè."
+"Ένα ελάχιστο ψεύτικο πρόγραμμα WordPress που χρησιμοποιείται για να "
+"δοκιμάσει το publishpress/dev-workspace τοπικά."
 
 #: fake-plugin.php:7
 #. Author of the plugin
@@ -44,86 +44,95 @@ msgstr "PublishPress"
 
 #: fake-plugin.php:25
 msgid "This is the first sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ àkọ́kọ́ fún gettext aláìlò."
+msgstr "Αυτή είναι η πρώτη δείγμα κείμενο για απλό gettext."
 
 #: fake-plugin.php:26
 msgid "This is the second sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ keji fún gettext aláìlò."
+msgstr "Αυτή είναι η δεύτερη δείγμα κείμενο για απλό gettext."
 
 #: fake-plugin.php:27
 msgid "This is the third sample string for plain gettext."
-msgstr "Eyi ni àpẹẹrẹ kẹta fún gettext aláìlò."
+msgstr "Αυτή είναι η τρίτη δείγμα κείμενο για απλό gettext."
 
 #: fake-plugin.php:31
 msgid "This sentence is printed with gettext using immediate echo."
-msgstr "Gbolohun yìí ni a tẹ̀jáde pẹ̀lú gettext nípasẹ̀ echo lẹ́sẹkẹsẹ."
+msgstr "Αυτή η πρόταση εκτυπώνεται με gettext χρησιμοποιώντας άμεσο echo."
 
 #: fake-plugin.php:35
 msgid "This line uses esc_html_e so unsafe markup cannot break the layout."
 msgstr ""
-"Ìlà yìí nlo esc_html_e nítorí pé a kò fẹ́ kí àpẹẹrẹ tó jẹ́ aláìlera ba "
-"àtúnṣe rẹ̀ kọ́."
+"Αυτή η γραμμή χρησιμοποιεί esc_html_e ώστε να μην μπορεί να διαταραχθεί η "
+"διάταξη από επικίνδυνη μορφοποίηση."
 
 #: fake-plugin.php:39
 msgid "This value uses esc_attr_e and belongs inside an HTML attribute."
-msgstr "Ìlà yìí nlo esc_attr_e àti pé ó jẹ́ ti àtẹ̀jáde HTML kan."
+msgstr ""
+"Αυτή η τιμή χρησιμοποιεί esc_attr_e και ανήκει μέσα σε ένα HTML "
+"χαρακτηριστικό."
 
 #: fake-plugin.php:43
 msgid "This line uses esc_html__ and returns a value instead of echoing it."
-msgstr "Ìlà yìí nlo esc_html__ àti pé ó padà wá iye kan dípò kí ó tẹ̀jáde rẹ."
+msgstr ""
+"Αυτή η γραμμή χρησιμοποιεί esc_html__ και επιστρέφει μια τιμή αντί να την "
+"εκτυπώνει."
 
 #: fake-plugin.php:44
 msgid "This line uses esc_attr__ for text stored in an attribute."
-msgstr "Ìlà yìí nlo esc_attr__ fún ọrọ tó wa nínú àtẹ̀jáde."
+msgstr ""
+"Αυτή η γραμμή χρησιμοποιεί esc_attr__ για κείμενο που αποθηκεύεται σε "
+"χαρακτηριστικό."
 
 #: fake-plugin.php:69
 #. translators: %d: number of items
 #, php-format
 msgid "There is %d item in this plural-form test."
 msgid_plural "There are %d items in this plural-form test."
-msgstr[0] "Ó ní %d ohun kan nínú àdánwò fọọ́mù púpọ̀ yìí."
+msgstr[0] "Υπάρχει %d στοιχείο σε αυτή τη δοκιμή πληθυντικού."
+msgstr[1] "Υπάρχουν %d στοιχεία σε αυτή τη δοκιμή πληθυντικού."
 
 #: fake-plugin.php:92
 #. translators: %s: a short word inserted into the sentence
 #, php-format
 msgid "This sentence has one slot for a word: today we say %s."
-msgstr "Gbolohun yìí ní ibè kan fún ọrọ: lónìí a sọ %s."
+msgstr "Αυτή η πρόταση έχει μία θέση για μια λέξη: σήμερα λέμε %s."
 
 #: fake-plugin.php:98
 #. translators: %1$s: earlier phrase, %2$s: later phrase (translators may reorder)
 #, php-format
 msgid "We name two things in source order: first %1$s, then %2$s."
-msgstr "A ń pe ohun méjì ní ìtòsọ́kan orísun: àkọ́kọ́ %1$s, lẹ́yìn náà %2$s."
+msgstr "Ονομάζουμε δύο πράγματα με την σειρά προέλευσης: πρώτα %1$s, μετά %2$s."
 
 #: fake-plugin.php:105
 #. translators: %1$s and %2$s appear out of numerical order on purpose
 #, php-format
 msgid "The later clause mentions %2$s before the earlier clause mentions %1$s."
-msgstr "Ìdí ni pé %2$s dúró níbẹ̀ kí %1$s tó dájú kí a mẹ́nu kàn."
+msgstr ""
+"Η αργότερη ρήτρα αναφέρει το %2$s πριν από την πρώιμη ρήτρα που αναφέρει το "
+"%1$s."
 
 #: fake-plugin.php:113
 #. translators: %1$s is the product name, %2$s is the star rating markup or label
 #, php-format
 msgid "If you like %1$s, please leave us a %2$s rating. Thank you!"
-msgstr "Tí o bá fẹ́ %1$s, jọ̀wọ́ fi %2$s àyẹ̀wò sílẹ̀ fún wa. Ẹ ṣéun!"
+msgstr "Εάν σας αρέσει το %1$s, παρακαλώ αφήστε μας μια βαθμολογία %2$s. Ευχαριστώ!"
 
 #: fake-plugin.php:120
 #. translators: %s: module title — control next to %1$s/%2$s strings (issue #81 compares these)
 #, php-format
 msgid "About %s"
-msgstr "Nípa %s"
+msgstr "Σχετικά με το %s"
 
 #: fake-plugin.php:126
 #. translators: %1$s: name, %2$s: place, %3$s: time word (order may change per language)
 #, php-format
 msgid "Meet %1$s from %2$s at %3$s."
-msgstr "Pade %1$s láti %2$s ní %3$s."
+msgstr "Γνωρίστε τον %1$s από το %2$s στις %3$s."
 
 #: fake-plugin.php:134
 #. translators: %1$d: count, %2$s: unit label
 #, php-format
 msgid "We counted %1$d items and labeled the batch as %2$s."
-msgstr "A ka %1$d ohun kan àti pé a dá àtẹ̀jáde náà sílẹ̀ gẹ́gẹ́ bí %2$s."
+msgstr "Μετρήσαμε %1$d στοιχεία και ετικετοποιήσαμε την παρτίδα ως %2$s."
 
 #: fake-plugin.php:141
 #. translators: Numbered placeholders split across a line break in the source (multiline msgid).
@@ -132,46 +141,45 @@ msgid ""
 "The first line names %1$s,\n"
 "and the second line names %2$s."
 msgstr ""
-"Igbese akọkọ n pe %1$s,  \n"
-"igbese keji n pe %2$s."
+"Η πρώτη γραμμή ονομάζει %1$s,  \n"
+"και η δεύτερη γραμμή ονομάζει %2$s."
 
 #: fake-plugin.php:152
 #. translators: %d: a whole number in a test phrase
 #, php-format
 msgid "The integer placeholder in this test reads exactly %d."
-msgstr "Iye ti o wa ninu idanwo yii kaakiri %d."
+msgstr "Η ακέραια θέση σε αυτή τη δοκιμή διαβάζεται ακριβώς %d."
 
 #: fake-plugin.php:158
 msgid ""
 "Quotes inside one string can mix apostrophes and double quotes, like it's "
 "short and \"quoted\"."
 msgstr ""
-"Awọn agbasọ inu okun kan le dapọ awọn apostrophes ati awọn agbasọ meji, "
-"gẹgẹ bi o ti jẹ kukuru ati \"quoted\"."
+"Τα αποσπάσματα μέσα σε μία συμβολοσειρά μπορούν να αναμειγνύουν απόστροφες "
+"και διπλά εισαγωγικά, όπως είναι «σύντομο» και \"εισαγωγμένο\"."
 
 #: fake-plugin.php:164
 msgid ""
 "This message is split across two lines in the source file.\n"
 "Please translate it as one natural sentence, not two separate labels."
 msgstr ""
-"Ifiranṣẹ yii pin ni awọn ila meji ninu faili orisun.  \n"
-"Jọwọ tumọ rẹ gẹgẹ bi gbolohun kan ti o jẹ adayeba, kii ṣe awọn aami meji ti "
-"o yato."
+"Αυτό το μήνυμα είναι χωρισμένο σε δύο γραμμές στο αρχείο πηγής.  \n"
+"Παρακαλώ μεταφράστε το ως μία φυσική πρόταση, όχι δύο ξεχωριστές ετικέτες."
 
 #: fake-plugin.php:47
 msgctxt "Button label: start recording audio or video."
 msgid "Record"
-msgstr "Iwe akọọlẹ"
+msgstr "Καταγραφή"
 
 #: fake-plugin.php:52
 msgctxt "Noun: a single audio or video recording you can play back."
 msgid "Record"
-msgstr "Iwe akọọlẹ"
+msgstr "Καταγραφή"
 
 #: fake-plugin.php:59
 msgctxt "Button label: close the dialog without keeping changes."
 msgid "Leave"
-msgstr "Fi silẹ"
+msgstr "Αφήστε"
 
 #: fake-plugin.php:80
 #. translators: %s: number of messages
@@ -179,4 +187,5 @@ msgstr "Fi silẹ"
 msgctxt "Count of admin notices about translation tests."
 msgid "You have %d message that needs gettext context."
 msgid_plural "You have %d messages that need gettext context."
-msgstr[0] "O ni %d ifiranṣẹ ti o nilo eto gettext."
+msgstr[0] "Έχετε %d μήνυμα που χρειάζεται συμφραζόμενα gettext."
+msgstr[1] "Έχετε %d μηνύματα που χρειάζονται συμφραζόμενα gettext."

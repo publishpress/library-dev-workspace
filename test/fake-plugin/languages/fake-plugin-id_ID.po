@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-09T14:01:25+00:00\n"
-"PO-Revision-Date: 2026-04-09 14:08+0000\n"
+"POT-Creation-Date: 2026-04-09T17:46:53+00:00\n"
+"PO-Revision-Date: 2026-06-04 14:21+0000\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: fake-plugin\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -21,8 +21,9 @@ msgstr ""
 msgid "Fake Plugin"
 msgstr "Plugin Palsu"
 
-#: fake-plugin.php:4, fuzzy
+#: fake-plugin.php:4
 #. Plugin URI of the plugin
+#, fuzzy
 msgid "https://publishpress.com"
 msgstr "https://publishpress.com"
 
@@ -35,8 +36,9 @@ msgstr ""
 "Plugin WordPress palsu minimal yang digunakan untuk menguji "
 "publishpress/dev-workspace secara lokal."
 
-#: fake-plugin.php:7, fuzzy
+#: fake-plugin.php:7
 #. Author of the plugin
+#, fuzzy
 msgid "PublishPress"
 msgstr "PublishPress"
 
