@@ -105,7 +105,7 @@
         "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs",
         "qa:phpstan": "vendor/publishpress/dev-workspace/scripts/run.sh phpstan",
         "fix:cs": [
-            "vendor/publishpress/dev-workspace/scripts/run.sh php-cs-fixer fix .",
+            "vendor/publishpress/dev-workspace/scripts/run.sh php-cs-fixer fix",
             "vendor/publishpress/dev-workspace/scripts/run.sh phpcbf --standard=.phpcs.xml"
         ],
         "fix:deps": "vendor/publishpress/dev-workspace/scripts/run.sh php vendor/publishpress/dev-workspace/scripts/merge-dependencies.sh ./lib ${PP_PLUGIN_COMPOSER_PACKAGE}",

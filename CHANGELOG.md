@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.4.6] - 04, Jun, 2026
+
+- Fixed: Updated the `fix:cs` command to remove the hardcoded `.` directory, enabling support for custom configuration files.
+
 [1.4.5] - 04, Jun, 2026
 
 - Added: Generic `install-node-deps.sh` (Yarn preferred, then npm) for dev-workspace `package.json` dependencies; exposed as `composer install:node-deps`.
