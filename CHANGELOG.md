@@ -3,15 +3,19 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.4.7] - 04, Jun, 2026
+[1.5.0] - 15 Jun, 2026
+
+- Added: Add PHPMD commands: `lint:phpmd`, `lint:phpmd:ci`, `lint:phpmd:text`.
+
+[1.4.7] - 04 Jun, 2026
 
 - Fixed: `install-node-deps.sh` now skips execution if neither Yarn nor npm are available.
 
-[1.4.6] - 04, Jun, 2026
+[1.4.6] - 04 Jun, 2026
 
 - Fixed: Updated the `fix:cs` command to remove the hardcoded `.` directory, enabling support for custom configuration files.
 
-[1.4.5] - 04, Jun, 2026
+[1.4.5] - 04 Jun, 2026
 
 - Added: Generic `install-node-deps.sh` (Yarn preferred, then npm) for dev-workspace `package.json` dependencies; exposed as `composer install:node-deps`.
 - Changed: JSON translation generation uses `@connectedcars/po2json` from dev-workspace (Jed `locale_data` format for WordPress), with `extra.plugin-lang-domain` as the text domain. Plugins no longer need their own `package.json` for po2json.

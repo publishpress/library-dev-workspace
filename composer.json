@@ -84,6 +84,7 @@
             "@check:php",
             "@lint:php",
             "@lint:phpcs",
+            "@lint:phpmd",
             "@check:longpath"
         ],
         "check:php": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6,7.2' --full-versions='7.4,8.0,8.1,8.2,8.3,8.4,8.5'",
@@ -103,6 +104,9 @@
             "vendor/publishpress/dev-workspace/scripts/run.sh longpath dist/${PP_PLUGIN_FOLDER}"
         ],
         "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs",
+        "lint:phpmd": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . ansi phpmd.ruleset.xml",
+        "lint:phpmd:ci": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . github phpmd.ruleset.xml",
+        "lint:phpmd:text": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . text phpmd.ruleset.xml",
         "qa:phpstan": "vendor/publishpress/dev-workspace/scripts/run.sh phpstan",
         "fix:cs": [
             "vendor/publishpress/dev-workspace/scripts/run.sh php-cs-fixer fix",
@@ -328,6 +332,9 @@
         "check:php-8.5": "Check PHP 8.5 compatibility",
         "lint:php": "Lint PHP syntax with phplint",
         "lint:phpcs": "Check PHP coding standards with PHPCS",
+        "lint:phpmd": "Check PHP coding standards with PHPMD",
+        "lint:phpmd:ci": "Check PHP coding standards with PHPMD for CI",
+        "lint:phpmd:text": "Check PHP coding standards with PHPMD in text format",
         "qa:phpstan": "Run PHPStan static analysis",
         "check:deps": "Verify lib Composer dependencies against the free plugin package",
         "check:longpath": "Pack an unpacked build and scan for Windows long-path issues",
