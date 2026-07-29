@@ -50,6 +50,8 @@ composer check:all
 | 1 | `.phpcs.xml` | VIP, PSR12, PublishPress standards (unchanged) |
 | 2 | `.phpcs-plugin-review.xml` | WordPress.org org-review (Plugin Check PHPCS) |
 
+VIP and org-review stay in separate rulesets so VIP exclusions do not suppress org-review sniffs.
+
 One-time setup per plugin:
 
 ```bash
@@ -59,6 +61,8 @@ composer config:plugin-check
 This merges the Plugin Check Composer repository into `composer.json`, creates `.phpcs-plugin-review.xml` from your `.phpcs.xml` scan paths (plus `readme.txt` when present), copies the GitHub workflow template, and runs `composer update` for `wordpress/plugin-check`.
 
 Use `composer config:plugin-check -- --force` to overwrite existing files.
+
+**Full Plugin Check** (readme, file types, runtime checks, and other non-PHPCS rules) is not run locally. The setup command copies `templates/github-workflows/plugin-check.yml.dist` to `.github/workflows/plugin-check.yml` for manual runs on GitHub (`workflow_dispatch`).
 
 If the plugin already defined those commands under `scripts` in its own `composer.json`, remove them. Names such as `build`, `check:php`, `check:all`, `test:up`, and the other shared workflows are registered by this package; keeping copies in the plugin would shadow or duplicate what the workspace provides.
 

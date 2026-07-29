@@ -3,12 +3,17 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.6.1] - 29 Jul, 2026
+
+- Fixed: `lint-phpcs.sh` always runs the org-review pass even when the VIP pass reports violations.
+
 [1.6.0] - 29 Jul, 2026
 
 - Added: `composer lint:phpcs` now runs a second pass with WordPress.org org-review rules (Plugin Check PHPCS).
 - Added: `composer config:plugin-check` for one-time Plugin Check setup in consuming plugins.
 - Added: `wordpress/plugin-check` as a Composer dependency (PHPCS assets only; installed to `vendor/wordpress/plugin-check/`).
 - Added: `phpcs-rulesets/.phpcs-plugin-review.xml.dist` template for per-plugin org-review scan paths.
+- Added: `templates/composer.plugin-check.json.dist` for the Plugin Check Composer repository and installer path.
 - Added: `templates/github-workflows/plugin-check.yml.dist` for manual full Plugin Check on GitHub.
 
 [1.5.0] - 15 Jun, 2026
