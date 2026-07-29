@@ -9,12 +9,38 @@
         }
     },
     "extra": {
-        "class": "PublishPress\\DevWorkspace\\Plugin"
+        "class": "PublishPress\\DevWorkspace\\Plugin",
+        "installer-paths": {
+            "vendor/wordpress/{$name}/": [
+                "type:wordpress-plugin"
+            ]
+        }
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "wordpress/plugin-check",
+                "version": "2.0.0",
+                "type": "wordpress-plugin",
+                "description": "Plugin Check PHPCS assets for local org-review linting (runtime deps omitted).",
+                "license": "GPL-2.0-or-later",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/WordPress/plugin-check/archive/refs/tags/2.0.0.zip"
+                },
+                "require": {
+                    "php": ">=7.4",
+                    "composer/installers": "^2.2"
+                }
+            }
+        }
+    ],
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
         "composer-plugin-api": "^2.0",
+        "composer/installers": "^2.2",
         "automattic/vipwpcs": "^3",
         "behat/behat": "^3.14",
         "codeception/module-asserts": "^3",
@@ -46,12 +72,14 @@
         "szepeviktor/phpstan-wordpress": "^1.3",
         "wp-cli/i18n-command": "^2.6",
         "wp-cli/wp-cli-bundle": "^2.10",
-        "wp-coding-standards/wpcs": "^3"
+        "wp-coding-standards/wpcs": "^3",
+        "wordpress/plugin-check": "^2.0"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
+            "composer/installers": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true
@@ -103,7 +131,7 @@
             "vendor/publishpress/dev-workspace/scripts/run.sh composer pack:dir",
             "vendor/publishpress/dev-workspace/scripts/run.sh longpath dist/${PP_PLUGIN_FOLDER}"
         ],
-        "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh phpcs",
+        "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/lint-phpcs.sh",
         "lint:phpmd": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . ansi phpmd.ruleset.xml",
         "lint:phpmd:ci": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . github phpmd.ruleset.xml",
         "lint:phpmd:text": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . text phpmd.ruleset.xml",
@@ -286,6 +314,7 @@
         "translate:cleanup": "rm languages/*.json languages/*.mo languages/*.php",
         "translate:repair": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/bin/publishpress-translate --repair-plurals",
         "config:phpcs": "vendor/publishpress/dev-workspace/scripts/config-phpcs-installed-paths.sh",
+        "config:plugin-check": "php vendor/publishpress/dev-workspace/scripts/setup-plugin-check.php",
         "install:node-deps": "[ -x scripts/install-node-deps.sh ] && scripts/install-node-deps.sh || vendor/publishpress/dev-workspace/scripts/install-node-deps.sh",
         "post-install-cmd": [
             "@config:phpcs",
@@ -331,7 +360,7 @@
         "check:php-8.4": "Check PHP 8.4 compatibility",
         "check:php-8.5": "Check PHP 8.5 compatibility",
         "lint:php": "Lint PHP syntax with phplint",
-        "lint:phpcs": "Check PHP coding standards with PHPCS",
+        "lint:phpcs": "Check PHP coding standards with PHPCS (VIP pass, then org-review pass)",
         "lint:phpmd": "Check PHP coding standards with PHPMD",
         "lint:phpmd:ci": "Check PHP coding standards with PHPMD for CI",
         "lint:phpmd:text": "Check PHP coding standards with PHPMD in text format",
@@ -395,6 +424,7 @@
         "translate:cleanup": "Remove compiled translation artefacts (JSON, MO, PHP) from the languages folder",
         "translate:repair": "Repair plural forms in PO files via PublishPress Translate",
         "config:phpcs": "Configure PHPCS installed_paths for this project",
+        "config:plugin-check": "One-time Plugin Check setup (composer.json, .phpcs-plugin-review.xml, GitHub workflow)",
         "post-install-cmd": "After install: configure PHPCS paths and fix potomatic permissions",
         "post-update-cmd": "After update: configure PHPCS paths and fix potomatic permissions",
         "pre-autoload-dump": "Dump lib autoload when lib/composer.json exists",

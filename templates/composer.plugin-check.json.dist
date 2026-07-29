@@ -1,0 +1,29 @@
+{
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "wordpress/plugin-check",
+                "version": "2.0.0",
+                "type": "wordpress-plugin",
+                "description": "Plugin Check PHPCS assets for local org-review linting (runtime deps omitted).",
+                "license": "GPL-2.0-or-later",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/WordPress/plugin-check/archive/refs/tags/2.0.0.zip"
+                },
+                "require": {
+                    "php": ">=7.4",
+                    "composer/installers": "^2.2"
+                }
+            }
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "vendor/wordpress/{$name}/": [
+                "type:wordpress-plugin"
+            ]
+        }
+    }
+}

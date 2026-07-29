@@ -1,0 +1,17 @@
+name: Plugin Check
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1

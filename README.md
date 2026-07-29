@@ -6,7 +6,7 @@ Shared development tooling for PublishPress WordPress plugins. This Composer pac
 
 - **Docker** — Compose setup for local development and automated tests
 - **Build & pack** — JavaScript (webpack), zip/dir packaging, version helpers
-- **Quality** — PHP compatibility, PHPCS, phplint, PHPStan, PHP-CS-Fixer
+- **Quality** — PHP compatibility, PHPCS (VIP + WordPress.org org-review), phplint, PHPStan, PHP-CS-Fixer
 - **Tests** — Codeception workflows and Docker test stack helpers
 - **i18n** — POT/MO/JSON/PHP translation pipelines and PublishPress Translate hooks (JSON uses Jed `locale_data` via `@connectedcars/po2json` bundled in this package; plugins do not need their own `package.json`)
 - **Sync** — Optional rsync to local or remote WordPress installs
@@ -40,6 +40,25 @@ composer build
 composer test:up
 composer check:all
 ```
+
+### WordPress.org Plugin Check (PHPCS)
+
+`composer lint:phpcs` runs **two** PHPCS passes:
+
+| Pass | Config | Standards |
+|------|--------|-----------|
+| 1 | `.phpcs.xml` | VIP, PSR12, PublishPress standards (unchanged) |
+| 2 | `.phpcs-plugin-review.xml` | WordPress.org org-review (Plugin Check PHPCS) |
+
+One-time setup per plugin:
+
+```bash
+composer config:plugin-check
+```
+
+This merges the Plugin Check Composer repository into `composer.json`, creates `.phpcs-plugin-review.xml` from your `.phpcs.xml` scan paths (plus `readme.txt` when present), copies the GitHub workflow template, and runs `composer update` for `wordpress/plugin-check`.
+
+Use `composer config:plugin-check -- --force` to overwrite existing files.
 
 If the plugin already defined those commands under `scripts` in its own `composer.json`, remove them. Names such as `build`, `check:php`, `check:all`, `test:up`, and the other shared workflows are registered by this package; keeping copies in the plugin would shadow or duplicate what the workspace provides.
 
