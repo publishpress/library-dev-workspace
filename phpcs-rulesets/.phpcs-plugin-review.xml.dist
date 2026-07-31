@@ -20,5 +20,5 @@
     <file>public/</file>
     <file>readme.txt</file>
 
-    <rule ref="vendor/wordpress/plugin-check/phpcs-rulesets/plugin-review.xml"/>
+    <rule ref="vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml"/>
 </ruleset>

@@ -58,7 +58,7 @@ One-time setup per plugin:
 composer config:plugin-check
 ```
 
-This merges the Plugin Check Composer repository into `composer.json`, creates `.phpcs-plugin-review.xml` from your `.phpcs.xml` scan paths (plus `readme.txt` when present), copies the GitHub workflow template, and runs `composer update` for `wordpress/plugin-check`.
+This creates `.phpcs-plugin-review.xml` from your `.phpcs.xml` scan paths (plus `readme.txt` when present) and copies the GitHub workflow template. Plugin Check PHPCS rules ship in `publishpress/publishpress-phpcs-standards`.
 
 Use `composer config:plugin-check -- --force` to overwrite existing files.
 

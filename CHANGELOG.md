@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.7.0] - 31 Jul, 2026
+
+- Changed: Plugin Check PHPCS rules now ship in `publishpress/publishpress-phpcs-standards` instead of `wordpress/plugin-check`. composer config:plugin-check` no longer merges a custom Composer repository into consuming plugins.
+- Removed: `wordpress/plugin-check` Composer dependency and inline package repository definition.
+- Removed: `templates/composer.plugin-check.json.dist` and `packages/wordpress-plugin-check.json`.
+
 [1.6.1] - 29 Jul, 2026
 
 - Fixed: `lint-phpcs.sh` always runs the org-review pass even when the VIP pass reports violations.
