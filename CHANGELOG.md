@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.7.1] - [UNRELEASED]
+
+- Fixed: Preserve semantic version prerelease suffixes and build metadata when reading and setting plugin versions.
+- Fixed: Enforce LF line endings for shell scripts to prevent invalid `bash\r` shebangs in Windows and WSL environments.
+
 [1.7.0] - 31 Jul, 2026
 
 - Changed: Plugin Check PHPCS rules now ship in `publishpress/publishpress-phpcs-standards` instead of `wordpress/plugin-check`. composer config:plugin-check` no longer merges a custom Composer repository into consuming plugins.
