@@ -31,7 +31,10 @@ function isStableVersion($version): bool
 
 function isValideVersion($version): bool
 {
-    return preg_match('/^\d+\.\d+\.\d+(-(alpha|beta|rc)\.[0-9]+)?$/', $version);
+    return preg_match(
+        '/^\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?:\+[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$/',
+        $version
+    );
 }
 
 function askForNewVersion(): string
@@ -52,7 +55,7 @@ if (isset($argv[1])) {
 }
 
 if (!isValideVersion($newVersion)) {
-    echo "Invalid version format. Please use x.y.z[-(alpha|beta|rc).w] format\n";
+    echo "Invalid version format. Please use semantic versioning (for example, x.y.z or x.y.z-beta)\n";
     exit(1);
 }
 
