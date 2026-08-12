@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.1] - 12 Aug, 2026
+
+- Changed: `check-release.sh` and `check-wporg.sh` use the same output helpers as the pack/build scripts (`echo-command-header`, `echo-step`, `echo-success`, `echo-error`, separators, runtime, and success/failure footer).
+
 [1.8.0] - 12 Aug, 2026
 
 - Added: `composer check:release` — pre-release gate for stable version consistency (plugin header, version constant, Stable tag, CHANGELOG, dist ZIP/dir) and fails if the version is already published on wordpress.org when the plugin is hosted there. `package.json` is optional; when it defines `version`, that value must match.
