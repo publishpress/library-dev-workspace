@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [1.8.1] - 12 Aug, 2026
 
 - Changed: `check-release.sh` and `check-wporg.sh` use the same output helpers as the pack/build scripts (`echo-command-header`, `echo-step`, `echo-success`, `echo-error`, separators, runtime, and success/failure footer).
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.1`.
 
 [1.8.0] - 12 Aug, 2026
 
