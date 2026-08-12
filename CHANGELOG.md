@@ -3,9 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.8.4]
+[1.8.4] - 12 Aug, 2026
 
 - Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root only (before packing); no longer check the dist folder after packing.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.4`.
+- Added: `.cursor/skills/release-dev-workspace` — predictable release workflow for this package (changelog, compose version, tag, GitHub release).
 
 [1.8.3] - 12 Aug, 2026
 
