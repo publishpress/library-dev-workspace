@@ -13,6 +13,7 @@ SOURCE_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
 IF_STABLE=0
 ALLOW_PUBLISHED=0
 VERSION_ARG=""
+start_time=$(date +%s)
 
 show_help() {
     cat <<EOF
@@ -63,8 +64,34 @@ done
 PASS=0
 FAIL=0
 
-pass() { PASS=$((PASS + 1)); printf 'PASS  %s — %s\n' "$1" "$2"; }
-fail() { FAIL=$((FAIL + 1)); printf 'FAIL  %s — %s\n' "$1" "$2"; }
+pass() {
+    PASS=$((PASS + 1))
+    "$SCRIPT_DIR/echo-success.sh" "${1}: ${2}"
+}
+
+fail() {
+    FAIL=$((FAIL + 1))
+    "$SCRIPT_DIR/echo-error.sh" "${1}: ${2}"
+}
+
+finish_success() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    "$SCRIPT_DIR/show-time.sh" "${start_time}"
+    echo ""
+    echo "🎉" " Executed successfully!"
+    echo ""
+    exit 0
+}
+
+finish_failure() {
+    local message="$1"
+    "$SCRIPT_DIR/echo-separator.sh"
+    "$SCRIPT_DIR/show-time.sh" "${start_time}"
+    echo ""
+    echo "⚠️  Error: ${message}"
+    echo ""
+    exit 1
+}
 
 is_stable_version() {
     [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
@@ -86,7 +113,6 @@ extract_constant_version() {
         echo ""
         return
     fi
-    # Match define('CONST', 'x.y.z');
     sed -nE "s/.*define\\('${constant}',[[:space:]]*'([^']+)'\\).*/\\1/p" "$file" | head -1 | tr -d '\r'
 }
 
@@ -113,42 +139,40 @@ DIST_README="${DIST_DIR}/readme.txt"
 
 if [[ ! -f "$MAIN_SOURCE" ]]; then
     "$SCRIPT_DIR/echo-error.sh" "Main plugin file not found: ${MAIN_SOURCE}"
-    exit 1
+    finish_failure "check:release could not find the main plugin file."
 fi
 
 HEADER_VER="$(extract_header_version "$MAIN_SOURCE")"
 if [[ -z "$HEADER_VER" ]]; then
     "$SCRIPT_DIR/echo-error.sh" "Could not read Version header from ${MAIN_SOURCE}"
-    exit 1
+    finish_failure "check:release could not read the Version header."
 fi
 
 VERSION="${VERSION_ARG:-$HEADER_VER}"
 
-echo "=== check:release — ${PLUGIN_SLUG} ${VERSION} ==="
-echo "Source: ${SOURCE_PATH}"
-echo
+"$SCRIPT_DIR/echo-command-header.sh" "Running check:release for ${PLUGIN_SLUG} ${VERSION}"
+"$SCRIPT_DIR/echo-step.sh" "Source path: ${SOURCE_PATH}"
 
 if ! is_stable_version "$VERSION"; then
     if [[ "$IF_STABLE" -eq 1 ]]; then
-        "$SCRIPT_DIR/echo-step.sh" "Skipping check:release — ${VERSION} is not a stable release (--if-stable)."
-        exit 0
+        "$SCRIPT_DIR/echo-step.sh" "Skipping check:release — ${VERSION} is not a stable release (--if-stable)"
+        finish_success
     fi
-    fail "Stable version" "Refusing non-stable version '${VERSION}'. Use x.y.z only."
-    echo
-    echo "PASS=${PASS} FAIL=${FAIL}"
-    exit 1
+    fail "Stable version" "Refusing non-stable version '${VERSION}'. Use x.y.z only"
+    finish_failure "check:release failed — version must be stable x.y.z."
 fi
 
+"$SCRIPT_DIR/echo-step.sh" "Checking version is stable"
 pass "Stable version" "$VERSION"
 
-# --- Source header ---
+"$SCRIPT_DIR/echo-step.sh" "Checking source Version header"
 if [[ "$HEADER_VER" == "$VERSION" ]]; then
     pass "Source Version header" "$HEADER_VER"
 else
     fail "Source Version header" "expected ${VERSION}, got '${HEADER_VER}'"
 fi
 
-# --- Constant ---
+"$SCRIPT_DIR/echo-step.sh" "Checking source version constant"
 if [[ -z "$VERSION_CONSTANT" ]]; then
     fail "Version constant" "extra.version-constant missing in composer.json"
 else
@@ -160,7 +184,7 @@ else
     fi
 fi
 
-# --- Stable tag ---
+"$SCRIPT_DIR/echo-step.sh" "Checking source Stable tag"
 if [[ ! -f "$README_SOURCE" ]]; then
     fail "Source Stable tag" "readme.txt not found"
 else
@@ -172,7 +196,7 @@ else
     fi
 fi
 
-# --- package.json (optional; validate version only when present) ---
+"$SCRIPT_DIR/echo-step.sh" "Checking package.json version (optional)"
 if [[ ! -f "$PACKAGE_JSON" ]]; then
     pass "package.json" "absent — skipped"
 else
@@ -186,7 +210,7 @@ else
     fi
 fi
 
-# --- CHANGELOG ---
+"$SCRIPT_DIR/echo-step.sh" "Checking CHANGELOG.md section"
 if [[ ! -f "$CHANGELOG" ]]; then
     fail "CHANGELOG" "CHANGELOG.md not found"
 else
@@ -197,13 +221,14 @@ else
     fi
 fi
 
-# --- Dist ---
+"$SCRIPT_DIR/echo-command-header.sh" "Checking dist package version metadata"
 ZIP_NAME="$("$SCRIPT_DIR/plugin-zipfile.sh" "$SOURCE_PATH")"
 ZIP_PATH="${SOURCE_PATH}/dist/${ZIP_NAME}"
 HAS_DIST=0
 
 if [[ -f "$ZIP_PATH" ]]; then
     HAS_DIST=1
+    "$SCRIPT_DIR/echo-step.sh" "Inspecting dist ZIP ${ZIP_NAME}"
     TMPZIP="$(mktemp -d)"
     unzip -q "$ZIP_PATH" -d "$TMPZIP"
     ZIP_MAIN="${TMPZIP}/${PLUGIN_FOLDER}/${PLUGIN_SLUG}.php"
@@ -213,7 +238,7 @@ if [[ -f "$ZIP_PATH" ]]; then
     ZIP_STABLE="$(extract_stable_tag "$ZIP_README")"
 
     if [[ "$ZIP_HEADER" == "$VERSION" ]]; then
-        pass "Dist ZIP Version header" "$ZIP_HEADER ($ZIP_NAME)"
+        pass "Dist ZIP Version header" "$ZIP_HEADER"
     else
         fail "Dist ZIP Version header" "expected ${VERSION}, got '${ZIP_HEADER:-missing}' in ${ZIP_NAME}"
     fi
@@ -232,12 +257,13 @@ if [[ -f "$ZIP_PATH" ]]; then
     rm -rf "$TMPZIP"
 elif [[ -f "$DIST_MAIN" ]]; then
     HAS_DIST=1
+    "$SCRIPT_DIR/echo-step.sh" "Inspecting dist directory ${DIST_DIR}"
     DIR_HEADER="$(extract_header_version "$DIST_MAIN")"
     DIR_CONST="$(extract_constant_version "$DIST_MAIN" "$VERSION_CONSTANT")"
     DIR_STABLE="$(extract_stable_tag "$DIST_README")"
 
     if [[ "$DIR_HEADER" == "$VERSION" ]]; then
-        pass "Dist dir Version header" "$DIR_HEADER (${DIST_DIR})"
+        pass "Dist dir Version header" "$DIR_HEADER"
     else
         fail "Dist dir Version header" "expected ${VERSION}, got '${DIR_HEADER:-missing}'"
     fi
@@ -256,22 +282,24 @@ elif [[ -f "$DIST_MAIN" ]]; then
 fi
 
 if [[ "$HAS_DIST" -eq 0 ]]; then
-    fail "Dist package" "No dist ZIP (${ZIP_PATH}) or unpacked dir (${DIST_DIR}). Run composer build / pack:zip first."
+    fail "Dist package" "No dist ZIP (${ZIP_PATH}) or unpacked dir (${DIST_DIR}). Run composer build / pack:zip first"
 fi
 
-# --- Already on wordpress.org? (only if plugin is hosted there) ---
+"$SCRIPT_DIR/echo-command-header.sh" "Checking WordPress.org publication status"
 UA="PublishPress-DevWorkspace-Release-Check/1.0"
+"$SCRIPT_DIR/echo-step.sh" "Looking up wordpress.org/plugins/${PLUGIN_SLUG}/"
 PAGE_CODE="$(curl -sS -o /dev/null -w '%{http_code}' -A "$UA" -L "https://wordpress.org/plugins/${PLUGIN_SLUG}/" || echo "000")"
 if [[ "$PAGE_CODE" == "200" ]]; then
     ZIP_WPORG="https://downloads.wordpress.org/plugin/${PLUGIN_SLUG}.${VERSION}.zip"
     CS_WPORG="https://downloads.wordpress.org/plugin-checksums/${PLUGIN_SLUG}/${VERSION}.json"
+    "$SCRIPT_DIR/echo-step.sh" "Checking whether ${VERSION} is already published"
     WZIP_CODE="$(curl -sS -o /dev/null -w '%{http_code}' -A "$UA" -I "$ZIP_WPORG" || echo "000")"
     WCS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' -A "$UA" -I "$CS_WPORG" || echo "000")"
     if [[ "$WZIP_CODE" == "200" || "$WCS_CODE" == "200" ]]; then
         if [[ "$ALLOW_PUBLISHED" -eq 1 ]]; then
             pass "WordPress.org not published" "already live but --allow-published set (${VERSION})"
         else
-            fail "WordPress.org not published" "${VERSION} already exists on wordpress.org (${ZIP_WPORG} → ${WZIP_CODE}, checksums → ${WCS_CODE}). Bump version or pass --allow-published."
+            fail "WordPress.org not published" "${VERSION} already exists on wordpress.org (ZIP ${WZIP_CODE}, checksums ${WCS_CODE}). Bump version or pass --allow-published"
         fi
     else
         pass "WordPress.org not published" "${VERSION} not found on downloads.wordpress.org"
@@ -280,11 +308,9 @@ else
     pass "WordPress.org hosting" "plugin page not found for slug ${PLUGIN_SLUG} (${PAGE_CODE}) — skipping published check"
 fi
 
-echo
-echo "PASS=${PASS} FAIL=${FAIL}"
+"$SCRIPT_DIR/echo-step.sh" "Summary: ${PASS} passed, ${FAIL} failed"
 if [[ "$FAIL" -gt 0 ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "check:release failed — fix version consistency before releasing."
-    exit 1
+    finish_failure "check:release failed — fix version consistency before releasing."
 fi
-"$SCRIPT_DIR/echo-success.sh" "check:release passed for ${VERSION}."
-exit 0
+"$SCRIPT_DIR/echo-success.sh" "check:release passed for ${VERSION}"
+finish_success

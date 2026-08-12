@@ -10,6 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 SOURCE_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
 UA="PublishPress-DevWorkspace-WPORG-Check/1.0"
+start_time=$(date +%s)
 
 show_help() {
     cat <<EOF
@@ -46,9 +47,39 @@ PASS=0
 FAIL=0
 WARN=0
 
-pass() { PASS=$((PASS + 1)); printf 'PASS  %s — %s\n' "$1" "$2"; }
-fail() { FAIL=$((FAIL + 1)); printf 'FAIL  %s — %s\n' "$1" "$2"; }
-warn() { WARN=$((WARN + 1)); printf 'WARN  %s — %s\n' "$1" "$2"; }
+pass() {
+    PASS=$((PASS + 1))
+    "$SCRIPT_DIR/echo-success.sh" "${1}: ${2}"
+}
+
+fail() {
+    FAIL=$((FAIL + 1))
+    "$SCRIPT_DIR/echo-error.sh" "${1}: ${2}"
+}
+
+warn() {
+    WARN=$((WARN + 1))
+    echo "⚠️ " " ${1}: ${2}"
+}
+
+finish_success() {
+    "$SCRIPT_DIR/echo-separator.sh"
+    "$SCRIPT_DIR/show-time.sh" "${start_time}"
+    echo ""
+    echo "🎉" " Executed successfully!"
+    echo ""
+    exit 0
+}
+
+finish_failure() {
+    local message="$1"
+    "$SCRIPT_DIR/echo-separator.sh"
+    "$SCRIPT_DIR/show-time.sh" "${start_time}"
+    echo ""
+    echo "⚠️  Error: ${message}"
+    echo ""
+    exit 1
+}
 
 is_stable_version() {
     [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
@@ -58,19 +89,6 @@ extract_header_version() {
     local file="$1"
     [[ -f "$file" ]] || { echo ""; return; }
     sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?).*/\1/p' "$file" | head -1 | tr -d '\r'
-}
-
-extract_constant_version() {
-    local file="$1"
-    local constant="$2"
-    [[ -f "$file" && -n "$constant" ]] || { echo ""; return; }
-    sed -nE "s/.*define\\('${constant}',[[:space:]]*'([^']+)'\\).*/\\1/p" "$file" | head -1 | tr -d '\r'
-}
-
-extract_stable_tag() {
-    local file="$1"
-    [[ -f "$file" ]] || { echo ""; return; }
-    sed -nE 's/^Stable tag:[[:space:]]*(.+)$/\1/p' "$file" | head -1 | tr -d '\r'
 }
 
 prior_patch() {
@@ -103,35 +121,37 @@ HEADER_VER="$(extract_header_version "$MAIN_SOURCE")"
 VERSION="${VERSION_ARG:-$HEADER_VER}"
 
 if [[ -z "$VERSION" ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "VERSION required (pass arg or set Version header)."
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "VERSION required (pass arg or set Version header)"
+    finish_failure "check:wporg requires a version."
 fi
+
+"$SCRIPT_DIR/echo-command-header.sh" "Running check:wporg for ${PLUGIN_SLUG} ${VERSION}"
 
 if ! is_stable_version "$VERSION"; then
     fail "Stable version" "check:wporg requires stable x.y.z, got '${VERSION}'"
-    echo "PASS=${PASS} WARN=${WARN} FAIL=${FAIL}"
-    exit 1
+    finish_failure "check:wporg failed — version must be stable x.y.z."
 fi
 
 PAGE_URL="https://wordpress.org/plugins/${PLUGIN_SLUG}/"
+"$SCRIPT_DIR/echo-step.sh" "Confirming plugin is hosted on wordpress.org"
 PAGE_CODE="$(curl -sS -o /dev/null -w '%{http_code}' -A "$UA" -L "$PAGE_URL" || echo "000")"
 if [[ "$PAGE_CODE" != "200" ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "Plugin does not appear hosted on wordpress.org (${PAGE_URL} → ${PAGE_CODE}). Skip check:wporg for non-directory plugins."
-    exit 1
+    "$SCRIPT_DIR/echo-error.sh" "Plugin does not appear hosted on wordpress.org (${PAGE_URL} → ${PAGE_CODE})"
+    finish_failure "check:wporg is only for plugins hosted on wordpress.org."
 fi
+pass "WordPress.org hosting" "${PAGE_URL}"
 
 ZIP_URL="https://downloads.wordpress.org/plugin/${PLUGIN_SLUG}.${VERSION}.zip"
 CHECKSUM_URL="https://downloads.wordpress.org/plugin-checksums/${PLUGIN_SLUG}/${VERSION}.json"
 UPDATE_URL="https://api.wordpress.org/plugins/update-check/1.1/"
 
-echo "=== check:wporg — ${PLUGIN_SLUG} ${VERSION} ==="
-echo
-
+"$SCRIPT_DIR/echo-command-header.sh" "Checking live ZIP package"
+"$SCRIPT_DIR/echo-step.sh" "Fetching ${ZIP_URL}"
 code="$(http_code "$ZIP_URL")"
 if [[ "$code" == "200" ]]; then
-    pass "ZIP available" "$ZIP_URL ($code)"
+    pass "ZIP available" "HTTP ${code}"
 else
-    fail "ZIP available" "$ZIP_URL ($code)"
+    fail "ZIP available" "${ZIP_URL} (HTTP ${code})"
 fi
 
 TMPDIR="$(mktemp -d)"
@@ -143,6 +163,7 @@ if [[ "$code" == "200" ]]; then
     MAIN_IN_ZIP="${PLUGIN_SLUG}/${PLUGIN_SLUG}.php"
     README_IN_ZIP="${PLUGIN_SLUG}/readme.txt"
 
+    "$SCRIPT_DIR/echo-step.sh" "Inspecting Version header, constant, and Stable tag inside ZIP"
     HEADER_ZIP="$(unzip -p "$ZIP_FILE" "$MAIN_IN_ZIP" 2>/dev/null | sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*(.+)$/\1/p' | head -1 | tr -d '\r')"
     CONST_ZIP=""
     if [[ -n "$VERSION_CONSTANT" ]]; then
@@ -179,6 +200,8 @@ else
     fail "Stable tag" "skipped (no ZIP)"
 fi
 
+"$SCRIPT_DIR/echo-command-header.sh" "Checking checksums and plugin page"
+"$SCRIPT_DIR/echo-step.sh" "Fetching checksums ${CHECKSUM_URL}"
 cscode="$(http_code "$CHECKSUM_URL")"
 if [[ "$cscode" == "200" ]]; then
     CS_META="$(curl -sS -A "$UA" "$CHECKSUM_URL" | python3 -c "
@@ -192,7 +215,7 @@ print(d.get('source',''))
     CS_FILES="$(echo "$CS_META" | sed -n '2p')"
     CS_SRC="$(echo "$CS_META" | sed -n '3p')"
     if [[ "$CS_VER" == "$VERSION" ]]; then
-        pass "Checksums" "${CHECKSUM_URL} (version=${CS_VER}, files=${CS_FILES})"
+        pass "Checksums" "version=${CS_VER}, files=${CS_FILES}"
     else
         fail "Checksums" "JSON version '${CS_VER}' != ${VERSION}"
     fi
@@ -200,9 +223,10 @@ print(d.get('source',''))
         warn "Checksums source" "expected tags/${VERSION}, got ${CS_SRC}"
     fi
 else
-    fail "Checksums" "$CHECKSUM_URL ($cscode)"
+    fail "Checksums" "${CHECKSUM_URL} (HTTP ${cscode})"
 fi
 
+"$SCRIPT_DIR/echo-step.sh" "Checking plugin directory page for Version ${VERSION}"
 PAGE_HTML_FILE="${TMPDIR}/page.html"
 curl -sS -A "$UA" -L "$PAGE_URL" -o "$PAGE_HTML_FILE" || true
 if grep -Fq "\"softwareVersion\": \"${VERSION}\"" "$PAGE_HTML_FILE"; then
@@ -213,6 +237,7 @@ else
     fail "Plugin page" "did not find Version ${VERSION} on ${PAGE_URL}"
 fi
 
+"$SCRIPT_DIR/echo-command-header.sh" "Checking update API"
 PREV="$(prior_patch "$VERSION")"
 OLDER="$(prior_patch "$PREV")"
 
@@ -258,6 +283,7 @@ PY
 }
 
 if [[ -n "$PREV" ]]; then
+    "$SCRIPT_DIR/echo-step.sh" "Probing update-check from ${PREV}"
     UC_JSON="$(update_check "$PREV")"
     UC_NEW="$(printf '%s' "$UC_JSON" | parse_update)"
     UC_VER="$(echo "$UC_NEW" | sed -n '1p')"
@@ -267,6 +293,7 @@ if [[ -n "$PREV" ]]; then
         pass "Update-check" "from ${PREV} → ${UC_VER}"
     elif [[ -z "$UC_VER" ]]; then
         if [[ -n "$OLDER" ]]; then
+            "$SCRIPT_DIR/echo-step.sh" "Probing update-check from ${OLDER}"
             OLD_JSON="$(update_check "$OLDER")"
             OLD_NEW="$(printf '%s' "$OLD_JSON" | parse_update)"
             OLD_VER="$(echo "$OLD_NEW" | sed -n '1p')"
@@ -290,16 +317,14 @@ else
     warn "Update-check" "could not derive prior version from ${VERSION}"
 fi
 
-echo
-echo "PASS=${PASS} WARN=${WARN} FAIL=${FAIL}"
+"$SCRIPT_DIR/echo-step.sh" "Summary: ${PASS} passed, ${WARN} warnings, ${FAIL} failed"
 if [[ "$FAIL" -gt 0 ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "check:wporg failed — package/integrity issue on wordpress.org."
-    exit 1
+    finish_failure "check:wporg failed — package/integrity issue on wordpress.org."
 fi
 if [[ "$WARN" -gt 0 ]]; then
-    "$SCRIPT_DIR/echo-success.sh" "check:wporg: package OK (update cooldown or soft warning)."
-    echo "Next: wait ~6h or ask plugins@wordpress.org / #pluginreview to lift hold if urgent."
-    exit 0
+    "$SCRIPT_DIR/echo-success.sh" "check:wporg: package OK (update cooldown or soft warning)"
+    "$SCRIPT_DIR/echo-step.sh" "Next: wait ~6h or ask plugins@wordpress.org / #pluginreview to lift hold if urgent"
+    finish_success
 fi
-"$SCRIPT_DIR/echo-success.sh" "check:wporg passed — package and update API agree on ${VERSION}."
-exit 0
+"$SCRIPT_DIR/echo-success.sh" "check:wporg passed — package and update API agree on ${VERSION}"
+finish_success
