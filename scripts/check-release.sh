@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Pre-release gate: stable version consistency across source + dist.
+# Pre-release gate: stable version consistency for a plugin folder.
 # Usage:
-#   check-release.sh [--if-stable] [--allow-published] [VERSION]
+#   check-release.sh [--if-stable] [--allow-published] [PATH] [VERSION]
 # Exit 0 = OK (or skipped via --if-stable on prerelease)
 # Exit 1 = FAIL
 
@@ -9,31 +9,43 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-SOURCE_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
+DEFAULT_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
+CHECK_PATH=""
 IF_STABLE=0
 ALLOW_PUBLISHED=0
 VERSION_ARG=""
+POSITIONALS=()
 start_time=$(date +%s)
 
 show_help() {
     cat <<EOF
 Pre-release version integrity check (stable releases only).
 
-Usage: check-release.sh [--if-stable] [--allow-published] [VERSION]
+Usage: check-release.sh [--if-stable] [--allow-published] [PATH] [VERSION]
 
+  PATH                Plugin folder to inspect (must contain composer.json and the
+                      main plugin PHP file). Default: project root
+                      (${DEFAULT_PATH}).
   VERSION             Expected version. Default: Version header in main plugin file.
   --if-stable         If current version is not stable (beta/rc/alpha), skip and exit 0.
                       Used by composer build so beta packages still pack.
   --allow-published   Do not fail when this version is already on wordpress.org.
   -h, --help          Show help.
 
+  A single positional is treated as VERSION when it matches x.y.z[(-alpha|-beta|-rc).N],
+  otherwise as PATH. Two positionals are PATH then VERSION.
+
 Checks (all must pass for a stable release):
   - Version is stable (x.y.z only)
-  - Header Version, version constant, readme Stable tag, CHANGELOG agree
+  - Header Version, version constant, and readme Stable tag agree
   - package.json "version" (only if the file exists and defines version)
-  - dist/ ZIP and/or unpacked folder match source
+  - CHANGELOG.md section (only if CHANGELOG.md exists)
   - Version is not already published on wordpress.org (when the plugin is hosted there)
 EOF
+}
+
+is_version_string() {
+    [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?$ ]]
 }
 
 while [[ $# -gt 0 ]]; do
@@ -55,11 +67,39 @@ while [[ $# -gt 0 ]]; do
         exit 1
         ;;
     *)
-        VERSION_ARG="$1"
+        POSITIONALS+=("$1")
         shift
         ;;
     esac
 done
+
+case "${#POSITIONALS[@]}" in
+0) ;;
+1)
+    if is_version_string "${POSITIONALS[0]}"; then
+        VERSION_ARG="${POSITIONALS[0]}"
+    else
+        CHECK_PATH="${POSITIONALS[0]}"
+    fi
+    ;;
+2)
+    CHECK_PATH="${POSITIONALS[0]}"
+    VERSION_ARG="${POSITIONALS[1]}"
+    ;;
+*)
+    "$SCRIPT_DIR/echo-error.sh" "Too many arguments. Usage: check-release.sh [options] [PATH] [VERSION]"
+    exit 1
+    ;;
+esac
+
+if [[ -z "$CHECK_PATH" ]]; then
+    CHECK_PATH="$DEFAULT_PATH"
+fi
+
+# Resolve relative paths against the default project root (container cwd is usually /project).
+if [[ "$CHECK_PATH" != /* ]]; then
+    CHECK_PATH="${DEFAULT_PATH}/${CHECK_PATH}"
+fi
 
 PASS=0
 FAIL=0
@@ -125,33 +165,39 @@ extract_stable_tag() {
     sed -nE 's/^Stable tag:[[:space:]]*(.+)$/\1/p' "$file" | head -1 | tr -d '\r'
 }
 
-PLUGIN_SLUG="$("$SCRIPT_DIR/plugin-slug.sh" "$SOURCE_PATH")"
-PLUGIN_FOLDER="$("$SCRIPT_DIR/plugin-folder.sh" "$SOURCE_PATH")"
-VERSION_CONSTANT="$("$SCRIPT_DIR/parse-json.sh" "$SOURCE_PATH/composer.json" "extra.version-constant" 2>/dev/null || true)"
+if [[ ! -d "$CHECK_PATH" ]]; then
+    "$SCRIPT_DIR/echo-error.sh" "Path not found: ${CHECK_PATH}"
+    finish_failure "check:release could not find the target path."
+fi
 
-MAIN_SOURCE="${SOURCE_PATH}/${PLUGIN_SLUG}.php"
-README_SOURCE="${SOURCE_PATH}/readme.txt"
-PACKAGE_JSON="${SOURCE_PATH}/package.json"
-CHANGELOG="${SOURCE_PATH}/CHANGELOG.md"
-DIST_DIR="${SOURCE_PATH}/dist/${PLUGIN_FOLDER}"
-DIST_MAIN="${DIST_DIR}/${PLUGIN_SLUG}.php"
-DIST_README="${DIST_DIR}/readme.txt"
+if [[ ! -f "${CHECK_PATH}/composer.json" ]]; then
+    "$SCRIPT_DIR/echo-error.sh" "composer.json not found in ${CHECK_PATH}"
+    finish_failure "check:release requires composer.json in the target path."
+fi
 
-if [[ ! -f "$MAIN_SOURCE" ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "Main plugin file not found: ${MAIN_SOURCE}"
+PLUGIN_SLUG="$("$SCRIPT_DIR/plugin-slug.sh" "$CHECK_PATH")"
+VERSION_CONSTANT="$("$SCRIPT_DIR/parse-json.sh" "$CHECK_PATH/composer.json" "extra.version-constant" 2>/dev/null || true)"
+
+MAIN_FILE="${CHECK_PATH}/${PLUGIN_SLUG}.php"
+README_FILE="${CHECK_PATH}/readme.txt"
+PACKAGE_JSON="${CHECK_PATH}/package.json"
+CHANGELOG="${CHECK_PATH}/CHANGELOG.md"
+
+if [[ ! -f "$MAIN_FILE" ]]; then
+    "$SCRIPT_DIR/echo-error.sh" "Main plugin file not found: ${MAIN_FILE}"
     finish_failure "check:release could not find the main plugin file."
 fi
 
-HEADER_VER="$(extract_header_version "$MAIN_SOURCE")"
+HEADER_VER="$(extract_header_version "$MAIN_FILE")"
 if [[ -z "$HEADER_VER" ]]; then
-    "$SCRIPT_DIR/echo-error.sh" "Could not read Version header from ${MAIN_SOURCE}"
+    "$SCRIPT_DIR/echo-error.sh" "Could not read Version header from ${MAIN_FILE}"
     finish_failure "check:release could not read the Version header."
 fi
 
 VERSION="${VERSION_ARG:-$HEADER_VER}"
 
 "$SCRIPT_DIR/echo-command-header.sh" "Running check:release for ${PLUGIN_SLUG} ${VERSION}"
-"$SCRIPT_DIR/echo-step.sh" "Source path: ${SOURCE_PATH}"
+"$SCRIPT_DIR/echo-step.sh" "Check path: ${CHECK_PATH}"
 
 if ! is_stable_version "$VERSION"; then
     if [[ "$IF_STABLE" -eq 1 ]]; then
@@ -165,34 +211,34 @@ fi
 "$SCRIPT_DIR/echo-step.sh" "Checking version is stable"
 pass "Stable version" "$VERSION"
 
-"$SCRIPT_DIR/echo-step.sh" "Checking source Version header"
+"$SCRIPT_DIR/echo-step.sh" "Checking Version header"
 if [[ "$HEADER_VER" == "$VERSION" ]]; then
-    pass "Source Version header" "$HEADER_VER"
+    pass "Version header" "$HEADER_VER"
 else
-    fail "Source Version header" "expected ${VERSION}, got '${HEADER_VER}'"
+    fail "Version header" "expected ${VERSION}, got '${HEADER_VER}'"
 fi
 
-"$SCRIPT_DIR/echo-step.sh" "Checking source version constant"
+"$SCRIPT_DIR/echo-step.sh" "Checking version constant"
 if [[ -z "$VERSION_CONSTANT" ]]; then
     fail "Version constant" "extra.version-constant missing in composer.json"
 else
-    CONST_VER="$(extract_constant_version "$MAIN_SOURCE" "$VERSION_CONSTANT")"
+    CONST_VER="$(extract_constant_version "$MAIN_FILE" "$VERSION_CONSTANT")"
     if [[ "$CONST_VER" == "$VERSION" ]]; then
-        pass "Source version constant" "${VERSION_CONSTANT}=${CONST_VER}"
+        pass "Version constant" "${VERSION_CONSTANT}=${CONST_VER}"
     else
-        fail "Source version constant" "expected ${VERSION}, got '${CONST_VER:-missing}' (${VERSION_CONSTANT})"
+        fail "Version constant" "expected ${VERSION}, got '${CONST_VER:-missing}' (${VERSION_CONSTANT})"
     fi
 fi
 
-"$SCRIPT_DIR/echo-step.sh" "Checking source Stable tag"
-if [[ ! -f "$README_SOURCE" ]]; then
-    fail "Source Stable tag" "readme.txt not found"
+"$SCRIPT_DIR/echo-step.sh" "Checking Stable tag"
+if [[ ! -f "$README_FILE" ]]; then
+    fail "Stable tag" "readme.txt not found"
 else
-    STABLE_TAG="$(extract_stable_tag "$README_SOURCE")"
+    STABLE_TAG="$(extract_stable_tag "$README_FILE")"
     if [[ "$STABLE_TAG" == "$VERSION" ]]; then
-        pass "Source Stable tag" "$STABLE_TAG"
+        pass "Stable tag" "$STABLE_TAG"
     else
-        fail "Source Stable tag" "expected ${VERSION}, got '${STABLE_TAG:-missing}'"
+        fail "Stable tag" "expected ${VERSION}, got '${STABLE_TAG:-missing}'"
     fi
 fi
 
@@ -210,79 +256,15 @@ else
     fi
 fi
 
-"$SCRIPT_DIR/echo-step.sh" "Checking CHANGELOG.md section"
+"$SCRIPT_DIR/echo-step.sh" "Checking CHANGELOG.md section (optional)"
 if [[ ! -f "$CHANGELOG" ]]; then
-    fail "CHANGELOG" "CHANGELOG.md not found"
+    pass "CHANGELOG" "absent — skipped"
 else
     if grep -Eq "^\[${VERSION}\]" "$CHANGELOG"; then
         pass "CHANGELOG section" "[${VERSION}] present"
     else
         fail "CHANGELOG section" "missing [${VERSION}] heading in CHANGELOG.md"
     fi
-fi
-
-"$SCRIPT_DIR/echo-command-header.sh" "Checking dist package version metadata"
-ZIP_NAME="$("$SCRIPT_DIR/plugin-zipfile.sh" "$SOURCE_PATH")"
-ZIP_PATH="${SOURCE_PATH}/dist/${ZIP_NAME}"
-HAS_DIST=0
-
-if [[ -f "$ZIP_PATH" ]]; then
-    HAS_DIST=1
-    "$SCRIPT_DIR/echo-step.sh" "Inspecting dist ZIP ${ZIP_NAME}"
-    TMPZIP="$(mktemp -d)"
-    unzip -q "$ZIP_PATH" -d "$TMPZIP"
-    ZIP_MAIN="${TMPZIP}/${PLUGIN_FOLDER}/${PLUGIN_SLUG}.php"
-    ZIP_README="${TMPZIP}/${PLUGIN_FOLDER}/readme.txt"
-    ZIP_HEADER="$(extract_header_version "$ZIP_MAIN")"
-    ZIP_CONST="$(extract_constant_version "$ZIP_MAIN" "$VERSION_CONSTANT")"
-    ZIP_STABLE="$(extract_stable_tag "$ZIP_README")"
-
-    if [[ "$ZIP_HEADER" == "$VERSION" ]]; then
-        pass "Dist ZIP Version header" "$ZIP_HEADER"
-    else
-        fail "Dist ZIP Version header" "expected ${VERSION}, got '${ZIP_HEADER:-missing}' in ${ZIP_NAME}"
-    fi
-    if [[ -n "$VERSION_CONSTANT" ]]; then
-        if [[ "$ZIP_CONST" == "$VERSION" ]]; then
-            pass "Dist ZIP version constant" "$ZIP_CONST"
-        else
-            fail "Dist ZIP version constant" "expected ${VERSION}, got '${ZIP_CONST:-missing}'"
-        fi
-    fi
-    if [[ "$ZIP_STABLE" == "$VERSION" ]]; then
-        pass "Dist ZIP Stable tag" "$ZIP_STABLE"
-    else
-        fail "Dist ZIP Stable tag" "expected ${VERSION}, got '${ZIP_STABLE:-missing}'"
-    fi
-    rm -rf "$TMPZIP"
-elif [[ -f "$DIST_MAIN" ]]; then
-    HAS_DIST=1
-    "$SCRIPT_DIR/echo-step.sh" "Inspecting dist directory ${DIST_DIR}"
-    DIR_HEADER="$(extract_header_version "$DIST_MAIN")"
-    DIR_CONST="$(extract_constant_version "$DIST_MAIN" "$VERSION_CONSTANT")"
-    DIR_STABLE="$(extract_stable_tag "$DIST_README")"
-
-    if [[ "$DIR_HEADER" == "$VERSION" ]]; then
-        pass "Dist dir Version header" "$DIR_HEADER"
-    else
-        fail "Dist dir Version header" "expected ${VERSION}, got '${DIR_HEADER:-missing}'"
-    fi
-    if [[ -n "$VERSION_CONSTANT" ]]; then
-        if [[ "$DIR_CONST" == "$VERSION" ]]; then
-            pass "Dist dir version constant" "$DIR_CONST"
-        else
-            fail "Dist dir version constant" "expected ${VERSION}, got '${DIR_CONST:-missing}'"
-        fi
-    fi
-    if [[ "$DIR_STABLE" == "$VERSION" ]]; then
-        pass "Dist dir Stable tag" "$DIR_STABLE"
-    else
-        fail "Dist dir Stable tag" "expected ${VERSION}, got '${DIR_STABLE:-missing}'"
-    fi
-fi
-
-if [[ "$HAS_DIST" -eq 0 ]]; then
-    fail "Dist package" "No dist ZIP (${ZIP_PATH}) or unpacked dir (${DIST_DIR}). Run composer build / pack:zip first"
 fi
 
 "$SCRIPT_DIR/echo-command-header.sh" "Checking WordPress.org publication status"
@@ -312,5 +294,5 @@ fi
 if [[ "$FAIL" -gt 0 ]]; then
     finish_failure "check:release failed — fix version consistency before releasing."
 fi
-"$SCRIPT_DIR/echo-success.sh" "check:release passed for ${VERSION}"
+"$SCRIPT_DIR/echo-success.sh" "check:release passed for ${VERSION} (${CHECK_PATH})"
 finish_success

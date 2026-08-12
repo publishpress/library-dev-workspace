@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Fixed: Terminal container bind-mounts the real `dev-workspace` path so Composer `path` repository symlinks work inside Docker.
+- Changed: `check-release.sh` takes an optional `PATH` (any plugin-like folder) instead of fixed `--source` / `--dist` modes. Default path is the project root.
+- Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root before packing, then again on `dist/${PP_PLUGIN_FOLDER}` after packing.
+- Changed: `CHANGELOG.md` and `package.json` checks are skipped when those files are absent (so dist folders without them still pass).
+
 [1.8.2] - 12 Aug, 2026
 
 - Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.2`.

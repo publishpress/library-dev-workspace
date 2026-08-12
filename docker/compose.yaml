@@ -21,6 +21,8 @@ services:
         working_dir: "/project"
         volumes:
             - ${REPO_ROOT}:/project
+            # Bind the real package path so Composer path-repo symlinks work in-container.
+            - ${DEV_WORKSPACE_REAL}:/project/vendor/publishpress/dev-workspace
             - ${REPO_ROOT}/vendor/publishpress/dev-workspace/docker/terminal/.zshrc:/root/.zshrc
             - ${CACHE_PATH}/.npm:/root/.npm
             - ${CACHE_PATH}/.oh-my-zsh/log:/root/.oh-my-zsh/log

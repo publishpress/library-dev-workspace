@@ -16,13 +16,15 @@ if [ "$arg1" = "-h" ] || [ "$arg1" = "--help" ]; then
     exit 0
 fi
 
-DEV_SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Assuming the script is run from the dev-workspace/scripts directory.
-DEV_WORKSPACE_DIR="$(cd "$DEV_SCRIPTS_DIR/.." && pwd)"
+DEV_SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -L)"
+# Logical path keeps vendor/... layout when the package is a Composer path symlink.
+DEV_WORKSPACE_DIR="$(cd "$DEV_SCRIPTS_DIR/.." && pwd -L)"
+# Physical path for Docker bind-mounts (symlink targets live outside the plugin mount).
+DEV_WORKSPACE_REAL="$(cd "$DEV_SCRIPTS_DIR/.." && pwd -P)"
 # Assuming the script is run from the dev-workspace directory from inside vendor/publishpress/dev-workspace.
-REPO_ROOT="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd)"
+REPO_ROOT="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd -L)"
 
-export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR REPO_ROOT
+export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR DEV_WORKSPACE_REAL REPO_ROOT
 
 if [[ ! -f "$REPO_ROOT/.env" ]]; then
     $DEV_SCRIPTS_DIR/echo-error.sh "Error: Missing .env file in repository root ($REPO_ROOT). Create it with: cp .env.example .env"
