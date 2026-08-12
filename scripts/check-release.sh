@@ -261,7 +261,8 @@ fi
 if [[ ! -f "$CHANGELOG" ]]; then
     pass "CHANGELOG" "absent — skipped"
 else
-    if grep -Eq "^\[${VERSION}\]" "$CHANGELOG"; then
+    # Accept Keep a Changelog headings (`## [1.0.0]`) and bare `[1.0.0]` lines.
+    if grep -Eq "^#{0,3}[[:space:]]*\[${VERSION}\]" "$CHANGELOG"; then
         pass "CHANGELOG section" "[${VERSION}] present"
     else
         fail "CHANGELOG section" "missing [${VERSION}] heading in CHANGELOG.md"
