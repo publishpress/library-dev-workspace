@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.0] - 12 Aug, 2026
+
+- Added: `composer check:release` — pre-release gate for stable version consistency (plugin header, version constant, Stable tag, CHANGELOG, dist ZIP/dir) and fails if the version is already published on wordpress.org when the plugin is hosted there. `package.json` is optional; when it defines `version`, that value must match.
+- Added: `composer check:wporg` — post-release verification of the live wordpress.org ZIP, checksums, plugin page, and update-check API (Protect the Shire cooldown reported as WARN).
+- Added: `composer check:release-if-stable` — same as `check:release` but skips non-stable (beta/rc/alpha) versions.
+- Changed: `composer build` and `composer build:all` run `check:release-if-stable` after packing so stable release packages cannot ship with mismatched version metadata.
+
 [1.7.0] - 31 Jul, 2026
 
 - Changed: Plugin Check PHPCS rules now ship in `publishpress/publishpress-phpcs-standards` instead of `wordpress/plugin-check`. composer config:plugin-check` no longer merges a custom Composer repository into consuming plugins.

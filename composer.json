@@ -63,12 +63,19 @@
         "dev:shell": "vendor/publishpress/dev-workspace/scripts/run.sh",
         "dev:shell:stop": "vendor/publishpress/dev-workspace/scripts/stop.sh",
         "not-container": "vendor/publishpress/dev-workspace/scripts/ensure-not-container.sh",
-        "build": "@pack:zip",
+        "build": [
+            "@pack:zip",
+            "@check:release-if-stable"
+        ],
         "build:all": [
             "@build:js",
             "@translate:compile",
-            "@pack:zip"
+            "@pack:zip",
+            "@check:release-if-stable"
         ],
+        "check:release": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh \"$@\"",
+        "check:release-if-stable": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh --if-stable \"$@\"",
+        "check:wporg": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-wporg.sh \"$@\"",
         "pack:zip": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/pack.sh zip",
         "pack:zip:with-debug": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/pack.sh zip --with-debug",
         "pack:dir": "vendor/publishpress/dev-workspace/scripts/run.sh vendor/publishpress/dev-workspace/scripts/pack.sh dir",
@@ -310,8 +317,11 @@
         "dev:shell": "Run a command inside the dev-workspace container or open a new terminal",
         "dev:shell:stop": "Stop spawned dev shell processes",
         "not-container": "Assert the current process is not running inside a container",
-        "build": "Create the distributable zip package",
-        "build:all": "Build JavaScript, compile translations, then pack the plugin (zip) and build an unpacked plugin directory under dist",
+        "build": "Create the distributable zip package, then run check:release when the version is stable",
+        "build:all": "Build JavaScript, compile translations, then pack the plugin (zip) and run check:release when stable",
+        "check:release": "Pre-release gate: stable version consistency (source + dist + changelog; optional package.json version; fails if already on wordpress.org)",
+        "check:release-if-stable": "Same as check:release, but skips when version is beta/rc/alpha (used by build)",
+        "check:wporg": "Post-release: verify ZIP, Stable tag, checksums, and update API on wordpress.org",
         "pack:zip": "Create the distributable zip package",
         "pack:zip:with-debug": "Create the distributable zip package with debug assets",
         "pack:dir": "Build an unpacked plugin directory under dist",
