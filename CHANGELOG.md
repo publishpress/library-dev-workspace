@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.2] - 12 Aug, 2026
+
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.2`.
+- Fixed: Re-release so Packagist consumers receive the compose version bump that landed after tag `1.8.1` was first published (Packagist still served the earlier `1.8.1` commit).
+
 [1.8.1] - 12 Aug, 2026
 
 - Changed: `check-release.sh` and `check-wporg.sh` use the same output helpers as the pack/build scripts (`echo-command-header`, `echo-step`, `echo-success`, `echo-error`, separators, runtime, and success/failure footer).
