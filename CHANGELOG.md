@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.5] - 12 Aug, 2026
+
+- Fixed: `check:release` accepts Keep a Changelog headings (`## [x.y.z]`) as well as bare `[x.y.z]` lines.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.5`.
+
 [1.8.4] - 12 Aug, 2026
 
 - Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root only (before packing); no longer check the dist folder after packing.
