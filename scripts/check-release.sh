@@ -170,6 +170,7 @@ if [[ ! -d "$CHECK_PATH" ]]; then
     finish_failure "check:release could not find the target path."
 fi
 
+# Metadata (slug / version-constant) comes from composer.json in the check path.
 if [[ ! -f "${CHECK_PATH}/composer.json" ]]; then
     "$SCRIPT_DIR/echo-error.sh" "composer.json not found in ${CHECK_PATH}"
     finish_failure "check:release requires composer.json in the target path."

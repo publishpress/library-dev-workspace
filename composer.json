@@ -65,15 +65,13 @@
         "not-container": "vendor/publishpress/dev-workspace/scripts/ensure-not-container.sh",
         "build": [
             "@check:release-if-stable",
-            "@pack:zip",
-            "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh --if-stable dist/${PP_PLUGIN_FOLDER}"
+            "@pack:zip"
         ],
         "build:all": [
             "@build:js",
             "@translate:compile",
             "@check:release-if-stable",
-            "@pack:zip",
-            "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh --if-stable dist/${PP_PLUGIN_FOLDER}"
+            "@pack:zip"
         ],
         "check:release": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh \"$@\"",
         "check:release-if-stable": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-release.sh --if-stable \"$@\"",
@@ -319,8 +317,8 @@
         "dev:shell": "Run a command inside the dev-workspace container or open a new terminal",
         "dev:shell:stop": "Stop spawned dev shell processes",
         "not-container": "Assert the current process is not running inside a container",
-        "build": "Run check:release on the project root (if stable), pack the zip, then check:release on dist/${PP_PLUGIN_FOLDER} (if stable)",
-        "build:all": "Build JavaScript, compile translations, run check:release on the project root (if stable), pack the zip, then check:release on dist (if stable)",
+        "build": "Run check:release on the project root (if stable), then pack the zip",
+        "build:all": "Build JavaScript, compile translations, run check:release on the project root (if stable), then pack the zip",
         "check:release": "Pre-release gate for a plugin folder (default: project root). Optional PATH and VERSION args. Fails if version already on wordpress.org when hosted there",
         "check:release-if-stable": "Same as check:release, but skips when version is beta/rc/alpha (used by build)",
         "check:wporg": "Post-release: verify ZIP, Stable tag, checksums, and update API on wordpress.org",

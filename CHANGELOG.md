@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.4]
+
+- Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root only (before packing); no longer check the dist folder after packing.
+
 [1.8.3] - 12 Aug, 2026
 
 - Changed: `check-release.sh` accepts an optional `PATH` (any plugin-like folder; default project root) and optional `VERSION`.
