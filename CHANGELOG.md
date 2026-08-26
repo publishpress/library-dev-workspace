@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.6] - 26 Aug, 2026
+
+- Fixed: `composer set:version` now writes the plugin header, version constant, optional `package.json` version, and (stable only) readme Stable tag instead of exiting after validation. It does not add a Composer `version` field.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.6`.
+
 [1.8.5] - 12 Aug, 2026
 
 - Fixed: `check:release` accepts Keep a Changelog headings (`## [x.y.z]`) as well as bare `[x.y.z]` lines.
