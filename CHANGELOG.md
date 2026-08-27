@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.10] - 27 Aug, 2026
+
+- Changed: Bare `composer lint:phpcs` vendor fallback scans PHP files only and excludes `dev-workspace-cache/` and `dist/`, substantially reducing WordPress.org plugin-review scan time and memory use.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.10`.
+
 [1.8.9] - 27 Aug, 2026
 
 - Changed: `composer lint:phpcs` labels both passes and displays PHPCS progress for each scan, including the vendor ruleset fallback, so long WordPress.org plugin-review runs remain visibly active.
