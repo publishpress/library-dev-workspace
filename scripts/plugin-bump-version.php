@@ -38,10 +38,13 @@ function isStableVersion($version): bool
     return (bool) preg_match('/^\d+\.\d+\.\d+$/', $version);
 }
 
-function isValideVersion($version): bool
+function isValidVersion($version): bool
 {
-    return preg_match(
-        '/^\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?:\+[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$/',
+    return (bool) preg_match(
+        '/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)' .
+        '(?:-(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)' .
+        '(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?' .
+        '(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\z/',
         $version
     );
 }
@@ -74,7 +77,7 @@ function readMainPluginFile(): string
         fwrite(STDERR, "Main plugin file not found: {$mainPluginFilePath}\n");
         exit(1);
     }
-  
+
     return (string) file_get_contents($mainPluginFilePath);
 }
 
@@ -193,8 +196,8 @@ if (isset($argv[1])) {
     $newVersion = askForNewVersion();
 }
 
-if (!isValideVersion($newVersion)) {
-    echo "Invalid version format. Please use x.y.z[-(alpha|beta|rc).w] format\n";
+if (!isValidVersion($newVersion)) {
+    echo "Invalid version format. Please use semantic versioning (for example, x.y.z or x.y.z-beta1)\n";
     exit(1);
 }
 
