@@ -3,10 +3,53 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.7.1] - [UNRELEASED]
+[1.8.7] - 27 Aug, 2026
 
+- Fixed: Bare `composer lint:phpcs` calls now scan the project root during the vendor org-review fallback instead of failing because no path was supplied.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.7`.
 - Fixed: Preserve semantic version prerelease suffixes and build metadata when reading and setting plugin versions.
 - Fixed: Enforce LF line endings for shell scripts to prevent invalid `bash\r` shebangs in Windows and WSL environments.
+
+[1.8.6] - 26 Aug, 2026
+
+- Fixed: `composer set:version` now writes the plugin header, version constant, optional `package.json` version, and (stable only) readme Stable tag instead of exiting after validation. It does not add a Composer `version` field.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.6`.
+
+[1.8.5] - 12 Aug, 2026
+
+- Fixed: `check:release` accepts Keep a Changelog headings (`## [x.y.z]`) as well as bare `[x.y.z]` lines.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.5`.
+
+[1.8.4] - 12 Aug, 2026
+
+- Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root only (before packing); no longer check the dist folder after packing.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.4`.
+- Added: `.cursor/skills/release-dev-workspace` — predictable release workflow for this package (changelog, compose version, tag, GitHub release).
+
+[1.8.3] - 12 Aug, 2026
+
+- Changed: `check-release.sh` accepts an optional `PATH` (any plugin-like folder; default project root) and optional `VERSION`.
+- Changed: `composer build` / `composer build:all` run `check:release-if-stable` on the project root before packing, then again on `dist/${PP_PLUGIN_FOLDER}` after packing.
+- Changed: `CHANGELOG.md` and `package.json` checks are skipped when those files are absent (so dist folders without them still pass).
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.3`.
+- Fixed: Terminal container bind-mounts the real `dev-workspace` path so Composer `path` repository symlinks work inside Docker.
+
+[1.8.2] - 12 Aug, 2026
+
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.2`.
+- Fixed: Re-release so Packagist consumers receive the compose version bump that landed after tag `1.8.1` was first published (Packagist still served the earlier `1.8.1` commit).
+
+[1.8.1] - 12 Aug, 2026
+
+- Changed: `check-release.sh` and `check-wporg.sh` use the same output helpers as the pack/build scripts (`echo-command-header`, `echo-step`, `echo-success`, `echo-error`, separators, runtime, and success/failure footer).
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.1`.
+
+[1.8.0] - 12 Aug, 2026
+
+- Added: `composer check:release` — pre-release gate for stable version consistency (plugin header, version constant, Stable tag, CHANGELOG, dist ZIP/dir) and fails if the version is already published on wordpress.org when the plugin is hosted there. `package.json` is optional; when it defines `version`, that value must match.
+- Added: `composer check:wporg` — post-release verification of the live wordpress.org ZIP, checksums, plugin page, and update-check API (Protect the Shire cooldown reported as WARN).
+- Added: `composer check:release-if-stable` — same as `check:release` but skips non-stable (beta/rc/alpha) versions.
+- Changed: `composer build` and `composer build:all` run `check:release-if-stable` after packing so stable release packages cannot ship with mismatched version metadata.
 
 [1.7.0] - 31 Jul, 2026
 

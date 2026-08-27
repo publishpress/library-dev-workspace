@@ -16,7 +16,11 @@ phpcs --standard=.phpcs.xml "$@" || pass1_status=$?
 if [[ -f .phpcs-plugin-review.xml ]]; then
     phpcs --standard=.phpcs-plugin-review.xml "$@" || pass2_status=$?
 elif [[ -f vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml ]]; then
-    phpcs --standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml "$@" || pass2_status=$?
+    pass2_args=("$@")
+    if [[ ${#pass2_args[@]} -eq 0 ]]; then
+        pass2_args=(.)
+    fi
+    phpcs --standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml "${pass2_args[@]}" || pass2_status=$?
 else
     echo "Plugin Check ruleset not found. Run composer config:plugin-check." >&2
     exit 1
