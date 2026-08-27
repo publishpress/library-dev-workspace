@@ -180,40 +180,65 @@ assertSame('stable package.json', '1.2.0', $stablePackage['version'] ?? null);
 $stableComposer = json_decode(read($stableDir, 'composer.json'), true);
 assertTrue('stable composer.json has no version field', !isset($stableComposer['version']));
 
-// --- prerelease preserves Stable tag ---
-$preDir = makeFixture([
-    'composer.json' => defaultComposerJson(),
-    'demo-plugin.php' => defaultPluginFile('1.0.0'),
-    'readme.txt' => "Stable tag: 1.0.0\n",
-    'package.json' => "{\n  \"name\": \"demo-plugin\",\n  \"version\": \"1.0.0\"\n}\n",
-]);
-[$code, $stdout, $stderr] = runBump($preDir, '1.2.0-beta.1');
-assertSame('prerelease exit code', 0, $code);
-assertTrue('prerelease stdout says Stable tag unchanged', strpos($stdout, 'Stable tag unchanged') !== false, $stdout . $stderr);
-$prePlugin = read($preDir, 'demo-plugin.php');
-assertSame('prerelease header', '1.2.0-beta.1', extractHeader($prePlugin));
-assertSame('prerelease constant', '1.2.0-beta.1', extractConstant($prePlugin));
-assertSame('prerelease readme preserved', '1.0.0', extractStableTag(read($preDir, 'readme.txt')));
-$prePackage = json_decode(read($preDir, 'package.json'), true);
-assertSame('prerelease package.json', '1.2.0-beta.1', $prePackage['version'] ?? null);
+// --- semantic custom versions preserve Stable tag ---
+$customVersions = [
+    '3.111.1-beta1',
+    '4.10.4-beta',
+    '1.2.0-beta.1+build.7',
+    '1.2.0+build.7',
+];
 
-// --- invalid version leaves files unchanged ---
-$invalidDir = makeFixture([
-    'composer.json' => defaultComposerJson(),
-    'demo-plugin.php' => defaultPluginFile('1.0.0'),
-    'readme.txt' => "Stable tag: 1.0.0\n",
-]);
-[$code, $stdout, $stderr] = runBump($invalidDir, '4.10.4-beta');
-assertSame('invalid version exit code', 1, $code);
-assertTrue(
-    'invalid version message',
-    strpos($stdout . $stderr, 'Invalid version format') !== false,
-    $stdout . $stderr
-);
-$invalidPlugin = read($invalidDir, 'demo-plugin.php');
-assertSame('invalid version header unchanged', '1.0.0', extractHeader($invalidPlugin));
-assertSame('invalid version constant unchanged', '1.0.0', extractConstant($invalidPlugin));
-assertSame('invalid version readme unchanged', '1.0.0', extractStableTag(read($invalidDir, 'readme.txt')));
+foreach ($customVersions as $customVersion) {
+    $preDir = makeFixture([
+        'composer.json' => defaultComposerJson(),
+        'demo-plugin.php' => defaultPluginFile('1.0.0'),
+        'readme.txt' => "Stable tag: 1.0.0\n",
+        'package.json' => "{\n  \"name\": \"demo-plugin\",\n  \"version\": \"1.0.0\"\n}\n",
+    ]);
+    [$code, $stdout, $stderr] = runBump($preDir, $customVersion);
+    $prefix = "custom {$customVersion}";
+    assertSame("{$prefix} exit code", 0, $code);
+    assertTrue(
+        "{$prefix} stdout says Stable tag unchanged",
+        strpos($stdout, 'Stable tag unchanged') !== false,
+        $stdout . $stderr
+    );
+    $prePlugin = read($preDir, 'demo-plugin.php');
+    assertSame("{$prefix} header", $customVersion, extractHeader($prePlugin));
+    assertSame("{$prefix} constant", $customVersion, extractConstant($prePlugin));
+    assertSame("{$prefix} readme preserved", '1.0.0', extractStableTag(read($preDir, 'readme.txt')));
+    $prePackage = json_decode(read($preDir, 'package.json'), true);
+    assertSame("{$prefix} package.json", $customVersion, $prePackage['version'] ?? null);
+}
+
+// --- invalid semantic versions leave files unchanged ---
+$invalidVersions = [
+    '4.10.4-beta..1',
+    '01.2.3',
+    '1.02.3',
+    '1.2.03',
+    '1.2.3-beta.01',
+];
+
+foreach ($invalidVersions as $invalidVersion) {
+    $invalidDir = makeFixture([
+        'composer.json' => defaultComposerJson(),
+        'demo-plugin.php' => defaultPluginFile('1.0.0'),
+        'readme.txt' => "Stable tag: 1.0.0\n",
+    ]);
+    [$code, $stdout, $stderr] = runBump($invalidDir, $invalidVersion);
+    $prefix = "invalid {$invalidVersion}";
+    assertSame("{$prefix} exit code", 1, $code);
+    assertTrue(
+        "{$prefix} message",
+        strpos($stdout . $stderr, 'Invalid version format') !== false,
+        $stdout . $stderr
+    );
+    $invalidPlugin = read($invalidDir, 'demo-plugin.php');
+    assertSame("{$prefix} header unchanged", '1.0.0', extractHeader($invalidPlugin));
+    assertSame("{$prefix} constant unchanged", '1.0.0', extractConstant($invalidPlugin));
+    assertSame("{$prefix} readme unchanged", '1.0.0', extractStableTag(read($invalidDir, 'readme.txt')));
+}
 
 // --- missing plugin-slug ---
 $missingSlugDir = makeFixture([

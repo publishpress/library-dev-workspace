@@ -27,5 +27,6 @@ if [ ! -f "${PLUGIN_FILE_PATH}" ]; then
     exit 2
 fi
 
-# Extract and output the plugin version
-grep "* Version:" "${PLUGIN_FILE_PATH}" | sed -E 's/[^0-9.]*([0-9.]+(-[a-zA-Z]+\.[0-9]+)?).*/\1/'
+# Preserve the complete version token, including prerelease and build metadata.
+sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([^[:space:]]+).*/\1/p' \
+    "${PLUGIN_FILE_PATH}" | head -1 | tr -d '\r'

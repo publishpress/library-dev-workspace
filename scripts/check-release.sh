@@ -32,7 +32,7 @@ Usage: check-release.sh [--if-stable] [--allow-published] [PATH] [VERSION]
   --allow-published   Do not fail when this version is already on wordpress.org.
   -h, --help          Show help.
 
-  A single positional is treated as VERSION when it matches x.y.z[(-alpha|-beta|-rc).N],
+  A single positional is treated as VERSION when it is a semantic version;
   otherwise as PATH. Two positionals are PATH then VERSION.
 
 Checks (all must pass for a stable release):
@@ -45,7 +45,10 @@ EOF
 }
 
 is_version_string() {
-    [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?$ ]]
+    local semver_pattern
+    semver_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+
+    [[ "$1" =~ $semver_pattern ]]
 }
 
 while [[ $# -gt 0 ]]; do
@@ -134,7 +137,7 @@ finish_failure() {
 }
 
 is_stable_version() {
-    [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+    [[ "$1" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
 }
 
 extract_header_version() {
@@ -143,7 +146,7 @@ extract_header_version() {
         echo ""
         return
     fi
-    sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?).*/\1/p' "$file" | head -1 | tr -d '\r'
+    sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([^[:space:]]+).*/\1/p' "$file" | head -1 | tr -d '\r'
 }
 
 extract_constant_version() {
