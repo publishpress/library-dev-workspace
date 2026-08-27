@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.8.8] - 27 Aug, 2026
 
-- Fixed: `composer translate:pot` scans nested `dist/` asset directories while continuing to exclude packaged plugin output.
+- Fixed: `composer translate:pot` scans nested `dist/` asset directories while continuing to exclude packaged plugin output (Issue #26).
 - Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.8`.
 
 [1.8.7] - 27 Aug, 2026
