@@ -20,7 +20,11 @@ if [[ -f .phpcs-plugin-review.xml ]]; then
 elif [[ -f vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml ]]; then
     pass2_args=("$@")
     if [[ ${#pass2_args[@]} -eq 0 ]]; then
-        pass2_args=(.)
+        pass2_args=(
+            "--extensions=php"
+            "--ignore=${REPO_ROOT}/dev-workspace-cache/*,${REPO_ROOT}/dist/*"
+            "."
+        )
     fi
     phpcs -p --standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml "${pass2_args[@]}" || pass2_status=$?
 else

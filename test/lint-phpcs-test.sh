@@ -105,13 +105,16 @@ assert_output() {
 
 bare_fixture="$(make_fixture bare)"
 run_lint "$bare_fixture"
-assert_calls "vendor fallback defaults to project root" "$bare_fixture" \
+printf -v bare_ignore_arg '%q' "--ignore=${bare_fixture}/dev-workspace-cache/*,${bare_fixture}/dist/*"
+assert_calls "vendor fallback limits bare scan to PHP project files" "$bare_fixture" \
 "CALL
 ARG=-p
 ARG=--standard=.phpcs.xml
 CALL
 ARG=-p
 ARG=--standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml
+ARG=--extensions=php
+ARG=$bare_ignore_arg
 ARG=."
 assert_output "passes have clear progress labels" "$bare_fixture" \
 "▶ PHPCS pass 1/2: project standards
