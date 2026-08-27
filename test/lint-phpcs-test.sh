@@ -72,7 +72,7 @@ run_lint() {
         PATH="$fixture/bin:$PATH" \
             PHPCS_CALLS="$fixture/phpcs-calls" \
             bash "$fixture/vendor/publishpress/dev-workspace/scripts/lint-phpcs.sh" "$@"
-    )
+    ) > "$fixture/lint-output"
 }
 
 assert_calls() {
@@ -89,23 +89,44 @@ assert_calls() {
     fi
 }
 
+assert_output() {
+    local name="$1"
+    local fixture="$2"
+    local expected="$3"
+    local actual
+
+    actual="$(< "$fixture/lint-output")"
+    if [[ "$actual" == "$expected" ]]; then
+        pass "$name"
+    else
+        fail "$name" "expected [$expected], got [$actual]"
+    fi
+}
+
 bare_fixture="$(make_fixture bare)"
 run_lint "$bare_fixture"
 assert_calls "vendor fallback defaults to project root" "$bare_fixture" \
 "CALL
+ARG=-p
 ARG=--standard=.phpcs.xml
 CALL
+ARG=-p
 ARG=--standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml
 ARG=."
+assert_output "passes have clear progress labels" "$bare_fixture" \
+"▶ PHPCS pass 1/2: project standards
+▶ PHPCS pass 2/2: WordPress.org plugin review"
 
 target_fixture="$(make_fixture explicit-targets)"
 run_lint "$target_fixture" "includes/Foo.php" "path with spaces.php"
 assert_calls "explicit targets are forwarded unchanged" "$target_fixture" \
 "CALL
+ARG=-p
 ARG=--standard=.phpcs.xml
 ARG=includes/Foo.php
 ARG=path\\ with\\ spaces.php
 CALL
+ARG=-p
 ARG=--standard=vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml
 ARG=includes/Foo.php
 ARG=path\\ with\\ spaces.php"
@@ -115,8 +136,10 @@ touch "$project_fixture/.phpcs-plugin-review.xml"
 run_lint "$project_fixture"
 assert_calls "project ruleset keeps its configured paths" "$project_fixture" \
 "CALL
+ARG=-p
 ARG=--standard=.phpcs.xml
 CALL
+ARG=-p
 ARG=--standard=.phpcs-plugin-review.xml"
 
 echo
