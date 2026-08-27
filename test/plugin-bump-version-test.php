@@ -180,22 +180,23 @@ assertSame('stable package.json', '1.2.0', $stablePackage['version'] ?? null);
 $stableComposer = json_decode(read($stableDir, 'composer.json'), true);
 assertTrue('stable composer.json has no version field', !isset($stableComposer['version']));
 
-// --- semantic prereleases preserve Stable tag ---
-$prereleaseVersions = [
+// --- semantic custom versions preserve Stable tag ---
+$customVersions = [
     '3.111.1-beta1',
     '4.10.4-beta',
     '1.2.0-beta.1+build.7',
+    '1.2.0+build.7',
 ];
 
-foreach ($prereleaseVersions as $prereleaseVersion) {
+foreach ($customVersions as $customVersion) {
     $preDir = makeFixture([
         'composer.json' => defaultComposerJson(),
         'demo-plugin.php' => defaultPluginFile('1.0.0'),
         'readme.txt' => "Stable tag: 1.0.0\n",
         'package.json' => "{\n  \"name\": \"demo-plugin\",\n  \"version\": \"1.0.0\"\n}\n",
     ]);
-    [$code, $stdout, $stderr] = runBump($preDir, $prereleaseVersion);
-    $prefix = "prerelease {$prereleaseVersion}";
+    [$code, $stdout, $stderr] = runBump($preDir, $customVersion);
+    $prefix = "custom {$customVersion}";
     assertSame("{$prefix} exit code", 0, $code);
     assertTrue(
         "{$prefix} stdout says Stable tag unchanged",
@@ -203,11 +204,11 @@ foreach ($prereleaseVersions as $prereleaseVersion) {
         $stdout . $stderr
     );
     $prePlugin = read($preDir, 'demo-plugin.php');
-    assertSame("{$prefix} header", $prereleaseVersion, extractHeader($prePlugin));
-    assertSame("{$prefix} constant", $prereleaseVersion, extractConstant($prePlugin));
+    assertSame("{$prefix} header", $customVersion, extractHeader($prePlugin));
+    assertSame("{$prefix} constant", $customVersion, extractConstant($prePlugin));
     assertSame("{$prefix} readme preserved", '1.0.0', extractStableTag(read($preDir, 'readme.txt')));
     $prePackage = json_decode(read($preDir, 'package.json'), true);
-    assertSame("{$prefix} package.json", $prereleaseVersion, $prePackage['version'] ?? null);
+    assertSame("{$prefix} package.json", $customVersion, $prePackage['version'] ?? null);
 }
 
 // --- invalid semantic versions leave files unchanged ---
