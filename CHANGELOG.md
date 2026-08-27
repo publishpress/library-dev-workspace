@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.9] - 27 Aug, 2026
+
+- Changed: `composer lint:phpcs` labels both passes and displays PHPCS progress for each scan, including the vendor ruleset fallback, so long WordPress.org plugin-review runs remain visibly active.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.9`.
+
 [1.8.8] - 27 Aug, 2026
 
 - Fixed: `composer translate:pot` scans nested `dist/` asset directories while continuing to exclude packaged plugin output (Issue #26).
