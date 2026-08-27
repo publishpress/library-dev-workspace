@@ -82,13 +82,13 @@ finish_failure() {
 }
 
 is_stable_version() {
-    [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+    [[ "$1" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
 }
 
 extract_header_version() {
     local file="$1"
     [[ -f "$file" ]] || { echo ""; return; }
-    sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?).*/\1/p' "$file" | head -1 | tr -d '\r'
+    sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([^[:space:]]+).*/\1/p' "$file" | head -1 | tr -d '\r'
 }
 
 prior_patch() {

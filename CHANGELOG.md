@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [1.8.7] - 27 Aug, 2026
 
 - Fixed: Bare `composer lint:phpcs` calls now scan the project root during the vendor org-review fallback instead of failing because no path was supplied.
+- Fixed: Plugin version readers and setters preserve semantic-version prerelease suffixes and build metadata, including compact identifiers such as `-beta1`.
+- Fixed: Shell scripts use LF line endings to prevent invalid `bash\r` shebangs on Windows and WSL.
 - Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.7`.
 
 [1.8.6] - 26 Aug, 2026
