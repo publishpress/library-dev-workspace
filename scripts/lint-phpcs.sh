@@ -11,12 +11,22 @@ pass2_status=0
 
 # Pass 1: VIP, PSR12, and project-specific standards.
 echo "▶ PHPCS pass 1/2: project standards"
-phpcs -p --standard=.phpcs.xml "$@" || pass1_status=$?
+
+# Handle Pass 1 - use provided args or default to current directory
+pass1_args=("$@")
+if [[ ${#pass1_args[@]} -eq 0 ]]; then
+    pass1_args=(".")
+fi
+phpcs -p --standard=.phpcs.xml "${pass1_args[@]}" || pass1_status=$?
 
 # Pass 2: WordPress.org org-review (Plugin Check plugin_review_phpcs).
 echo "▶ PHPCS pass 2/2: WordPress.org plugin review"
 if [[ -f .phpcs-plugin-review.xml ]]; then
-    phpcs -p --standard=.phpcs-plugin-review.xml "$@" || pass2_status=$?
+    pass2_args=("$@")
+    if [[ ${#pass2_args[@]} -eq 0 ]]; then
+        pass2_args=(".")
+    fi
+    phpcs -p --standard=.phpcs-plugin-review.xml "${pass2_args[@]}" || pass2_status=$?
 elif [[ -f vendor/publishpress/publishpress-phpcs-standards/standards/plugin-check-rulesets/plugin-review.xml ]]; then
     pass2_args=("$@")
     if [[ ${#pass2_args[@]} -eq 0 ]]; then
