@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.11] - 28 Aug, 2026
+
+- Fixed: Fix missed argument issue on lint:phpcs.
+
 [1.8.10] - 27 Aug, 2026
 
 - Changed: Bare `composer lint:phpcs` vendor fallback scans PHP files only and excludes `dev-workspace-cache/` and `dist/`, substantially reducing WordPress.org plugin-review scan time and memory use.
