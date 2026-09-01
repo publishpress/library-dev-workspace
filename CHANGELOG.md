@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.12] - 01 Sep, 2026
+
+- Changed: WordPress test image updated from 6.9 to 7.1 (`publishpress/dev-workspace-wordpress:wordpress-7.1-php-8.5`) in `docker/compose.yaml`, `README.md`, and `test/fake-plugin/.env.example`.
+
 [1.8.11] - 28 Aug, 2026
 
 - Fixed: Fix missed argument issue on lint:phpcs.
