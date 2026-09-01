@@ -64,7 +64,7 @@ services:
             retries: 10
     wp_test:
         profiles: ["test"]
-        image: publishpress/dev-workspace-wordpress:wordpress-6.9-php-8.5
+        image: publishpress/dev-workspace-wordpress:wordpress-7.1-php-8.5
         container_name: ${CONTAINER_NAME}_env_wp_test
         env_file:
             - ${REPO_ROOT}/.env

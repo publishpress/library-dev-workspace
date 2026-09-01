@@ -157,7 +157,7 @@ PLUGIN_TYPE="FREE"
 PLUGIN_COMPOSER_PACKAGE="publishpress/publishpress-future"
 
 TERMINAL_IMAGE_NAME="publishpress/dev-workspace-terminal:node-25"
-WP_IMAGE_NAME="publishpress/dev-workspace-wordpress:wordpress-6.9-php-8.5"
+WP_IMAGE_NAME="publishpress/dev-workspace-wordpress:wordpress-7.1-php-8.5"
 WPCLI_IMAGE_NAME="publishpress/dev-workspace-wpcli:wpcli-2-php-8.5"
 ```
 
