@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+- Changed: `check-release`, `check-wporg`, and `plugin-bump-version` locate the version constant in the main plugin file or `defines.php`, `constants.php`, or `include.php` at the plugin root, requiring exactly one definition.
+
 [1.8.12] - 01 Sep, 2026
 
 - Changed: WordPress test image updated from 6.9 to 7.1 (`publishpress/dev-workspace-wordpress:wordpress-7.1-php-8.5`) in `docker/compose.yaml`, `README.md`, and `test/fake-plugin/.env.example`.

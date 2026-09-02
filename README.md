@@ -140,6 +140,15 @@ Set the following keys in the plugin's `composer.json` `extra` section so the wo
 }
 ```
 
+**Version constant placement.** Set `extra.version-constant` to the PHP constant name (for example `PUBLISHPRESS_FUTURE_VERSION`). The `define()` must appear in exactly one file at the plugin root:
+
+- `{plugin-slug}.php` (main plugin file)
+- `defines.php`
+- `constants.php`
+- `include.php`
+
+Release checks (`check:release`, `check-wporg`) and `plugin-bump-version` all use this list. Defining the constant in more than one candidate file fails. Supported syntax is strict `define('NAME', 'version')` / `define("NAME", "version")`, including mixed quote styles; the bump script preserves the quote style already in the file.
+
 Each plugin root must have two environment files:
 
 - **`.env.example`** — committed template with placeholder or default values; keep it in the repository so contributors know what variables are required.
