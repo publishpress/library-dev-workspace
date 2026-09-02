@@ -4,18 +4,40 @@
 
 VERSION_CONSTANT_BASENAMES=(defines.php constants.php include.php)
 
-_version_constant_sed_pattern() {
-    local constant="$1"
-    echo "s/.*define\\((['\"])${constant}\\1,[[:space:]]*(['\"])([^'\"]+)\\2\\).*/\\3/p"
+# BusyBox sed (dev-workspace terminal) cannot match quote pairs via backreferences;
+# try all strict define('NAME', 'value') / define("NAME", "value") combinations.
+_extract_constant_version_with_sed() {
+    local input_file="$1"
+    local constant="$2"
+    local q1 q2 pattern result
+
+    for q1 in "'" '"'; do
+        for q2 in "'" '"'; do
+            pattern="s/.*define\\(${q1}${constant}${q1},[[:space:]]*${q2}([^${q2}]+)${q2}\\).*/\\1/p"
+            result="$(sed -nE "$pattern" "$input_file" | head -1 | tr -d '\r')"
+            if [[ -n "$result" ]]; then
+                echo "$result"
+                return 0
+            fi
+        done
+    done
+
+    echo ""
 }
 
 extract_constant_version_from_stream() {
     local constant="$1"
+    local tmp_file=""
+
     if [[ -z "$constant" ]]; then
         echo ""
         return
     fi
-    sed -nE "$(_version_constant_sed_pattern "$constant")" | head -1 | tr -d '\r'
+
+    tmp_file="$(mktemp)"
+    cat > "$tmp_file"
+    _extract_constant_version_with_sed "$tmp_file" "$constant"
+    rm -f "$tmp_file"
 }
 
 extract_constant_version() {
@@ -25,7 +47,7 @@ extract_constant_version() {
         echo ""
         return
     fi
-    sed -nE "$(_version_constant_sed_pattern "$constant")" "$file" | head -1 | tr -d '\r'
+    _extract_constant_version_with_sed "$file" "$constant"
 }
 
 version_constant_filesystem_candidates() {
