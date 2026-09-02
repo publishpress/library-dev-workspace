@@ -67,6 +67,39 @@ define('DEMO_PLUGIN_VERSION', '${version}');
 PHP
 }
 
+write_stable_fixture_file() {
+    local fixture_dir="$1"
+    local version="$2"
+    shift 2
+
+    mkdir -p "$fixture_dir"
+
+    cat > "$fixture_dir/composer.json" <<'JSON'
+{
+  "name": "publishpress/demo-plugin",
+  "extra": {
+    "plugin-slug": "demo-plugin",
+    "version-constant": "DEMO_PLUGIN_VERSION"
+  }
+}
+JSON
+
+    printf 'Stable tag: %s\n' "$version" > "$fixture_dir/readme.txt"
+
+    while [[ $# -ge 2 ]]; do
+        local relative="$1"
+        local contents="$2"
+        shift 2
+        printf '%s\n' "$contents" > "$fixture_dir/${relative}"
+    done
+}
+
+run_check_release() {
+    local fixture_dir="$1"
+    local version="$2"
+    PP_SOURCE_PATH="$fixture_dir" bash "$REPO_ROOT/scripts/check-release.sh" "$version" 2>&1
+}
+
 versions=(
     "3.111.1-beta1"
     "1.2.3-beta.1+build.7"
@@ -94,6 +127,56 @@ else
     assert_same "check-wporg prerelease exit code" "1" "$wporg_status"
 fi
 assert_contains "check-wporg reports complete prerelease" "$wporg_output" "got '3.111.1-beta1'"
+
+CONST_FIXTURE="$TMP_ROOT/constant-fixtures"
+mkdir -p "$CONST_FIXTURE"
+
+MAIN_ONLY_HEADER='<?php
+/**
+ * Plugin Name: Demo Plugin
+ * Version: 2.0.0
+ */'
+
+write_stable_fixture_file "$CONST_FIXTURE/defines-only" "2.0.0" \
+    "demo-plugin.php" "$MAIN_ONLY_HEADER" \
+    "defines.php" "define('DEMO_PLUGIN_VERSION', '2.0.0');"
+
+defines_only_output="$(run_check_release "$CONST_FIXTURE/defines-only" "2.0.0")"
+assert_contains "check-release accepts constant in defines.php" "$defines_only_output" "Version constant: DEMO_PLUGIN_VERSION=2.0.0 (defines.php)"
+
+write_stable_fixture_file "$CONST_FIXTURE/duplicate" "2.0.0" \
+    "demo-plugin.php" "${MAIN_ONLY_HEADER}
+
+define('DEMO_PLUGIN_VERSION', '2.0.0');" \
+    "defines.php" "define('DEMO_PLUGIN_VERSION', '2.0.0');"
+
+if duplicate_output="$(run_check_release "$CONST_FIXTURE/duplicate" "2.0.0")"; then
+    fail "check-release rejects duplicate constant locations" "$duplicate_output"
+else
+    pass "check-release rejects duplicate constant locations"
+fi
+assert_contains "check-release reports duplicate constant files" "$duplicate_output" "defined in multiple files: demo-plugin.php defines.php"
+
+write_stable_fixture_file "$CONST_FIXTURE/missing" "2.0.0" \
+    "demo-plugin.php" "$MAIN_ONLY_HEADER"
+
+if missing_output="$(run_check_release "$CONST_FIXTURE/missing" "2.0.0")"; then
+    fail "check-release rejects missing version constant" "$missing_output"
+else
+    pass "check-release rejects missing version constant"
+fi
+assert_contains "check-release reports missing constant" "$missing_output" "not found in main plugin file, defines.php, constants.php, or include.php"
+
+write_stable_fixture_file "$CONST_FIXTURE/mismatch" "2.0.0" \
+    "demo-plugin.php" "$MAIN_ONLY_HEADER" \
+    "constants.php" "define('DEMO_PLUGIN_VERSION', '1.0.0');"
+
+if mismatch_output="$(run_check_release "$CONST_FIXTURE/mismatch" "2.0.0")"; then
+    fail "check-release rejects mismatched constant value" "$mismatch_output"
+else
+    pass "check-release rejects mismatched constant value"
+fi
+assert_contains "check-release reports constant mismatch basename" "$mismatch_output" "got '1.0.0' (constants.php)"
 
 echo
 echo "$passes passed, $failures failed"

@@ -17,6 +17,9 @@ if (!is_string($basePath) || $basePath === '' || !is_dir($basePath)) {
 define('BASE_PATH', $basePath);
 define('COMPOSER_JSON_PATH', BASE_PATH . '/composer.json');
 
+// Keep in sync with scripts/version-constant-lib.sh (VERSION_CONSTANT_BASENAMES).
+const VERSION_CONSTANT_BASENAMES = ['defines.php', 'constants.php', 'include.php'];
+
 function getExtraInfoFromComposerJson($composerJsonPath): array
 {
     if (!is_file($composerJsonPath)) {
@@ -70,6 +73,66 @@ function mainPluginFilePath(): string
     return BASE_PATH . '/' . PLUGIN_SLUG . '.php';
 }
 
+function versionConstantCandidatePaths(): array
+{
+    $paths = [mainPluginFilePath()];
+
+    foreach (VERSION_CONSTANT_BASENAMES as $basename) {
+        $paths[] = BASE_PATH . '/' . $basename;
+    }
+
+    return $paths;
+}
+
+function versionConstantDefinePattern(string $versionConstant): string
+{
+    return "/(define\\((['\"])" . preg_quote($versionConstant, '/') . "\\2,[[:space:]]*(['\"]))([^'\"]+)(\\3\\))/";
+}
+
+function extractConstantVersionFromContents(string $contents, string $versionConstant): ?string
+{
+    if (!preg_match(versionConstantDefinePattern($versionConstant), $contents, $matches)) {
+        return null;
+    }
+
+    return $matches[4];
+}
+
+function findVersionConstantLocation(string $versionConstant): string
+{
+    $matches = [];
+
+    foreach (versionConstantCandidatePaths() as $path) {
+        if (!is_file($path)) {
+            continue;
+        }
+
+        $contents = (string) file_get_contents($path);
+        if (extractConstantVersionFromContents($contents, $versionConstant) !== null) {
+            $matches[] = $path;
+        }
+    }
+
+    if ($matches === []) {
+        fwrite(
+            STDERR,
+            "Version constant {$versionConstant} not found in main plugin file, defines.php, constants.php, or include.php\n"
+        );
+        exit(1);
+    }
+
+    if (count($matches) > 1) {
+        $basenames = array_map('basename', $matches);
+        fwrite(
+            STDERR,
+            'Version constant ' . $versionConstant . ' found in multiple files: ' . implode(', ', $basenames) . "\n"
+        );
+        exit(1);
+    }
+
+    return $matches[0];
+}
+
 function readMainPluginFile(): string
 {
     $mainPluginFilePath = mainPluginFilePath();
@@ -81,25 +144,18 @@ function readMainPluginFile(): string
     return (string) file_get_contents($mainPluginFilePath);
 }
 
-function updateVersionConstantInMainPluginFile($versionConstant, $newVersion): void
+function updateVersionConstantInFile(string $path, string $versionConstant, string $newVersion): void
 {
-    $mainPluginFilePath = mainPluginFilePath();
-    $mainPluginFile = readMainPluginFile();
-
-    $updated = preg_replace(
-        "/define\('{$versionConstant}', '.*?'\);/",
-        "define('{$versionConstant}', '" . $newVersion . "');",
-        $mainPluginFile,
-        1,
-        $count
-    );
+    $contents = (string) file_get_contents($path);
+    $pattern = versionConstantDefinePattern($versionConstant);
+    $updated = preg_replace($pattern, '${1}' . $newVersion . '${5}', $contents, 1, $count);
 
     if (!is_string($updated) || $count !== 1) {
-        fwrite(STDERR, "Version constant {$versionConstant} not found in {$mainPluginFilePath}\n");
+        fwrite(STDERR, "Version constant {$versionConstant} not found in {$path}\n");
         exit(1);
     }
 
-    file_put_contents($mainPluginFilePath, $updated);
+    file_put_contents($path, $updated);
 }
 
 function updateVersionInMainPluginFileHeader($newVersion): void
@@ -203,8 +259,10 @@ if (!isValidVersion($newVersion)) {
 
 define('NEW_VERSION', $newVersion);
 
+$versionConstantPath = findVersionConstantLocation(VERSION_CONSTANT);
+
 updateVersionInMainPluginFileHeader(NEW_VERSION);
-updateVersionConstantInMainPluginFile(VERSION_CONSTANT, NEW_VERSION);
+updateVersionConstantInFile($versionConstantPath, VERSION_CONSTANT, NEW_VERSION);
 
 if (isStableVersion(NEW_VERSION)) {
     updateVersionInReadme(NEW_VERSION);

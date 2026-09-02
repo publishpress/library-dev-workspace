@@ -89,6 +89,44 @@ define('DEMO_PLUGIN_VERSION', '{$version}');
 PHP;
 }
 
+function pluginFileWithoutConstant(string $version = '1.0.0'): string
+{
+    return <<<PHP
+<?php
+/**
+ * Plugin Name: Demo Plugin
+ * Version: {$version}
+ */
+
+PHP;
+}
+
+function extractConstantFromFile(string $dir, string $relative): string
+{
+    $php = read($dir, $relative);
+    if (preg_match("/define\\('DEMO_PLUGIN_VERSION', '([^']+)'\\);/", $php, $matches)) {
+        return $matches[1];
+    }
+    if (preg_match('/define\\("DEMO_PLUGIN_VERSION", "([^"]+)"\\);/', $php, $matches)) {
+        return $matches[1];
+    }
+    if (preg_match("/define\\('DEMO_PLUGIN_VERSION', \"([^\"]+)\"\\);/", $php, $matches)) {
+        return $matches[1];
+    }
+
+    return '';
+}
+
+function fixtureFingerprint(string $dir, array $relatives): string
+{
+    $parts = [];
+    foreach ($relatives as $relative) {
+        $parts[] = $relative . ':' . read($dir, $relative);
+    }
+
+    return implode("\n---\n", $parts);
+}
+
 function runBump(string $dir, string $version): array
 {
     $script = dirname(__DIR__) . '/scripts/plugin-bump-version.php';
@@ -277,6 +315,75 @@ $originalPackage = read($noPkgVersionDir, 'package.json');
 [$code] = runBump($noPkgVersionDir, '1.2.0');
 assertSame('package.json without version exit code', 0, $code);
 assertSame('package.json without version unchanged', $originalPackage, read($noPkgVersionDir, 'package.json'));
+
+// --- constant only in defines.php ---
+$definesOnlyDir = makeFixture([
+    'composer.json' => defaultComposerJson(),
+    'demo-plugin.php' => pluginFileWithoutConstant('1.0.0'),
+    'defines.php' => "define('DEMO_PLUGIN_VERSION', '1.0.0');\n",
+    'readme.txt' => "Stable tag: 1.0.0\n",
+]);
+[$code, $stdout, $stderr] = runBump($definesOnlyDir, '1.2.0');
+assertSame('defines.php only exit code', 0, $code);
+assertSame('defines.php only header', '1.2.0', extractHeader(read($definesOnlyDir, 'demo-plugin.php')));
+assertSame('defines.php only constant', '1.2.0', extractConstantFromFile($definesOnlyDir, 'defines.php'));
+assertSame('defines.php only main unchanged', '', extractConstantFromFile($definesOnlyDir, 'demo-plugin.php'));
+
+// --- duplicate constant locations fail before writes ---
+$duplicateDir = makeFixture([
+    'composer.json' => defaultComposerJson(),
+    'demo-plugin.php' => defaultPluginFile('1.0.0'),
+    'defines.php' => "define('DEMO_PLUGIN_VERSION', '1.0.0');\n",
+    'readme.txt' => "Stable tag: 1.0.0\n",
+]);
+$duplicateBefore = fixtureFingerprint($duplicateDir, ['demo-plugin.php', 'defines.php', 'readme.txt']);
+[$code, $stdout, $stderr] = runBump($duplicateDir, '1.2.0');
+assertSame('duplicate constant exit code', 1, $code);
+assertTrue(
+    'duplicate constant message',
+    strpos($stdout . $stderr, 'found in multiple files') !== false,
+    $stdout . $stderr
+);
+assertSame(
+    'duplicate constant leaves files unchanged',
+    $duplicateBefore,
+    fixtureFingerprint($duplicateDir, ['demo-plugin.php', 'defines.php', 'readme.txt'])
+);
+
+// --- double-quoted define preserves quote style ---
+$doubleQuoteDir = makeFixture([
+    'composer.json' => defaultComposerJson(),
+    'demo-plugin.php' => pluginFileWithoutConstant('1.0.0'),
+    'constants.php' => "define(\"DEMO_PLUGIN_VERSION\", \"1.0.0\");\n",
+    'readme.txt' => "Stable tag: 1.0.0\n",
+]);
+[$code] = runBump($doubleQuoteDir, '1.2.0');
+assertSame('double-quoted constant exit code', 0, $code);
+assertSame(
+    'double-quoted constant preserved',
+    "define(\"DEMO_PLUGIN_VERSION\", \"1.2.0\");\n",
+    read($doubleQuoteDir, 'constants.php')
+);
+
+// --- missing constant fails before writes ---
+$missingConstantDir = makeFixture([
+    'composer.json' => defaultComposerJson(),
+    'demo-plugin.php' => pluginFileWithoutConstant('1.0.0'),
+    'readme.txt' => "Stable tag: 1.0.0\n",
+]);
+$missingBefore = fixtureFingerprint($missingConstantDir, ['demo-plugin.php', 'readme.txt']);
+[$code, $stdout, $stderr] = runBump($missingConstantDir, '1.2.0');
+assertSame('missing constant exit code', 1, $code);
+assertTrue(
+    'missing constant message',
+    strpos($stdout . $stderr, 'not found in main plugin file') !== false,
+    $stdout . $stderr
+);
+assertSame(
+    'missing constant leaves files unchanged',
+    $missingBefore,
+    fixtureFingerprint($missingConstantDir, ['demo-plugin.php', 'readme.txt'])
+);
 
 echo "\n{$passes} passed, {$failures} failed\n";
 exit($failures > 0 ? 1 : 0);

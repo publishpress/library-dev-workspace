@@ -46,6 +46,7 @@ jobs:
 
       - name: Check shell syntax
         run: |
+          bash -n scripts/version-constant-lib.sh
           bash -n scripts/plugin-version.sh
           bash -n scripts/check-release.sh
           bash -n scripts/check-wporg.sh

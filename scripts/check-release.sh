@@ -8,6 +8,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=version-constant-lib.sh
+source "${SCRIPT_DIR}/version-constant-lib.sh"
 
 DEFAULT_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
 CHECK_PATH=""
@@ -149,16 +151,6 @@ extract_header_version() {
     sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*([^[:space:]]+).*/\1/p' "$file" | head -1 | tr -d '\r'
 }
 
-extract_constant_version() {
-    local file="$1"
-    local constant="$2"
-    if [[ ! -f "$file" || -z "$constant" ]]; then
-        echo ""
-        return
-    fi
-    sed -nE "s/.*define\\('${constant}',[[:space:]]*'([^']+)'\\).*/\\1/p" "$file" | head -1 | tr -d '\r'
-}
-
 extract_stable_tag() {
     local file="$1"
     if [[ ! -f "$file" ]]; then
@@ -226,11 +218,11 @@ fi
 if [[ -z "$VERSION_CONSTANT" ]]; then
     fail "Version constant" "extra.version-constant missing in composer.json"
 else
-    CONST_VER="$(extract_constant_version "$MAIN_FILE" "$VERSION_CONSTANT")"
-    if [[ "$CONST_VER" == "$VERSION" ]]; then
-        pass "Version constant" "${VERSION_CONSTANT}=${CONST_VER}"
+    mapfile -t VERSION_CONSTANT_FILES < <(version_constant_filesystem_candidates "$CHECK_PATH" "$PLUGIN_SLUG")
+    if validate_version_constant_in_paths "$VERSION_CONSTANT" "$VERSION" "${VERSION_CONSTANT_FILES[@]}"; then
+        pass "Version constant" "$VERSION_CONSTANT_CHECK_DETAIL"
     else
-        fail "Version constant" "expected ${VERSION}, got '${CONST_VER:-missing}' (${VERSION_CONSTANT})"
+        fail "Version constant" "$VERSION_CONSTANT_CHECK_DETAIL"
     fi
 fi
 

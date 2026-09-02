@@ -7,6 +7,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=version-constant-lib.sh
+source "${SCRIPT_DIR}/version-constant-lib.sh"
 
 SOURCE_PATH="${PP_SOURCE_PATH:-${GITHUB_WORKSPACE:-/project}}"
 UA="PublishPress-DevWorkspace-WPORG-Check/1.0"
@@ -165,10 +167,6 @@ if [[ "$code" == "200" ]]; then
 
     "$SCRIPT_DIR/echo-step.sh" "Inspecting Version header, constant, and Stable tag inside ZIP"
     HEADER_ZIP="$(unzip -p "$ZIP_FILE" "$MAIN_IN_ZIP" 2>/dev/null | sed -nE 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*(.+)$/\1/p' | head -1 | tr -d '\r')"
-    CONST_ZIP=""
-    if [[ -n "$VERSION_CONSTANT" ]]; then
-        CONST_ZIP="$(unzip -p "$ZIP_FILE" "$MAIN_IN_ZIP" 2>/dev/null | sed -nE "s/.*define\\('${VERSION_CONSTANT}',[[:space:]]*'([^']+)'\\).*/\\1/p" | head -1 | tr -d '\r')"
-    fi
     STABLE_ZIP="$(unzip -p "$ZIP_FILE" "$README_IN_ZIP" 2>/dev/null | sed -nE 's/^Stable tag:[[:space:]]*(.+)$/\1/p' | head -1 | tr -d '\r')"
 
     if [[ "$HEADER_ZIP" == "$VERSION" ]]; then
@@ -178,10 +176,11 @@ if [[ "$code" == "200" ]]; then
     fi
 
     if [[ -n "$VERSION_CONSTANT" ]]; then
-        if [[ "$CONST_ZIP" == "$VERSION" ]]; then
-            pass "Version constant" "$CONST_ZIP"
+        mapfile -t VERSION_CONSTANT_ZIP_MEMBERS < <(version_constant_zip_members "$PLUGIN_SLUG")
+        if validate_version_constant_in_zip "$ZIP_FILE" "$VERSION_CONSTANT" "$VERSION" "${VERSION_CONSTANT_ZIP_MEMBERS[@]}"; then
+            pass "Version constant" "$VERSION_CONSTANT_CHECK_DETAIL"
         else
-            fail "Version constant" "expected ${VERSION}, got '${CONST_ZIP:-missing}'"
+            fail "Version constant" "$VERSION_CONSTANT_CHECK_DETAIL"
         fi
     fi
 
