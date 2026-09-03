@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.14] - 03 Sep, 2026
+
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.14`.
+
 [1.8.13] - 02 Sep, 2026
 
 - Changed: `check-release`, `check-wporg`, and `plugin-bump-version` locate the version constant in the main plugin file or `defines.php`, `constants.php`, or `include.php` at the plugin root, requiring exactly one definition.
