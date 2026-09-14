@@ -38,6 +38,31 @@ set +a
 if [[ "$CACHE_PATH" != /* ]]; then
     CACHE_PATH="$REPO_ROOT/$CACHE_PATH"
 fi
+export CACHE_PATH
+
+# Docker Compose --env-file interpolates compose.yaml from the file, not from
+# the process environment (Compose v5). Persist the computed paths so
+# ${REPO_ROOT}:/project does not become :/project.
+upsert_dotenv() {
+    local file="$1" key="$2" value="$3"
+    local tmp
+    tmp="$(mktemp)"
+    awk -v k="$key" -v v="$value" '
+        BEGIN { done = 0 }
+        $0 ~ "^" k "=" {
+            print k "=\"" v "\""
+            done = 1
+            next
+        }
+        { print }
+        END { if (!done) print k "=\"" v "\"" }
+    ' "$file" > "$tmp"
+    mv "$tmp" "$file"
+}
+
+upsert_dotenv "$REPO_ROOT/.env" REPO_ROOT "$REPO_ROOT"
+upsert_dotenv "$REPO_ROOT/.env" DEV_WORKSPACE_REAL "$DEV_WORKSPACE_REAL"
+upsert_dotenv "$REPO_ROOT/.env" CACHE_PATH "$CACHE_PATH"
 
 required_env_vars=(
     "PLUGIN_NAME"
