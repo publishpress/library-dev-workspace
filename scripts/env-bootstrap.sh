@@ -22,7 +22,8 @@ DEV_WORKSPACE_DIR="$(cd "$DEV_SCRIPTS_DIR/.." && pwd -L)"
 # Physical path for Docker bind-mounts (symlink targets live outside the plugin mount).
 DEV_WORKSPACE_REAL="$(cd "$DEV_SCRIPTS_DIR/.." && pwd -P)"
 # Assuming the script is run from the dev-workspace directory from inside vendor/publishpress/dev-workspace.
-REPO_ROOT="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd -L)"
+computed_repo_root="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd -L)"
+REPO_ROOT="$computed_repo_root"
 
 export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR DEV_WORKSPACE_REAL REPO_ROOT
 
@@ -35,14 +36,26 @@ set -a
 source "$REPO_ROOT/.env"
 set +a
 
+# .env stores the host checkout path so Docker Compose can interpolate
+# ${REPO_ROOT}:/project. The terminal container mounts that checkout at
+# /project, so the host path is not present there. Keep using the checkout
+# this process was launched from.
+host_repo_root="$REPO_ROOT"
+if [[ ! -f "$REPO_ROOT/composer.json" && -f "$computed_repo_root/composer.json" ]]; then
+    REPO_ROOT="$computed_repo_root"
+    export REPO_ROOT
+fi
+
 if [[ "$CACHE_PATH" != /* ]]; then
     CACHE_PATH="$REPO_ROOT/$CACHE_PATH"
 fi
 export CACHE_PATH
 
 # Docker Compose --env-file interpolates compose.yaml from the file, not from
-# the process environment (Compose v5). Persist the computed paths so
-# ${REPO_ROOT}:/project does not become :/project.
+# the process environment (Compose v5). Persist the host checkout path so
+# ${REPO_ROOT}:/project does not become :/project. Skip this inside the
+# terminal container: writing /project back into .env breaks the next
+# host-side Compose run.
 upsert_dotenv() {
     local file="$1" key="$2" value="$3"
     local tmp
@@ -60,9 +73,11 @@ upsert_dotenv() {
     mv "$tmp" "$file"
 }
 
-upsert_dotenv "$REPO_ROOT/.env" REPO_ROOT "$REPO_ROOT"
-upsert_dotenv "$REPO_ROOT/.env" DEV_WORKSPACE_REAL "$DEV_WORKSPACE_REAL"
-upsert_dotenv "$REPO_ROOT/.env" CACHE_PATH "$CACHE_PATH"
+if [[ "${INSIDE_DEV_CONTAINER:-}" != "true" && -f "$host_repo_root/composer.json" ]]; then
+    upsert_dotenv "$host_repo_root/.env" REPO_ROOT "$host_repo_root"
+    upsert_dotenv "$host_repo_root/.env" DEV_WORKSPACE_REAL "$DEV_WORKSPACE_REAL"
+    upsert_dotenv "$host_repo_root/.env" CACHE_PATH "$CACHE_PATH"
+fi
 
 required_env_vars=(
     "PLUGIN_NAME"

@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Fixed: Commands inside the dev-workspace terminal, including `composer translate:pot`, resolve the plugin checkout at `/project` when `.env` stores the host `REPO_ROOT` for Docker Compose. The container no longer writes that `/project` path back into `.env`.
+
 [1.8.14] - 03 Sep, 2026
 
 - Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.14`.
