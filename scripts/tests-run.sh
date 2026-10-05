@@ -31,6 +31,29 @@ fi
 if [ "${1:-}" != "Unit" ]; then
     echo "Ensuring Docker test stack (MariaDB/WP/Mailhog) is running..."
     bash "$SCRIPT_DIR/server.sh" up test
+
+    # compose marks wp_test_cli healthy as soon as it starts. Wait until
+    # prepare-wp.sh has decided not to reset the database.
+    cli_container="${CONTAINER_NAME}_env_wp_test_cli"
+    echo "Waiting for ${cli_container} to finish database setup..."
+    deadline=$((SECONDS + 600))
+    while true; do
+        cli_status="$(docker inspect -f '{{.State.Status}}' "$cli_container" 2>/dev/null || echo missing)"
+        if [ "$cli_status" = "exited" ]; then
+            cli_exit="$(docker inspect -f '{{.State.ExitCode}}' "$cli_container")"
+            echo "WordPress test CLI setup exited ${cli_exit}" >&2
+            docker logs --tail 40 "$cli_container" >&2 || true
+            exit 1
+        fi
+        if docker exec "$cli_container" test -f /tmp/wp-test-ready; then
+            break
+        fi
+        if [ "$SECONDS" -ge "$deadline" ]; then
+            echo "Timed out waiting for ${cli_container} (status: ${cli_status})" >&2
+            exit 1
+        fi
+        sleep 1
+    done
 fi
 
 (cd "$REPO_ROOT" && vendor/bin/codecept run "$@")

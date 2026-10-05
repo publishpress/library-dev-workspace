@@ -25,6 +25,15 @@ show_error() {
     echo -e "${RED}✗ $1${NC}"
 }
 
+# `docker compose up` starts this one-shot container on every test run.
+# Resetting an installed database races Codeception, which is already booting WordPress.
+show_header "Checking WordPress installation"
+if wp core is-installed; then
+    show_status "WordPress is already installed; leaving the database in place"
+    touch /tmp/wp-test-ready
+    exec sleep infinity
+fi
+
 # Clean up the database
 show_header "Cleaning up the database"
 wp db reset --yes
@@ -113,3 +122,6 @@ show_status "Future Pro activated successfully"
 echo -e "\n${GREEN}================================================================"
 echo -e "✨ WordPress environment setup completed successfully!"
 echo -e "================================================================"
+
+touch /tmp/wp-test-ready
+exec sleep infinity
