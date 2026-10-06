@@ -35,7 +35,7 @@ services:
             INSIDE_DEV_CONTAINER: "true"
             GIT_CONFIG_GLOBAL: "/root/.gitconfig-vol/config"
             HISTFILE: "/root/.zsh-vol/.zsh_history"
-            DEV_WORKSPACE_VERSION: "1.8.14"
+            DEV_WORKSPACE_VERSION: "1.8.15"
             GIT_CONFIG_COUNT: "1"
             GIT_CONFIG_KEY_0: safe.directory
             GIT_CONFIG_VALUE_0: /project
@@ -130,7 +130,13 @@ services:
             - db_test
             - mailhog
         working_dir: /var/www/html
+        restart: unless-stopped
         command: ["/bin/sh", "-c", "sh /tmp/prepare-wp.sh http://localhost:${WP_TESTS_HTTP_PORT:-8011} plugin-free-wp_test"]
+        healthcheck:
+            test: ["CMD-SHELL", "test -f /tmp/wp-test-ready && wp core is-installed"]
+            start_period: 120s
+            interval: 5s
+            retries: 24
         extra_hosts:
             - "host.docker.internal:host-gateway"
 
