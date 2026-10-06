@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 
-[1.8.15] - 06 Oct, 2026
+[1.8.16] - 06 Oct, 2026
 
 - Fixed: Docker test runs leave an already-installed WordPress database in place, keep the WP-CLI setup container running, and wait until `prepare-wp.sh` finishes before Codeception starts, so `wp db reset` no longer races the WPLoader bootstrap.
 - Fixed: Commands inside the dev-workspace terminal, including `composer translate:pot`, resolve the plugin checkout at `/project` when `.env` stores the host `REPO_ROOT` for Docker Compose. The container no longer writes that `/project` path back into `.env`.
