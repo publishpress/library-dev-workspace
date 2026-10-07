@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "842c8c89151128616189b37f4c13ec5f",
+    "content-hash": "5bd6b037c282dcc2dd7c486d04fa22e2",
     "packages": [
         {
             "name": "automattic/vipwpcs",
@@ -6055,16 +6055,16 @@
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
-            "version": "dev-development",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/publishpress-phpcs-standards.git",
-                "reference": "d02376f26036a2194ebbd67bbb2ac1730568693a"
+                "reference": "95a6ebe1508071735a0a3daf590b493d6253d7f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/publishpress-phpcs-standards/zipball/d02376f26036a2194ebbd67bbb2ac1730568693a",
-                "reference": "d02376f26036a2194ebbd67bbb2ac1730568693a",
+                "url": "https://api.github.com/repos/publishpress/publishpress-phpcs-standards/zipball/95a6ebe1508071735a0a3daf590b493d6253d7f6",
+                "reference": "95a6ebe1508071735a0a3daf590b493d6253d7f6",
                 "shasum": ""
             },
             "require": {
@@ -6076,12 +6076,10 @@
                 "overtrue/phplint": "^2.1",
                 "phpcompatibility/php-compatibility": "*",
                 "phpmd/phpmd": "^2.8",
-                "phpunit/phpunit": "^9.6",
                 "sebastian/phpcpd": "^6.0",
                 "squizlabs/php_codesniffer": "^3.5",
                 "vimeo/psalm": "^4.17"
             },
-            "default-branch": true,
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6098,9 +6096,9 @@
             "description": "PublishPress PHPCS standards, including vendored WordPress.org Plugin Check rules",
             "support": {
                 "issues": "https://github.com/publishpress/publishpress-phpcs-standards/issues",
-                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/development"
+                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/1.1.0"
             },
-            "time": "2026-10-07T14:03:54+00:00"
+            "time": "2026-07-31T15:48:12+00:00"
         },
         {
             "name": "publishpress/translations",
@@ -13646,9 +13644,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "publishpress/publishpress-phpcs-standards": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -13656,6 +13652,6 @@
         "ext-json": "*",
         "composer-plugin-api": "^2.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
