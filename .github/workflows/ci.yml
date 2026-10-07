@@ -51,12 +51,15 @@ jobs:
           bash -n scripts/check-release.sh
           bash -n scripts/check-wporg.sh
           bash -n scripts/translate-pot.sh
+          bash -n scripts/container-exec.sh
           bash -n test/plugin-version-test.sh
           bash -n test/lint-phpcs-test.sh
           bash -n test/translate-pot-test.sh
+          bash -n test/container-exec-test.sh
 
       - name: Run shell fixture tests
         run: |
           bash test/plugin-version-test.sh
           bash test/lint-phpcs-test.sh
           bash test/translate-pot-test.sh
+          bash test/container-exec-test.sh

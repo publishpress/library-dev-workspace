@@ -25,6 +25,14 @@ DEV_WORKSPACE_REAL="$(cd "$DEV_SCRIPTS_DIR/.." && pwd -P)"
 computed_repo_root="$(cd "$DEV_WORKSPACE_DIR/../../.." && pwd -L)"
 REPO_ROOT="$computed_repo_root"
 
+# Scripts rewritten onto /opt/dev-workspace are not three levels under the
+# plugin checkout. The terminal always mounts that checkout at /project.
+container_project="${CONTAINER_PROJECT_DIR:-/project}"
+if [[ "${INSIDE_DEV_CONTAINER:-}" == "true" && -f "$container_project/composer.json" ]]; then
+    REPO_ROOT="$container_project"
+    computed_repo_root="$container_project"
+fi
+
 export DEV_SCRIPTS_DIR DEV_WORKSPACE_DIR DEV_WORKSPACE_REAL REPO_ROOT
 
 if [[ ! -f "$REPO_ROOT/.env" ]]; then

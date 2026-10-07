@@ -21,8 +21,11 @@ services:
         working_dir: "/project"
         volumes:
             - ${REPO_ROOT}:/project
-            # Bind the real package path so Composer path-repo symlinks work in-container.
-            - ${DEV_WORKSPACE_REAL}:/project/vendor/publishpress/dev-workspace
+            # Real package checkout. Do not mount this onto
+            # vendor/publishpress/dev-workspace: Composer path repos make that
+            # path a symlink, and Docker will not replace a symlink. container-exec.sh
+            # rewrites commands to /opt/dev-workspace when the vendor path is missing.
+            - ${DEV_WORKSPACE_REAL}:/opt/dev-workspace
             - ${REPO_ROOT}/vendor/publishpress/dev-workspace/docker/terminal/.zshrc:/root/.zshrc
             - ${CACHE_PATH}/.npm:/root/.npm
             - ${CACHE_PATH}/.oh-my-zsh/log:/root/.oh-my-zsh/log

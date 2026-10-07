@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 
+- Fixed: `composer info:versions` inside the dev-workspace terminal finds `dependency-versions.sh` when `vendor/publishpress/dev-workspace` is a Composer path symlink. Docker mounts the real package at `/opt/dev-workspace` instead of over that symlink.
+
 [1.8.16] - 06 Oct, 2026
 
 - Fixed: Docker test runs leave an already-installed WordPress database in place, keep the WP-CLI setup container running, and wait until `prepare-wp.sh` finishes before Codeception starts, so `wp db reset` no longer races the WPLoader bootstrap.
