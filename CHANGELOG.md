@@ -3,7 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.8.17] - 07 Oct, 2026
+
+- Fixed: `composer info:versions` inside the dev-workspace terminal finds `dependency-versions.sh` when `vendor/publishpress/dev-workspace` is a Composer path symlink. Docker mounts the real package at `/opt/dev-workspace` instead of over that symlink.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.17`.
 
 [1.8.16] - 06 Oct, 2026
 

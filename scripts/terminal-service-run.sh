@@ -9,14 +9,8 @@ run_terminal_service() {
     if [ $# -eq 0 ]; then
         docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
     else
-        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal sh -c '
-            export DEV_WORKSPACE_DIR="/project/vendor/publishpress/dev-workspace"
-            export PATH="$DEV_WORKSPACE_DIR/scripts:$PATH"
-            cd /project
-            [ -n "$GIT_USER_NAME" ] && git config --global user.name "$GIT_USER_NAME"
-            [ -n "$GIT_USER_EMAIL" ] && git config --global user.email "$GIT_USER_EMAIL"
-            exec "$@"
-        ' _ "$@"
+        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal \
+            sh -c "$(cat "$SCRIPT_DIR/container-exec.sh")" _ "$@"
     fi
 }
 
@@ -71,11 +65,6 @@ else
     if [ $# -eq 0 ]; then
         docker exec -it "$RUNNING_CONTAINER" zsh
     else
-        docker exec -it "$RUNNING_CONTAINER" sh -lc '
-            export DEV_WORKSPACE_DIR="/project/vendor/publishpress/dev-workspace"
-            export PATH="$DEV_WORKSPACE_DIR/scripts:$PATH"
-            cd /project
-            exec "$@"
-        ' _ "$@"
+        docker exec -it "$RUNNING_CONTAINER" sh -c "$(cat "$SCRIPT_DIR/container-exec.sh")" _ "$@"
     fi
 fi
