@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Changed: `publishpress/publishpress-phpcs-standards` is required from `dev-development`, so `composer lint:phpcs` runs the new PublishPress sniffs below.
+- Added: `PublishPressStandards.Security.RequireDirectAccessGuard` requires `if (!defined('ABSPATH')) exit;` after `declare`, `namespace`, and `use`.
+- Added: `PublishPressStandards.Composer.RequirePluginExtra` warns when `composer.json` `extra` metadata required by dev-workspace is missing or empty.
+- Added: `PublishPressStandards.Files.RequireGitAttributes` requires a plugin-root `.gitattributes` and `export-ignore` for common dev paths that exist in the repository.
+- Added: `PublishPressStandards.Libraries.DisallowDirectAutoload` requires `publishpress/*/lib/include.php` instead of `autoload.php` when loading bundled PublishPress libraries.
+
 [1.8.17] - 07 Oct, 2026
 
 - Fixed: `composer info:versions` inside the dev-workspace terminal finds `dependency-versions.sh` when `vendor/publishpress/dev-workspace` is a Composer path symlink. Docker mounts the real package at `/opt/dev-workspace` instead of over that symlink.
