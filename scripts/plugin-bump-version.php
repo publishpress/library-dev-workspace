@@ -18,7 +18,16 @@ define('BASE_PATH', $basePath);
 define('COMPOSER_JSON_PATH', BASE_PATH . '/composer.json');
 
 // Keep in sync with scripts/version-constant-lib.sh (VERSION_CONSTANT_BASENAMES).
-const VERSION_CONSTANT_BASENAMES = ['defines.php', 'constants.php', 'include.php'];
+const VERSION_CONSTANT_BASENAMES = [
+    'defines.php',
+    'constants.php',
+    'include.php',
+    'autoload.php',
+    'src/constants.php',
+    'src/defines.php',
+    'src/includes.php',
+    'src/autoload.php',
+];
 
 function getExtraInfoFromComposerJson($composerJsonPath): array
 {
@@ -73,6 +82,17 @@ function mainPluginFilePath(): string
     return BASE_PATH . '/' . PLUGIN_SLUG . '.php';
 }
 
+function versionConstantMissingMessage(string $versionConstant): string
+{
+    $names = VERSION_CONSTANT_BASENAMES;
+    $last = array_pop($names);
+
+    return 'Version constant ' . $versionConstant
+        . ' not found in main plugin file, '
+        . implode(', ', $names)
+        . ', or ' . $last . "\n";
+}
+
 function versionConstantCandidatePaths(): array
 {
     $paths = [mainPluginFilePath()];
@@ -116,13 +136,23 @@ function findVersionConstantLocation(string $versionConstant): string
     if ($matches === []) {
         fwrite(
             STDERR,
-            "Version constant {$versionConstant} not found in main plugin file, defines.php, constants.php, or include.php\n"
+            versionConstantMissingMessage($versionConstant)
         );
         exit(1);
     }
 
     if (count($matches) > 1) {
-        $basenames = array_map('basename', $matches);
+        $basenames = array_map(
+            static function (string $path): string {
+                $prefix = BASE_PATH . '/';
+                if (str_starts_with($path, $prefix)) {
+                    return substr($path, strlen($prefix));
+                }
+
+                return basename($path);
+            },
+            $matches
+        );
         fwrite(
             STDERR,
             'Version constant ' . $versionConstant . ' found in multiple files: ' . implode(', ', $basenames) . "\n"

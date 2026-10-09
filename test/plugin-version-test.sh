@@ -90,6 +90,7 @@ JSON
         local relative="$1"
         local contents="$2"
         shift 2
+        mkdir -p "$(dirname "$fixture_dir/${relative}")"
         printf '%s\n' "$contents" > "$fixture_dir/${relative}"
     done
 }
@@ -165,7 +166,14 @@ if missing_output="$(run_check_release "$CONST_FIXTURE/missing" "2.0.0")"; then
 else
     pass "check-release rejects missing version constant"
 fi
-assert_contains "check-release reports missing constant" "$missing_output" "not found in main plugin file, defines.php, constants.php, or include.php"
+assert_contains "check-release reports missing constant" "$missing_output" "not found in main plugin file, defines.php, constants.php, include.php, autoload.php, src/constants.php, src/defines.php, src/includes.php, or src/autoload.php"
+
+write_stable_fixture_file "$CONST_FIXTURE/src-constants" "2.0.0" \
+    "demo-plugin.php" "$MAIN_ONLY_HEADER" \
+    "src/constants.php" "define('DEMO_PLUGIN_VERSION', '2.0.0');"
+
+src_constants_output="$(run_check_release "$CONST_FIXTURE/src-constants" "2.0.0")"
+assert_contains "check-release accepts constant in src/constants.php" "$src_constants_output" "Version constant: DEMO_PLUGIN_VERSION=2.0.0 (src/constants.php)"
 
 write_stable_fixture_file "$CONST_FIXTURE/mismatch" "2.0.0" \
     "demo-plugin.php" "$MAIN_ONLY_HEADER" \
