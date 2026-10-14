@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8519252569d02777b80fe8442588b8db",
+    "content-hash": "fe9974d647657bd6481af334c5a36205",
     "packages": [
         {
             "name": "automattic/vipwpcs",
@@ -5965,16 +5965,16 @@
         },
         {
             "name": "publishpress/publishpress-phpcs-standards",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/publishpress-phpcs-standards.git",
-                "reference": "90c00e11d52f7eb64c73ed7803f82a1e21cf1f10"
+                "reference": "95a6ebe1508071735a0a3daf590b493d6253d7f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/publishpress-phpcs-standards/zipball/90c00e11d52f7eb64c73ed7803f82a1e21cf1f10",
-                "reference": "90c00e11d52f7eb64c73ed7803f82a1e21cf1f10",
+                "url": "https://api.github.com/repos/publishpress/publishpress-phpcs-standards/zipball/95a6ebe1508071735a0a3daf590b493d6253d7f6",
+                "reference": "95a6ebe1508071735a0a3daf590b493d6253d7f6",
                 "shasum": ""
             },
             "require": {
@@ -6003,24 +6003,25 @@
                     "role": "Developer"
                 }
             ],
+            "description": "PublishPress PHPCS standards, including vendored WordPress.org Plugin Check rules",
             "support": {
                 "issues": "https://github.com/publishpress/publishpress-phpcs-standards/issues",
-                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/1.0.0"
+                "source": "https://github.com/publishpress/publishpress-phpcs-standards/tree/1.1.0"
             },
-            "time": "2026-04-02T20:16:04+00:00"
+            "time": "2026-07-31T15:48:12+00:00"
         },
         {
             "name": "publishpress/translations",
-            "version": "v1.4.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "923b67c3ac432a5b21997b8d2de9a88e45470517"
+                "reference": "4e52429394a261b440c7df9ba3a40556fab13e31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/923b67c3ac432a5b21997b8d2de9a88e45470517",
-                "reference": "923b67c3ac432a5b21997b8d2de9a88e45470517",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/4e52429394a261b440c7df9ba3a40556fab13e31",
+                "reference": "4e52429394a261b440c7df9ba3a40556fab13e31",
                 "shasum": ""
             },
             "require": {
@@ -6062,9 +6063,9 @@
             "description": "AI-powered translation automation for PublishPress plugins using Potomatic",
             "support": {
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
-                "source": "https://github.com/publishpress/library-publishpress-translator/tree/v1.4.0"
+                "source": "https://github.com/publishpress/library-publishpress-translator/tree/v1.6.1"
             },
-            "time": "2026-05-14T16:12:10+00:00"
+            "time": "2026-10-14T16:48:54+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -11276,23 +11277,6 @@
             "time": "2025-12-27T19:49:13+00:00"
         },
         {
-            "name": "wordpress/plugin-check",
-            "version": "2.0.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/WordPress/plugin-check/archive/refs/tags/2.0.0.zip"
-            },
-            "require": {
-                "composer/installers": "^2.2",
-                "php": ">=7.4"
-            },
-            "type": "wordpress-plugin",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Plugin Check PHPCS assets for local org-review linting (runtime deps omitted)."
-        },
-        {
             "name": "wp-cli/cache-command",
             "version": "v2.2.1",
             "source": {
@@ -13567,7 +13551,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -13575,6 +13559,6 @@
         "ext-json": "*",
         "composer-plugin-api": "^2.0"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }
