@@ -3,10 +3,6 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
-
-- Changed: `publishpress/translations` tracks the `1.6.x` releases (`~1.6.0`), including 1.6.1.
-
 [1.8.18] - 09 Oct, 2026
 
 - Changed: `check-release`, `check-wporg`, and `plugin-bump-version` also accept the version constant in `autoload.php` or under `src/` (`src/constants.php`, `src/defines.php`, `src/includes.php`, `src/autoload.php`), still requiring exactly one definition.
