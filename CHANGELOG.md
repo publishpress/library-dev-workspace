@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added: `PublishPressStandards.Files.RequireGitAttributes` requires a plugin-root `.gitattributes` and `export-ignore` for common dev paths that exist in the repository.
 - Added: `PublishPressStandards.Libraries.DisallowDirectAutoload` requires `publishpress/*/lib/include.php` instead of `autoload.php` when loading bundled PublishPress libraries.
 
+[1.8.18] - 09 Oct, 2026
+
+- Changed: `check-release`, `check-wporg`, and `plugin-bump-version` also accept the version constant in `autoload.php` or under `src/` (`src/constants.php`, `src/defines.php`, `src/includes.php`, `src/autoload.php`), still requiring exactly one definition.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.18`.
+
 [1.8.17] - 07 Oct, 2026
 
 - Fixed: `composer info:versions` inside the dev-workspace terminal finds `dependency-versions.sh` when `vendor/publishpress/dev-workspace` is a Composer path symlink. Docker mounts the real package at `/opt/dev-workspace` instead of over that symlink.

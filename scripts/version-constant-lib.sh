@@ -2,7 +2,57 @@
 # Shared version-constant helpers for check-release.sh and check-wporg.sh.
 # Keep candidate basenames in sync with scripts/plugin-bump-version.php.
 
-VERSION_CONSTANT_BASENAMES=(defines.php constants.php include.php)
+VERSION_CONSTANT_BASENAMES=(
+    defines.php
+    constants.php
+    include.php
+    autoload.php
+    src/constants.php
+    src/defines.php
+    src/includes.php
+    src/autoload.php
+)
+
+version_constant_candidate_label() {
+    local path="$1"
+    local best=""
+    local candidate
+
+    for candidate in "${VERSION_CONSTANT_BASENAMES[@]}"; do
+        if [[ "$path" == */"$candidate" && ${#candidate} -gt ${#best} ]]; then
+            best="$candidate"
+        fi
+    done
+
+    if [[ -n "$best" ]]; then
+        echo "$best"
+        return
+    fi
+
+    basename "$path"
+}
+
+version_constant_missing_detail() {
+    local constant="$1"
+    local -a names=("${VERSION_CONSTANT_BASENAMES[@]}")
+    local last_index=$((${#names[@]} - 1))
+    local joined=""
+    local i=0
+    local name
+
+    for name in "${names[@]}"; do
+        if (( i == 0 )); then
+            joined="$name"
+        elif (( i == last_index )); then
+            joined="${joined}, or ${name}"
+        else
+            joined="${joined}, ${name}"
+        fi
+        i=$((i + 1))
+    done
+
+    echo "constant '${constant}' not found in main plugin file, ${joined}"
+}
 
 # BusyBox sed (dev-workspace terminal) cannot match quote pairs via backreferences;
 # try all strict define('NAME', 'value') / define("NAME", "value") combinations.
@@ -89,7 +139,7 @@ validate_version_constant_in_paths() {
         if [[ -f "$path" ]]; then
             value="$(extract_constant_version "$path" "$constant")"
             if [[ -n "$value" ]]; then
-                found_labels+=("$(basename "$path")")
+                found_labels+=("$(version_constant_candidate_label "$path")")
                 found_values+=("$value")
             fi
         fi
@@ -97,7 +147,7 @@ validate_version_constant_in_paths() {
 
     if [[ "${#found_labels[@]}" -eq 0 ]]; then
         VERSION_CONSTANT_CHECK_STATUS="missing"
-        VERSION_CONSTANT_CHECK_DETAIL="constant '${constant}' not found in main plugin file, defines.php, constants.php, or include.php"
+        VERSION_CONSTANT_CHECK_DETAIL="$(version_constant_missing_detail "$constant")"
         return 1
     fi
 
@@ -135,14 +185,14 @@ validate_version_constant_in_zip() {
     for member in "$@"; do
         value="$(unzip -p "$zip_file" "$member" 2>/dev/null | extract_constant_version_from_stream "$constant")"
         if [[ -n "$value" ]]; then
-            found_labels+=("${member##*/}")
+            found_labels+=("$(version_constant_candidate_label "$member")")
             found_values+=("$value")
         fi
     done
 
     if [[ "${#found_labels[@]}" -eq 0 ]]; then
         VERSION_CONSTANT_CHECK_STATUS="missing"
-        VERSION_CONSTANT_CHECK_DETAIL="constant '${constant}' not found in main plugin file, defines.php, constants.php, or include.php"
+        VERSION_CONSTANT_CHECK_DETAIL="$(version_constant_missing_detail "$constant")"
         return 1
     fi
 

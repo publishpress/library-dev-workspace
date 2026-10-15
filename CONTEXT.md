@@ -9,7 +9,7 @@ A PHP `define()` holding the plugin semver, named by `composer.json` → `extra.
 _Avoid_: version define, VERSION define (when referring to this specific metadata field)
 
 **Version constant candidate file**:
-One of the plugin-root files where the version constant may live: the main plugin file (`{slug}.php`), `defines.php`, `constants.php`, or `include.php`.
+One of the files where the version constant may live: the main plugin file (`{slug}.php`), `defines.php`, `constants.php`, `include.php`, `autoload.php`, or the same names under `src/` (`src/constants.php`, `src/defines.php`, `src/includes.php`, `src/autoload.php`).
 _Avoid_: constants file (generic), config file
 
 **Canonical version constant location**:
