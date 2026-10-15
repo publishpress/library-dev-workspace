@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.19] - 15 Oct, 2026
+
+- Changed: `publishpress/publishpress-phpcs-standards` is required from `dev-development`, so `composer lint:phpcs` runs the new PublishPress sniffs below.
+- Added: `PublishPressStandards.Security.RequireDirectAccessGuard` requires `if (!defined('ABSPATH')) exit;` after `declare`, `namespace`, and `use`.
+- Added: `PublishPressStandards.Composer.RequirePluginExtra` warns when `composer.json` `extra` metadata required by dev-workspace is missing or empty.
+- Added: `PublishPressStandards.Files.RequireGitAttributes` requires a plugin-root `.gitattributes` and `export-ignore` for common dev paths that exist in the repository.
+- Added: `PublishPressStandards.Libraries.DisallowDirectAutoload` requires `publishpress/*/lib/include.php` instead of `autoload.php` when loading bundled PublishPress libraries.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `1.8.19`.
+
 [1.8.18] - 09 Oct, 2026
 
 - Changed: `check-release`, `check-wporg`, and `plugin-bump-version` also accept the version constant in `autoload.php` or under `src/` (`src/constants.php`, `src/defines.php`, `src/includes.php`, `src/autoload.php`), still requiring exactly one definition.
