@@ -12,16 +12,23 @@
         "plugin-folder": "fake-plugin",
         "plugin-lang-domain": "fake-plugin",
         "plugin-github-repo": "publishpress/fake-plugin",
-        "plugin-composer-package": "publishpress/fake-plugin"
+        "plugin-composer-package": "publishpress/fake-plugin",
+        "release-presets": [
+            "plugin-free-stable",
+            "plugin-free-unstable"
+        ]
     },
     "require-dev": {
-        "publishpress/dev-workspace": "dev-development",
+        "publishpress/dev-workspace": "*",
         "wp-coding-standards/wpcs": "^3"
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "../.."
+            "type": "path",
+            "url": "../..",
+            "options": {
+                "symlink": true
+            }
         }
     ],
     "config": {
@@ -29,7 +36,8 @@
             "publishpress/dev-workspace": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "composer/installers": true
         }
     }
 }

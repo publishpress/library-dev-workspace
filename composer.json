@@ -245,7 +245,10 @@
             "@not-container",
             "vendor/publishpress/dev-workspace/scripts/pr-link.sh"
         ],
-        "deploy": "vendor/publishpress/dev-workspace/scripts/run.sh node vendor/publishpress/dev-workspace/scripts/custom-deploy/index.mjs",
+        "deploy": [
+            "@not-container",
+            "node vendor/publishpress/dev-workspace/scripts/release-runner/index.mjs \"$@\""
+        ],
         "deploy:metadata-github-output": [
             "@not-container",
             "vendor/publishpress/dev-workspace/scripts/plugin-metadata-github-output.sh"

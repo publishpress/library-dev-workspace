@@ -1,9 +1,24 @@
 {
   "name": "publishpress-dev-workspace",
   "private": true,
-  "description": "Node tooling for PublishPress dev-workspace (PO to WordPress-compatible JSON)",
+  "description": "Node tooling for PublishPress dev-workspace (PO to WordPress-compatible JSON, release runner UI)",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@connectedcars/po2json": "^2.0.0"
+    "@connectedcars/po2json": "^2.0.0",
+    "@radix-ui/react-collapsible": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.3"
+  },
+  "optionalDependencies": {
+    "node-pty": "^1.0.0"
+  },
+  "scripts": {
+    "test:release-runner": "node --test test/release-runner-*.test.mjs",
+    "build:release-ui": "vite build --config scripts/release-runner/ui/vite.config.js"
   }
 }
