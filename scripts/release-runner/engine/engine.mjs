@@ -7,10 +7,16 @@ import {
   syncReleaseSteps,
   touchRelease,
 } from '../state/store.mjs';
-import { isRunStopped, throwIfRunStopRequested } from '../run-control.mjs';
+import { isRunStopRequested, isRunStopped, throwIfRunStopRequested } from '../run-control.mjs';
 
 /** Step id executing right now in this process, for the page's `running` status. */
 let activeStepId = null;
+
+/**
+ * Finished step kept as current during the auto-run beat, so the page can show
+ * it completed before the highlight moves on.
+ */
+let lingeringStepId = null;
 
 export function getActiveStepId() {
   return activeStepId;
@@ -176,8 +182,67 @@ export async function runEngine(release, options = {}) {
   try {
     return await runEngineInner(release, pipeline, ctx, options);
   } finally {
+    lingeringStepId = null;
     await ctx.closeLog();
   }
+}
+
+/**
+ * Hold a completed step as current so a fast auto chain is readable.
+ * Returns true when the user stopped during the pause; the step stays as saved.
+ *
+ * @param {string} stepId
+ * @param {object} options
+ */
+async function beatBeforeNext(stepId, options) {
+  const ms = options.beatMs;
+  if (!ms || ms <= 0) {
+    return false;
+  }
+  lingeringStepId = stepId;
+  try {
+    let left = ms;
+    while (left > 0) {
+      if (isRunStopRequested()) {
+        return true;
+      }
+      const wait = Math.min(100, left);
+      await new Promise((resolve) => {
+        setTimeout(resolve, wait);
+      });
+      left -= wait;
+    }
+    return isRunStopRequested();
+  } finally {
+    if (lingeringStepId === stepId) {
+      lingeringStepId = null;
+    }
+  }
+}
+
+/**
+ * Pause on a finished step when chaining. Stepwise and `--until` return at once.
+ *
+ * @param {object} release
+ * @param {import('../presets/types.mjs').StepDefinition} stepDef
+ * @param {object} options
+ * @returns {Promise<{ exitCode: number, release: object, error?: string } | null>}
+ */
+async function holdCompletedStep(release, stepDef, options) {
+  if (options.stepwise || options.until === stepDef.id) {
+    return { exitCode: 0, release };
+  }
+  if (await beatBeforeNext(stepDef.id, options)) {
+    return stoppedAfterBeat(release);
+  }
+  return null;
+}
+
+/**
+ * @param {object} release
+ */
+function stoppedAfterBeat(release) {
+  return { exitCode: 130, release, error: 'Stopped by user' };
 }
 
 /**
@@ -250,8 +315,9 @@ async function runEngineInner(release, pipeline, ctx, options) {
       };
       touchRelease(release);
       saveRelease(release, options.cwd);
-      if (options.until === stepDef.id) {
-        return { exitCode: 0, release };
+      const held = await holdCompletedStep(release, stepDef, options);
+      if (held) {
+        return held;
       }
       continue;
     }
@@ -288,8 +354,9 @@ async function runEngineInner(release, pipeline, ctx, options) {
       return { exitCode: 1, release, error: err.message };
     }
 
-    if (options.stepwise || options.until === stepDef.id) {
-      return { exitCode: 0, release };
+    const held = await holdCompletedStep(release, stepDef, options);
+    if (held) {
+      return held;
     }
   }
 
@@ -338,8 +405,9 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
       };
       touchRelease(release);
       saveRelease(release, options.cwd);
-      if (options.until === stepDef.id) {
-        return { exitCode: 0, release };
+      const heldSkip = await holdCompletedStep(release, stepDef, options);
+      if (heldSkip) {
+        return heldSkip;
       }
       continue;
     }
@@ -376,8 +444,9 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
       return { exitCode: 1, release, error: err.message };
     }
 
-    if (options.stepwise || options.until === stepDef.id) {
-      return { exitCode: 0, release };
+    const held = await holdCompletedStep(release, stepDef, options);
+    if (held) {
+      return held;
     }
   }
 
@@ -389,6 +458,10 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
 export function getCurrentStepId(release, edition) {
+  const lingered = release.steps?.[lingeringStepId];
+  if (lingered && (lingered.status === 'done' || lingered.status === 'skipped')) {
+    return lingeringStepId;
+  }
   const pipeline = getPreset(edition);
   for (const stepDef of pipeline) {
     const st = release.steps[stepDef.id]?.status;

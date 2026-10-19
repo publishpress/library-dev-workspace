@@ -95,7 +95,7 @@ async function continueIfAuto(cwd, flags) {
     const release = loadCurrentRelease(cwd);
     return { exitCode: 0, release };
   }
-  return continueRelease(cwd, { onLog: flags.onLog });
+  return continueRelease(cwd, { onLog: flags.onLog, beatMs: flags.beatMs });
 }
 
 /**
@@ -346,6 +346,7 @@ async function cmdRun(rest, cwd, flags) {
     confirm,
     onLog: flags.onLog,
     stepwise: flags.autoRun === false && !until,
+    beatMs: flags.beatMs,
   });
   output(formatRunPayload(result), flags.json);
   return result.exitCode;

@@ -219,6 +219,8 @@ async function handleApi(req, res, cwd) {
     json: false,
     yes: body.yes === true,
     autoRun: loadUiPrefs(cwd).autoRun !== false,
+    // Hold each finished auto step so the page can show it before the next starts.
+    beatMs: loadUiPrefs(cwd).autoRun !== false ? 1200 : 0,
     onLog: (line) => publishLog(line),
   };
   const rest = args;

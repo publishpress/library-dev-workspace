@@ -137,6 +137,41 @@ test('status payload reports running while an auto step executes', async () => {
   }
 });
 
+test('auto-run beat keeps the finished step current before the next starts', async () => {
+  const { getCurrentStepId } = await import('../scripts/release-runner/engine/engine.mjs');
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
+    release.edition = 'fixture';
+    saveRelease(release, cwd);
+    let sawFinishedCurrent = false;
+    const pending = runEngine(release, { cwd, beatMs: 400 });
+    const start = Date.now();
+    while (Date.now() - start < 1500) {
+      let loaded;
+      try {
+        loaded = loadCurrentRelease(cwd);
+      } catch {
+        loaded = null;
+      }
+      if (loaded?.steps.auto_ok.status === 'done' && getCurrentStepId(loaded, 'fixture') === 'auto_ok') {
+        sawFinishedCurrent = true;
+        break;
+      }
+      await new Promise((resolve) => {
+        setTimeout(resolve, 20);
+      });
+    }
+    const result = await pending;
+    assert.equal(sawFinishedCurrent, true);
+    assert.equal(result.exitCode, 10);
+    assert.equal(result.blocked, 'manual_gate');
+    assert.equal(getCurrentStepId(loadCurrentRelease(cwd), 'fixture'), 'manual_gate');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test('status payload exposes type, publish flag and resolved command', async () => {
   const { buildStatusPayload } = await import('../scripts/release-runner/engine/engine.mjs');
   const { getPreset } = await import('../scripts/release-runner/presets/index.mjs');

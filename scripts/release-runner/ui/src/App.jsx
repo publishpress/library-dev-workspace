@@ -143,8 +143,8 @@ export default function App() {
 
   useEffect(() => {
     refresh();
-    // Poll faster while a command runs so `running` moves from step to step.
-    const id = setInterval(refresh, busy ? 1000 : 4000);
+    // While auto-run holds each finished step (~1.2s), poll fast enough to show it.
+    const id = setInterval(refresh, busy ? 400 : 4000);
     return () => clearInterval(id);
   }, [refresh, busy]);
 
@@ -279,6 +279,9 @@ export default function App() {
       );
     }
     if (step.type === 'auto') {
+      if (step.status === 'done' || step.status === 'skipped') {
+        return null;
+      }
       const stepIndex = steps.findIndex((s) => s.id === step.id);
       let label = 'Run';
       if (step.status === 'failed') {
