@@ -23,7 +23,7 @@ function readRootComposer(cwd) {
 }
 
 /**
- * Suite names from `composer.json` → `extra.test_suites`.
+ * Suite names from `composer.json` → `extra.test-suites`.
  * Missing or empty means the release shows a single manual testing step.
  *
  * @param {string | undefined} cwd
@@ -38,12 +38,12 @@ export function readTestSuites(cwd) {
     return [];
   }
   const extra = composer.extra && typeof composer.extra === 'object' ? composer.extra : {};
-  const raw = extra.test_suites;
+  const raw = extra['test-suites'];
   if (raw === undefined || raw === null) {
     return [];
   }
   if (!Array.isArray(raw)) {
-    throw new Error('composer.json extra.test_suites must be an array of suite names');
+    throw new Error('composer.json extra.test-suites must be an array of suite names');
   }
   /** @type {string[]} */
   const suites = [];
@@ -51,12 +51,12 @@ export function readTestSuites(cwd) {
   for (const entry of raw) {
     if (typeof entry !== 'string' || !SUITE_NAME.test(entry)) {
       throw new Error(
-        `composer.json extra.test_suites entries must be suite names like "unit" (got ${JSON.stringify(entry)})`
+        `composer.json extra.test-suites entries must be suite names like "unit" (got ${JSON.stringify(entry)})`
       );
     }
     const id = suiteStepId(entry);
     if (seen.has(id)) {
-      throw new Error(`composer.json extra.test_suites has duplicate suite "${entry}"`);
+      throw new Error(`composer.json extra.test-suites has duplicate suite "${entry}"`);
     }
     seen.add(id);
     suites.push(entry);
@@ -98,7 +98,7 @@ export function suiteStep(suite) {
   };
 }
 
-/** Shown when `extra.test_suites` is missing or empty. */
+/** Shown when `extra.test-suites` is missing or empty. */
 export const manualTestingStep = {
   id: MANUAL_TESTING_STEP_ID,
   label: 'Testing',
@@ -106,7 +106,7 @@ export const manualTestingStep = {
   type: 'manual',
   instructions:
     'Run the project tests, then continue.\n\n' +
-    'composer.json has no extra.test_suites, so this step stays manual.\n' +
+    'composer.json has no extra.test-suites, so this step stays manual.\n' +
     'List suite names there to run them as composer test:<name> (for example "unit" → composer test:unit).',
 };
 

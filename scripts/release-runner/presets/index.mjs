@@ -109,7 +109,7 @@ export function getPreset(edition) {
 }
 
 /**
- * Preset steps with `extra.test_suites` expanded into `composer test:<suite>` steps.
+ * Preset steps with `extra.test-suites` expanded into `composer test:<suite>` steps.
  * Without suites, the pipeline keeps the single manual testing step.
  *
  * @param {ReleaseEditionId | string} edition

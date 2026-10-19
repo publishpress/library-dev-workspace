@@ -6,7 +6,7 @@ import { join } from 'path';
 import { resolvePipeline } from '../scripts/release-runner/presets/index.mjs';
 import { readTestSuites } from '../scripts/release-runner/steps/testing.mjs';
 
-test('missing extra.test_suites keeps one manual testing step', () => {
+test('missing extra.test-suites keeps one manual testing step', () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rr-test-'));
   try {
     writeFileSync(join(cwd, 'composer.json'), JSON.stringify({ name: 'acme/plugin' }));
@@ -19,11 +19,11 @@ test('missing extra.test_suites keeps one manual testing step', () => {
   }
 });
 
-test('extra.test_suites expands to composer test:<suite> steps', () => {
+test('extra.test-suites expands to composer test:<suite> steps', () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rr-test-'));
   try {
     writeFileSync(join(cwd, 'composer.json'), JSON.stringify({
-      extra: { test_suites: ['unit', 'integration'] },
+      extra: { 'test-suites': ['unit', 'integration'] },
     }));
     assert.deepEqual(readTestSuites(cwd), ['unit', 'integration']);
     const steps = resolvePipeline('plugin-pro-stable', cwd);
