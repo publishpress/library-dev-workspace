@@ -375,7 +375,13 @@ export async function runCli(argv, options = {}) {
   const sub = rest[0];
   if (!sub || sub === '--help' || sub === '-h') {
     process.stderr.write(
-      'Usage: release-runner <start|resume|reset|new|list|status|complete|skip|reopen|run> [options]\n'
+      [
+        'Open the web UI:  composer release',
+        '  Then open the URL printed in that terminal. Leave it running.',
+        '',
+        'CLI only:  composer release -- <start|resume|reset|new|list|status|complete|skip|reopen|run> [options]',
+        '',
+      ].join('\n')
     );
     return sub ? 0 : 1;
   }

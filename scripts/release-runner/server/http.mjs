@@ -23,6 +23,26 @@ const UI_DIST = join(__dirname, '../ui/dist');
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.RELEASE_RUNNER_PORT || 9876);
 
+/**
+ * Startup text for `composer release` with no subcommand.
+ *
+ * @param {{ host: string, port: number, cwd: string, hyperlink?: boolean }} options
+ */
+export function formatStartupMessage({ host, port, cwd, hyperlink = false }) {
+  const url = `http://${host}:${port}/`;
+  const shown = hyperlink ? `\u001b]8;;${url}\u001b\\${url}\u001b]8;;\u001b\\` : url;
+  return [
+    'Release UI is ready.',
+    '',
+    '  Open this URL in your browser:',
+    `  ${shown}`,
+    '',
+    '  Leave this terminal running. Ctrl+C stops the UI.',
+    `  Working directory: ${cwd}`,
+    '',
+  ].join('\n');
+}
+
 const MIME = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -300,7 +320,12 @@ export function startServer(options = {}) {
 
   server.listen(PORT, HOST, () => {
     process.stderr.write(
-      `Release runner UI: http://${HOST}:${PORT}/ (cwd: ${cwd})\n`
+      formatStartupMessage({
+        host: HOST,
+        port: PORT,
+        cwd,
+        hyperlink: Boolean(process.stderr.isTTY),
+      })
     );
   });
   return server;
