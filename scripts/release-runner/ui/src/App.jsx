@@ -10,7 +10,6 @@ import {
   PhaseProgress,
   PublishBoundary,
   StartReleaseDialog,
-  StatusBadge,
   StepRow,
   AutoRunToggle,
   ThemeToggle,
@@ -390,12 +389,9 @@ export default function App() {
           <div className="rr-header__bar">
             <div className="rr-header__next">
               {currentStep ? (
-                <>
-                  <StatusBadge status={currentStep.status} />
-                  <span>
-                    Next: <strong>{currentStep.label}</strong>
-                  </span>
-                </>
+                <span>
+                  Next: <strong>{currentStep.label}</strong>
+                </span>
               ) : (
                 <span>All steps complete.</span>
               )}
