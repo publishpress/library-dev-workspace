@@ -127,12 +127,12 @@ async function runStep(step, ctx, state) {
     const ok = await confirm({ message: 'Mark as done and continue?' });
     if (ok === Symbol.for('clack:cancel')) {
       saveState(state);
-      cancel('Deployment paused. Run `composer deploy` to resume.');
+      cancel('Deployment paused. Run `composer release` to resume.');
       process.exit(0);
     }
     if (!ok) {
       saveState(state);
-      cancel('Deployment paused. Run `composer deploy` to resume.');
+      cancel('Deployment paused. Run `composer release` to resume.');
       process.exit(0);
     }
     state.completedSteps.push(step.id);
@@ -158,7 +158,7 @@ async function runStep(step, ctx, state) {
 
     if (action === 'abort') {
       saveState(state);
-      cancel('Deployment paused. Run `composer deploy` to resume.');
+      cancel('Deployment paused. Run `composer release` to resume.');
       process.exit(0);
     }
     if (action === 'skip') {
@@ -190,7 +190,7 @@ async function runStep(step, ctx, state) {
       const action = await promptOnFailure(err, { critical: step.critical });
       if (action === 'abort') {
         saveState(state);
-        cancel('Deployment paused. Run `composer deploy` to resume.');
+        cancel('Deployment paused. Run `composer release` to resume.');
         process.exit(1);
       }
       if (action === 'skip') {
@@ -274,7 +274,7 @@ async function runGroup(entry, ctx, state) {
 
     if (action === 'abort') {
       saveState(state);
-      cancel('Deployment paused. Run `composer deploy` to resume.');
+      cancel('Deployment paused. Run `composer release` to resume.');
       process.exit(1);
     }
     for (const result of results) {
@@ -311,7 +311,7 @@ export async function runDeploy(pipeline) {
   const handleSignal = () => {
     if (currentState) {
       saveState(currentState);
-      process.stdout.write('\nProgress saved. Run `composer deploy` to resume.\n');
+      process.stdout.write('\nProgress saved. Run `composer release` to resume.\n');
     }
     if (logStream) logStream.end();
     process.exit(0);

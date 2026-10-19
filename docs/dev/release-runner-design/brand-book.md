@@ -1,4 +1,4 @@
-Release Runner is the local web page (`composer deploy`, `127.0.0.1:9876`) that takes a PublishPress plugin from `development` to a published release. It replaces the GitHub issue checklist. The page has one job: show the step that needs you now, what it will run, and whether it goes public. Use the components through `window.RR` and the tokens through `tokens.css`. The token names match the app's existing `styles.css`, so `scripts/release-runner/ui` can switch to `tokens.css` without renaming anything.
+Release Runner is the local web page (`composer release`, `127.0.0.1:9876`) that takes a PublishPress plugin from `development` to a published release. It replaces the GitHub issue checklist. The page has one job: show the step that needs you now, what it will run, and whether it goes public. Use the components through `window.RR` and the tokens through `tokens.css`. The token names match the app's existing `styles.css`, so `scripts/release-runner/ui` can switch to `tokens.css` without renaming anything.
 
 ## Content fundamentals
 

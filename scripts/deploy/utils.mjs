@@ -22,7 +22,7 @@ export async function commitIfDirty(ctx, defaultMessage) {
   });
 
   if (message === Symbol.for('clack:cancel')) {
-    cancel('Deployment paused. Run `composer deploy` to resume.');
+    cancel('Deployment paused. Run `composer release` to resume.');
     process.exit(0);
   }
 

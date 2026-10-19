@@ -420,7 +420,7 @@ export default function App() {
           }
           hint={
             <>
-              Or from the terminal: <span className="rr-code">composer deploy -- start 4.11.0</span>
+              Or from the terminal: <span className="rr-code">composer release -- start 4.11.0</span>
             </>
           }
         >

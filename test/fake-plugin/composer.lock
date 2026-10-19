@@ -6367,7 +6367,7 @@
                     "@not-container",
                     "vendor/publishpress/dev-workspace/scripts/pr-link.sh"
                 ],
-                "deploy": [
+                "release": [
                     "@not-container",
                     "node vendor/publishpress/dev-workspace/scripts/release-runner/index.mjs \"$@\""
                 ],

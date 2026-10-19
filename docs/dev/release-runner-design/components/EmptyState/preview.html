@@ -8,7 +8,7 @@
   var R = window.RR, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('root')).render(h(R.EmptyState, {
     action: h(R.Button, { variant: 'primary' }, 'Start release'),
-    hint: h('span', null, 'Or from the terminal: ', h('span', { className: 'rr-code' }, 'composer deploy -- start 4.11.0')),
+    hint: h('span', null, 'Or from the terminal: ', h('span', { className: 'rr-code' }, 'composer release -- start 4.11.0')),
     archived: h('span', { className: 'rr-progress__legend' }, 'Last abandoned: 4.10.2-rc.1 · 3 days ago') },
     'Start a versioned release for this working copy. Edition is read from ', h('span', { className: 'rr-code' }, 'composer.json'), ' (free).'));
 </script>

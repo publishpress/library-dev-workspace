@@ -1,6 +1,6 @@
 # Release runner
 
-Local release orchestration for PublishPress plugins. Replaces the GitHub issue checklist and the prototype Clack `composer deploy` wizard.
+Local release orchestration for PublishPress plugins. Replaces the GitHub issue checklist and the prototype Clack `composer release` wizard.
 
 **Implementation (for now):** this repository.
 
@@ -22,7 +22,7 @@ Later: move into `publishpress/dev-workspace` and drop the duplicate tree here.
 - Resume, reset, or start a new release from saved state on one machine.
 - Execute automatable steps; stop on human gates.
 - React page on `127.0.0.1` shows the checklist and live log.
-- CLI is the only writer; agents use `composer deploy -- <command>`.
+- CLI is the only writer; agents use `composer release -- <command>`.
 - No release checklist GitHub issue; translator assignment issues stay manual outside the app.
 
 ## Architecture
@@ -89,8 +89,8 @@ One in-progress release per working copy. A second concurrent release needs anot
 
 | Entry | Command |
 |-------|---------|
-| Page | `composer deploy` (runs on the **host**, not inside the dev-workspace container) |
-| CLI | `composer deploy -- <subcommand> [options]` |
+| Page | `composer release` (runs on the **host**, not inside the dev-workspace container) |
+| CLI | `composer release -- <subcommand> [options]` |
 
 Composer only forwards arguments after `--`.
 
@@ -174,7 +174,7 @@ Presets follow the issue templates, not the old Future-only `custom-deploy` list
 
 **Start release** lists presets from `GET /api/status` → `runnerPresets` and `presetMeta` (version rules, allowed prerelease channels). The dialog picks a preset; when more than one channel is allowed for that preset, a beta/rc control appears. Version validation follows the preset (`stable` = strict `x.y.z`).
 
-CLI `composer deploy -- start <version> [--preset <id>]` uses the same rules. With a single entry in `extra.release-presets`, `--preset` may be omitted.
+CLI `composer release -- start <version> [--preset <id>]` uses the same rules. With a single entry in `extra.release-presets`, `--preset` may be omitted.
 
 ### Layout
 
@@ -189,11 +189,11 @@ Page calls the same engine functions as the CLI. **Auto-run** (header, saved in 
 
 The first auto step requires a **clean git working tree** (`git status --short` empty). Commit, stash, or discard local changes, then **Retry step** (or reopen preflight).
 
-For local UI work on the runner itself only: `RELEASE_RUNNER_ALLOW_DIRTY=1 composer deploy` skips that check (not for real releases).
+For local UI work on the runner itself only: `RELEASE_RUNNER_ALLOW_DIRTY=1 composer release` skips that check (not for real releases).
 
 ### Connection refused on the UI URL
 
-The server listens on `http://127.0.0.1:9876/` (override with `RELEASE_RUNNER_PORT`). **`composer deploy` must run on the host** (`@not-container`); if you start `node scripts/release-runner/index.mjs` inside the dev-workspace container, the port is only reachable inside that container. From the host, run `composer deploy` or `node scripts/release-runner/index.mjs` in the plugin root. Rebuild assets if the page is blank: `npm run build:release-ui`.
+The server listens on `http://127.0.0.1:9876/` (override with `RELEASE_RUNNER_PORT`). **`composer release` must run on the host** (`@not-container`); if you start `node scripts/release-runner/index.mjs` inside the dev-workspace container, the port is only reachable inside that container. From the host, run `composer release` or `node scripts/release-runner/index.mjs` in the plugin root. Rebuild assets if the page is blank: `npm run build:release-ui`.
 
 ## Out of scope (v1)
 
@@ -211,4 +211,4 @@ The server listens on `http://127.0.0.1:9876/` (override with `RELEASE_RUNNER_PO
 3. Engine + fixture steps + tests.
 4. Plugin free/pro stable presets + real commands.
 5. React page + localhost API.
-6. `composer deploy` cutover; remove Clack wizard.
+6. `composer release` cutover; remove Clack wizard.

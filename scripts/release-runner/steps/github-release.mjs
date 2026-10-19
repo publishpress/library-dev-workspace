@@ -11,7 +11,7 @@ export default {
     [
       `Create the GitHub release on master with tag name ${ctx.data.version} (no "v" prefix).`,
       'Tag the merged master commit. Do not move the tag after deploy workflows start.',
-      'Use Confirm in the UI or: composer deploy -- run --confirm github_release',
+      'Use Confirm in the UI or: composer release -- run --confirm github_release',
     ].join('\n'),
   run: async (ctx) => {
     await ctx.exec(

@@ -246,7 +246,7 @@
             "@not-container",
             "vendor/publishpress/dev-workspace/scripts/pr-link.sh"
         ],
-        "deploy": [
+        "release": [
             "@not-container",
             "node vendor/publishpress/dev-workspace/scripts/release-runner/index.mjs \"$@\""
         ],
@@ -390,7 +390,7 @@
         "set:version": "Bump the plugin version in project files",
         "pre-release": "Prepare a release branch and open a pull request",
         "pr-link": "Print the release PR URL for the current branch",
-        "deploy": "Run the interactive deployment helper",
+        "release": "Start the local release web UI and print the URL to open",
         "deploy:metadata-github-output": "Output plugin metadata to GitHub Actions output",
         "after-pr-merge": "Run repository post-merge housekeeping",
         "translate": "Run PublishPress Translate for the default language set",
