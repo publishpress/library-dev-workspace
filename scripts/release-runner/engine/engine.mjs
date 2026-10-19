@@ -227,6 +227,9 @@ async function runEngineInner(release, pipeline, ctx, options) {
       saveRelease(release, options.cwd);
       return { exitCode: 1, release, error: err.message };
     }
+    if (options.stepwise) {
+      return { exitCode: 0, release };
+    }
     return continueAfterStep(release, confirmOnly, pipeline, ctx, options);
   }
 

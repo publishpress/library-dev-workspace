@@ -92,6 +92,7 @@ test('run --confirm passes confirm gate', async () => {
     let release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
     release.edition = 'fixture';
     release.steps.auto_ok = { status: 'done', at: new Date().toISOString() };
+    release.steps.auto_next = { status: 'done', at: new Date().toISOString() };
     release.steps.manual_gate = { status: 'done', at: new Date().toISOString() };
     saveRelease(release, cwd);
 
@@ -108,6 +109,7 @@ test('status payload marks the current manual gate as waiting', async () => {
   const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
   release.edition = 'fixture';
   release.steps.auto_ok = { status: 'done', at: new Date().toISOString() };
+  release.steps.auto_next = { status: 'done', at: new Date().toISOString() };
   const steps = buildStatusPayload(release, 'fixture').steps;
   assert.equal(steps.find((s) => s.id === 'manual_gate').status, 'waiting');
   assert.equal(steps.find((s) => s.id === 'confirm_gate').status, 'pending');
