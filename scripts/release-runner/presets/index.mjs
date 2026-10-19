@@ -1,3 +1,4 @@
+import { expandTestingSteps } from '../steps/testing.mjs';
 import { fixturePreset } from './fixture.mjs';
 import { pluginFreeStablePreset } from './plugin-free-stable.mjs';
 import { pluginProStablePreset } from './plugin-pro-stable.mjs';
@@ -105,6 +106,17 @@ export function getPreset(edition) {
     return pluginFreeUnstablePreset;
   }
   return pluginFreeStablePreset;
+}
+
+/**
+ * Preset steps with `extra.test_suites` expanded into `composer test:<suite>` steps.
+ * Without suites, the pipeline keeps the single manual testing step.
+ *
+ * @param {ReleaseEditionId | string} edition
+ * @param {string | undefined} cwd
+ */
+export function resolvePipeline(edition, cwd = process.cwd()) {
+  return expandTestingSteps(getPreset(edition), cwd);
 }
 
 export {

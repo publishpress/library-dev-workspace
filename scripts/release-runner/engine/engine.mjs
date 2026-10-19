@@ -1,6 +1,6 @@
 import { Context } from './context.mjs';
 import { runGhAuthLogin } from './pty.mjs';
-import { getPreset } from '../presets/index.mjs';
+import { resolvePipeline } from '../presets/index.mjs';
 import {
   resolveEffectiveVersion,
   saveRelease,
@@ -36,16 +36,16 @@ export function resolveField(field, ctx) {
 /**
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
-export function getStepPipeline(edition) {
-  return getPreset(edition);
+export function getStepPipeline(edition, cwd) {
+  return resolvePipeline(edition, cwd);
 }
 
 /**
  * @param {object} release
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
-export function orderedStepIds(release, edition) {
-  return getPreset(edition).map((s) => s.id);
+export function orderedStepIds(release, edition, cwd) {
+  return resolvePipeline(edition, cwd).map((s) => s.id);
 }
 
 /**
@@ -53,8 +53,8 @@ export function orderedStepIds(release, edition) {
  * @param {string} stepId
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
-export function cascadeReopen(release, stepId, edition) {
-  const ids = orderedStepIds(release, edition);
+export function cascadeReopen(release, stepId, edition, cwd) {
+  const ids = orderedStepIds(release, edition, cwd);
   const idx = ids.indexOf(stepId);
   if (idx === -1) {
     throw new Error(`Unknown step: ${stepId}`);
@@ -161,12 +161,12 @@ async function runAutoStepInner(stepDef, ctx) {
  * @returns {Promise<{ exitCode: number, blocked?: string, release: object, error?: string }>}
  */
 export async function runEngine(release, options = {}) {
-  const { changed } = syncReleaseSteps(release);
+  const { changed } = syncReleaseSteps(release, options.cwd);
   if (changed && options.cwd) {
     saveRelease(release, options.cwd);
   }
   const edition = release.edition;
-  const pipeline = getPreset(edition);
+  const pipeline = resolvePipeline(edition, options.cwd);
   const ctx = new Context(
     {
       version: resolveEffectiveVersion(release),
@@ -457,12 +457,12 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
  * @param {object} release
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
-export function getCurrentStepId(release, edition) {
+export function getCurrentStepId(release, edition, cwd) {
   const lingered = release.steps?.[lingeringStepId];
   if (lingered && (lingered.status === 'done' || lingered.status === 'skipped')) {
     return lingeringStepId;
   }
-  const pipeline = getPreset(edition);
+  const pipeline = resolvePipeline(edition, cwd);
   for (const stepDef of pipeline) {
     const st = release.steps[stepDef.id]?.status;
     if (st !== 'done' && st !== 'skipped') {
@@ -476,16 +476,16 @@ export function getCurrentStepId(release, edition) {
  * @param {object} release
  * @param {import('../presets/index.mjs').ReleaseEditionId | string} edition
  */
-export function buildStatusPayload(release, edition) {
-  const pipeline = getPreset(edition);
-  const currentStepId = getCurrentStepId(release, edition);
+export function buildStatusPayload(release, edition, cwd) {
+  const pipeline = resolvePipeline(edition, cwd);
+  const currentStepId = getCurrentStepId(release, edition, cwd);
   const ctx = new Context({
     version: resolveEffectiveVersion(release),
     branchName: release.branchName,
     edition: release.edition,
     urgency: release.urgency,
     prerelease: release.prerelease,
-  });
+  }, { cwd });
   return {
     release,
     effectiveVersion: resolveEffectiveVersion(release),

@@ -135,7 +135,7 @@ async function handleApi(req, res, cwd) {
       });
       return;
     }
-    const payload = buildStatusPayload(release, release.edition);
+    const payload = buildStatusPayload(release, release.edition, cwd);
     json(res, 200, {
       ok: true,
       ghAccount: await ghAccount(cwd),

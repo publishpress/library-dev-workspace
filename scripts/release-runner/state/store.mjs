@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from 'fs';
 import { join, resolve } from 'path';
-import { getPreset, normalizeEdition } from '../presets/index.mjs';
+import { normalizeEdition, resolvePipeline } from '../presets/index.mjs';
 
 /**
  * @param {string} [cwd]
@@ -60,9 +60,10 @@ export function loadRelease(version, cwd = process.cwd()) {
  * Ensure every pipeline step has state (e.g. steps added after release started).
  *
  * @param {object} release
+ * @param {string} [cwd]
  * @returns {{ release: object, changed: boolean }}
  */
-export function syncReleaseSteps(release) {
+export function syncReleaseSteps(release, cwd = process.cwd()) {
   if (!release?.edition || !release.steps) {
     return { release, changed: false };
   }
@@ -72,7 +73,7 @@ export function syncReleaseSteps(release) {
     release.edition = canonicalEdition;
     changed = true;
   }
-  const pipeline = getPreset(release.edition);
+  const pipeline = resolvePipeline(release.edition, cwd);
   for (const def of pipeline) {
     if (!release.steps[def.id]) {
       release.steps[def.id] = { status: 'pending' };
@@ -94,7 +95,7 @@ export function loadCurrentRelease(cwd = process.cwd()) {
   if (!release) {
     return null;
   }
-  const synced = syncReleaseSteps(release);
+  const synced = syncReleaseSteps(release, cwd);
   if (synced.changed) {
     saveRelease(synced.release, cwd);
   }

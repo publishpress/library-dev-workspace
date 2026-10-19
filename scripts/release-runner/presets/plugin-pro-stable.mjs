@@ -12,8 +12,7 @@ import checkQualityPhp from '../steps/check-quality-php.mjs';
 import checkQualityLint from '../steps/check-quality-lint.mjs';
 import checkQualityCs from '../steps/check-quality-cs.mjs';
 import checkQualityLongpath from '../steps/check-quality-longpath.mjs';
-import testUnit from '../steps/test-unit.mjs';
-import testIntegration from '../steps/test-integration.mjs';
+import { manualTestingStep } from '../steps/testing.mjs';
 import buildPackage from '../steps/build-package.mjs';
 import teamTesting from '../steps/team-testing.mjs';
 import translateAi from '../steps/translate-ai.mjs';
@@ -50,8 +49,7 @@ export const pluginProStablePreset = [
   checkQualityLint,
   checkQualityCs,
   checkQualityLongpath,
-  testUnit,
-  testIntegration,
+  manualTestingStep,
   buildPackage,
   teamTesting,
   translateAi,

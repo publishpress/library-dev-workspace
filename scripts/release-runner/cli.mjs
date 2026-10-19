@@ -14,8 +14,8 @@ import {
   runEngine,
 } from './engine/engine.mjs';
 import {
-  getPreset,
   getPresetMeta,
+  resolvePipeline,
   validateVersionForPreset,
 } from './presets/index.mjs';
 import { resolveStartPreset } from './detect-edition.mjs';
@@ -153,7 +153,7 @@ async function cmdStart(rest, cwd, flags) {
   if (existing?.status === 'in_progress') {
     throw new Error(`Release v${existing.version} is already in progress`);
   }
-  const steps = getPreset(edition);
+  const steps = resolvePipeline(edition, cwd);
   const release = createReleaseRecord(version, edition, urgency, steps, prerelease);
   saveRelease(release, cwd);
   const result = await continueIfAuto(cwd, flags);
@@ -228,7 +228,7 @@ async function cmdStatus(cwd, flags) {
     output({ ok: true, release: null }, flags.json);
     return 0;
   }
-  const payload = buildStatusPayload(release, release.edition);
+  const payload = buildStatusPayload(release, release.edition, cwd);
   output({ ok: true, ...payload }, flags.json);
   return 0;
 }
@@ -239,7 +239,7 @@ async function cmdStatus(cwd, flags) {
  * @param {string} [note]
  */
 function markStep(release, stepId, status, note, cwd) {
-  const { changed } = syncReleaseSteps(release);
+  const { changed } = syncReleaseSteps(release, cwd);
   if (changed) {
     saveRelease(release, cwd);
   }
@@ -317,7 +317,7 @@ async function cmdReopen(rest, cwd, flags) {
   if (!release) {
     throw new Error('No in-progress release');
   }
-  cascadeReopen(release, stepId, release.edition);
+  cascadeReopen(release, stepId, release.edition, cwd);
   saveRelease(release, cwd);
   const result = await continueIfAuto(cwd, flags);
   output(formatRunPayload(result), flags.json);
