@@ -183,7 +183,7 @@ CLI `composer release -- start <version> [--preset <id>]` uses the same rules. W
 3. Current step expanded: instructions + live log (SSE).
 4. Security urgency: warning line in header.
 
-Page calls the same engine functions as the CLI. **Auto-run** (header, saved in `dev-workspace-cache/release-runner-ui.json`) is on by default: after **start**, **complete**, **skip**, or **reopen**, auto steps run until the next manual or confirm gate. Each finished step stays current for about 1.2s so the page can show it before the next starts. Turn it off to stop after each auto step; the current step then needs **Run** (first step or a failure) or **Continue**. The CLI always chains, with no pause.
+Page calls the same engine functions as the CLI. **Auto-run** (header, saved in `dev-workspace-cache/release-runner-ui.json`) is on by default: after **start**, **complete**, **skip**, or **reopen**, auto steps run until the next manual or confirm gate. Each finished step stays current for about 0.7s so the page can show it before the next starts. Turn it off to stop after each auto step; the current step then needs **Run** (first step or a failure) or **Continue**. The CLI always chains, with no pause.
 
 ### Pre-flight check failed
 

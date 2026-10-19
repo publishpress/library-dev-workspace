@@ -143,7 +143,7 @@ export default function App() {
 
   useEffect(() => {
     refresh();
-    // While auto-run holds each finished step (~1.2s), poll fast enough to show it.
+    // While auto-run holds each finished step (~0.7s), poll fast enough to show it.
     const id = setInterval(refresh, busy ? 400 : 4000);
     return () => clearInterval(id);
   }, [refresh, busy]);
