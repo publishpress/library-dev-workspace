@@ -1,0 +1,100 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * List the longest relative paths under a directory.
+ *
+ * Skip test, dist, dev-workspace, and node_modules only when they are inside
+ * the scan root. The packed tree lives at dist/${PP_PLUGIN_FOLDER}, so matching
+ * those names against the absolute path drops every file.
+ */
+
+function show_help()
+{
+    echo "Usage: longpath DIRECTORY [NUMBER_OF_PATHS]\n";
+    echo "Options:\n";
+    echo "  -h, --help        Display this help message.\n";
+    echo "  DIRECTORY         Specify the directory to search for files.\n";
+    echo "  NUMBER_OF_PATHS   (Optional) Specify the number of paths to display. Default is 10.\n";
+}
+
+if (in_array('-h', $argv, true) || in_array('--help', $argv, true)) {
+    show_help();
+    exit(0);
+}
+
+if ($argc < 2) {
+    echo "Error: DIRECTORY is required.\n";
+    show_help();
+    exit(1);
+}
+
+$dir = $argv[1];
+
+if (!is_dir($dir)) {
+    echo "Error: Directory does not exist.\n";
+    exit(1);
+}
+
+$root = realpath($dir);
+if ($root === false) {
+    echo "Error: Directory does not exist.\n";
+    exit(1);
+}
+
+$numberOfPaths = 10;
+if ($argc >= 3) {
+    $numberOfPaths = intval($argv[2]);
+    if ($numberOfPaths < 1) {
+        echo "Error: NUMBER_OF_PATHS must be a positive integer.\n";
+        exit(1);
+    }
+}
+
+$skipPattern = '#(^|/)(test|dist|dev-workspace|node_modules)(/|$)#';
+$filePaths = array();
+
+$directory = new RecursiveDirectoryIterator(
+    $root,
+    FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS
+);
+$iterator = new RecursiveIteratorIterator($directory);
+
+foreach ($iterator as $info) {
+    $filePath = $info->getPathname();
+    $relative = ltrim(substr($filePath, strlen($root)), '/');
+    if ($relative === '' || preg_match($skipPattern, $relative)) {
+        continue;
+    }
+
+    $filePaths[] = array(
+        'length' => strlen($relative),
+        'path' => $relative,
+    );
+}
+
+usort(
+    $filePaths,
+    function ($left, $right) {
+        if ($left['length'] === $right['length']) {
+            return strcmp($left['path'], $right['path']);
+        }
+
+        return $right['length'] - $left['length'];
+    }
+);
+
+echo "The longest paths are:\n";
+
+$count = 0;
+foreach ($filePaths as $entry) {
+    echo 'Length: ' . $entry['length'] . ' characters, Path: ' . $entry['path'] . "\n";
+    $count++;
+    if ($count >= $numberOfPaths) {
+        break;
+    }
+}
+
+if ($count === 0) {
+    echo "No files found in the directory.\n";
+}

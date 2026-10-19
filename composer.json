@@ -111,7 +111,7 @@
         "check:deps": "vendor/publishpress/dev-workspace/scripts/run.sh php vendor/publishpress/dev-workspace/scripts/check-dependencies.php ./lib ${PP_PLUGIN_COMPOSER_PACKAGE}",
         "check:longpath": [
             "vendor/publishpress/dev-workspace/scripts/run.sh composer pack:dir",
-            "vendor/publishpress/dev-workspace/scripts/run.sh longpath dist/${PP_PLUGIN_FOLDER}"
+            "vendor/publishpress/dev-workspace/scripts/run.sh php vendor/publishpress/dev-workspace/scripts/longpath dist/${PP_PLUGIN_FOLDER}"
         ],
         "lint:phpcs": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/lint-phpcs.sh",
         "lint:phpmd": "vendor/publishpress/dev-workspace/scripts/run.sh phpmd . ansi phpmd.ruleset.xml",
