@@ -184,6 +184,108 @@ test('status payload exposes type, publish flag and resolved command', async () 
   assert.equal(steps.find((s) => s.id === 'merge_hotfixes').publish, false);
 });
 
+function releaseAt(cwd, doneIds = []) {
+  const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
+  release.edition = 'fixture';
+  const at = new Date().toISOString();
+  for (const id of doneIds) {
+    release.steps[id] = { status: 'done', at };
+  }
+  saveRelease(release, cwd);
+  return release;
+}
+
+test('skip marks the current auto step and does not run the next', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd);
+    const code = await commands.skip(['auto_ok'], cwd, { json: false, yes: false, autoRun: false });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.auto_ok.status, 'skipped');
+    assert.equal(loaded.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('skip is rejected when auto-run is on, for a later step, and for confirm', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd);
+    const flags = { json: false, yes: false, autoRun: false };
+    await assert.rejects(
+      () => commands.skip(['auto_ok'], cwd, { ...flags, autoRun: true }),
+      /auto-run is off/
+    );
+    await assert.rejects(() => commands.skip(['auto_next'], cwd, flags), /current step/);
+    await assert.rejects(() => commands.skip(['github_auth'], cwd, flags), /github_auth cannot be skipped/);
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate']);
+    await assert.rejects(() => commands.skip(['confirm_gate'], cwd, flags), /cannot be skipped/);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('rerun with auto-run off executes only that auto step', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next']);
+    const code = await commands.rerun(['auto_ok'], cwd, { json: false, yes: false, autoRun: false });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.auto_ok.status, 'done');
+    assert.equal(loaded.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('rerun with auto-run on continues until the next gate', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate']);
+    const code = await commands.rerun(['auto_ok'], cwd, { json: false, yes: false, autoRun: true });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 10);
+    assert.equal(loaded.steps.auto_ok.status, 'done');
+    assert.equal(loaded.steps.auto_next.status, 'done');
+    assert.equal(loaded.steps.manual_gate.status, 'pending');
+    assert.equal(loaded.steps.confirm_gate.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('rerun of a manual step cascades without completing it', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate', 'confirm_gate']);
+    const code = await commands.rerun(['manual_gate'], cwd, { json: false, yes: false, autoRun: true });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.auto_ok.status, 'done');
+    assert.equal(loaded.steps.manual_gate.status, 'pending');
+    assert.equal(loaded.steps.confirm_gate.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('reopen cascades without executing the auto step', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next']);
+    const code = await commands.reopen(['auto_ok'], cwd, { json: false, yes: false, autoRun: true });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.auto_ok.status, 'pending');
+    assert.equal(loaded.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test('getPreset resolves legacy free and pro ids', async () => {
   const { getPreset } = await import('../scripts/release-runner/presets/index.mjs');
   assert.equal(getPreset('plugin-free-stable'), getPreset('plugin-free-stable'));

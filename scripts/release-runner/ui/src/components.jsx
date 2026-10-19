@@ -244,7 +244,7 @@ export function StepRow({
               </span>
             </button>
           </Collapsible.Trigger>
-          {current && actions && <div className="rr-step__actions">{actions}</div>}
+          {actions && <div className="rr-step__actions">{actions}</div>}
           {canExpand && (
             // Pointer shortcut for the same toggle; the labelled trigger above is the accessible control.
             <Collapsible.Trigger asChild>

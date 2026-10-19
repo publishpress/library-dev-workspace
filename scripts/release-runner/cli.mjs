@@ -11,8 +11,10 @@ import {
 import {
   buildStatusPayload,
   cascadeReopen,
+  getCurrentStepId,
   runEngine,
 } from './engine/engine.mjs';
+import { loadUiPrefs } from './state/ui-prefs.mjs';
 import {
   getPresetMeta,
   resolvePipeline,
@@ -96,6 +98,19 @@ async function continueIfAuto(cwd, flags) {
     return { exitCode: 0, release };
   }
   return continueRelease(cwd, { onLog: flags.onLog, beatMs: flags.beatMs });
+}
+
+/**
+ * UI passes `autoRun` on the request. CLI falls back to the saved toggle (default on).
+ *
+ * @param {{ autoRun?: boolean }} flags
+ * @param {string} cwd
+ */
+function resolveAutoRun(flags, cwd) {
+  if (typeof flags.autoRun === 'boolean') {
+    return flags.autoRun;
+  }
+  return loadUiPrefs(cwd).autoRun !== false;
 }
 
 /**
@@ -286,6 +301,9 @@ async function cmdComplete(rest, cwd, flags) {
  */
 async function cmdSkip(rest, cwd, flags) {
   const stepId = rest[0];
+  if (resolveAutoRun(flags, cwd)) {
+    throw new Error('Skip is only available when auto-run is off');
+  }
   if (stepId === 'github_auth') {
     throw new Error('github_auth cannot be skipped');
   }
@@ -300,10 +318,29 @@ async function cmdSkip(rest, cwd, flags) {
   if (!release) {
     throw new Error('No in-progress release');
   }
+  const pipeline = resolvePipeline(release.edition, cwd);
+  const stepDef = pipeline.find((step) => step.id === stepId);
+  if (!stepDef) {
+    throw new Error(`Unknown step: ${stepId}`);
+  }
+  if (stepDef.type === 'confirm' || stepDef.publish === true) {
+    throw new Error(`${stepId} cannot be skipped`);
+  }
+  if (stepDef.type !== 'auto' && stepDef.type !== 'manual') {
+    throw new Error(`${stepId} cannot be skipped`);
+  }
+  const currentStepId = getCurrentStepId(release, release.edition, cwd);
+  if (stepId !== currentStepId) {
+    throw new Error('Only the current step can be skipped');
+  }
+  const status = release.steps[stepId]?.status;
+  if (status === 'done' || status === 'skipped' || status === 'running') {
+    throw new Error(`Cannot skip ${stepId} while it is ${status}`);
+  }
   markStep(release, stepId, 'skipped', note, cwd);
-  const result = await continueIfAuto(cwd, flags);
-  output(formatRunPayload(result), flags.json);
-  return exitFromRunResult(result);
+  const saved = loadCurrentRelease(cwd);
+  output({ ok: true, exitCode: 0, release: saved }, flags.json);
+  return 0;
 }
 
 /**
@@ -319,9 +356,49 @@ async function cmdReopen(rest, cwd, flags) {
   }
   cascadeReopen(release, stepId, release.edition, cwd);
   saveRelease(release, cwd);
-  const result = await continueIfAuto(cwd, flags);
+  const saved = loadCurrentRelease(cwd);
+  output({ ok: true, exitCode: 0, release: saved }, flags.json);
+  return 0;
+}
+
+/**
+ * Cascade from a finished step. Auto steps execute. Manual and confirm steps stay pending.
+ * Auto-run on continues until the next gate. Auto-run off stops after that one auto step.
+ *
+ * @param {string[]} rest
+ * @param {string} cwd
+ * @param {{ json: boolean, autoRun?: boolean, onLog?: (line: string) => void, beatMs?: number }} flags
+ */
+async function cmdRerun(rest, cwd, flags) {
+  const stepId = rest[0];
+  const release = loadCurrentRelease(cwd);
+  if (!release) {
+    throw new Error('No in-progress release');
+  }
+  const pipeline = resolvePipeline(release.edition, cwd);
+  const stepDef = pipeline.find((step) => step.id === stepId);
+  if (!stepDef) {
+    throw new Error(`Unknown step: ${stepId}`);
+  }
+  const status = release.steps[stepId]?.status;
+  if (status !== 'done' && status !== 'failed' && status !== 'skipped') {
+    throw new Error(`Step ${stepId} has not run yet`);
+  }
+  cascadeReopen(release, stepId, release.edition, cwd);
+  saveRelease(release, cwd);
+  if (stepDef.type === 'manual' || stepDef.type === 'confirm') {
+    const result = await continueIfAuto(cwd, flags);
+    output(formatRunPayload(result), flags.json);
+    return exitFromRunResult(result);
+  }
+  const autoRun = resolveAutoRun(flags, cwd);
+  const result = await continueRelease(cwd, {
+    onLog: flags.onLog,
+    stepwise: autoRun === false,
+    beatMs: autoRun === false ? 0 : flags.beatMs,
+  });
   output(formatRunPayload(result), flags.json);
-  return exitFromRunResult(result);
+  return result.exitCode;
 }
 
 /**
@@ -363,6 +440,7 @@ export const commands = {
   complete: cmdComplete,
   skip: cmdSkip,
   reopen: cmdReopen,
+  rerun: cmdRerun,
   run: cmdRun,
 };
 
@@ -380,7 +458,7 @@ export async function runCli(argv, options = {}) {
         'Open the web UI:  composer release',
         '  Then open the URL printed in that terminal. Leave it running.',
         '',
-        'CLI only:  composer release -- <start|resume|reset|new|list|status|complete|skip|reopen|run> [options]',
+        'CLI only:  composer release -- <start|resume|reset|new|list|status|complete|skip|reopen|rerun|run> [options]',
         '',
       ].join('\n')
     );

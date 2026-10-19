@@ -37,6 +37,23 @@ function isFinished(step) {
   return step.status === 'done' || step.status === 'skipped';
 }
 
+function canSkip(step, autoRun) {
+  if (autoRun || !step || step.id === 'github_auth') {
+    return false;
+  }
+  if (step.type !== 'auto' && step.type !== 'manual') {
+    return false;
+  }
+  if (step.publish || step.status === 'done' || step.status === 'skipped' || step.status === 'running') {
+    return false;
+  }
+  return true;
+}
+
+function canRerun(step) {
+  return step?.status === 'done' || step?.status === 'failed' || step?.status === 'skipped';
+}
+
 /** Show step note only when it is not already present in the live log. */
 function distinctStepNote(note, logLines, isCurrent) {
   if (!note?.trim()) {
@@ -267,8 +284,22 @@ export default function App() {
   };
 
   const stepActions = (step) => {
-    if (!step || step.id !== currentStepId) {
+    if (!step) {
       return null;
+    }
+    const rerun = canRerun(step) ? (
+      <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('rerun', [step.id])}>
+        Run again
+      </Button>
+    ) : null;
+    const skip =
+      step.id === currentStepId && canSkip(step, autoRun) ? (
+        <Button variant="ghost" size="sm" disabled={busy} onClick={() => runAction('skip', [step.id])}>
+          Skip
+        </Button>
+      ) : null;
+    if (step.id !== currentStepId) {
+      return rerun;
     }
     if (step.status === 'running') {
       return (
@@ -279,20 +310,29 @@ export default function App() {
     }
     if (step.type === 'auto') {
       if (step.status === 'done' || step.status === 'skipped') {
-        return null;
+        return rerun;
+      }
+      if (step.status === 'failed') {
+        return (
+          <>
+            {rerun}
+            {skip}
+          </>
+        );
       }
       const stepIndex = steps.findIndex((s) => s.id === step.id);
-      let label = 'Run';
-      if (step.status === 'failed') {
-        label = 'Run again';
-      } else if (!autoRun && stepIndex > 0) {
-        label = 'Continue';
-      }
+      const label = !autoRun && stepIndex > 0 ? 'Continue' : 'Run';
       return (
-        <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('run', [])}>
-          {label}
-        </Button>
+        <>
+          <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('run', [])}>
+            {label}
+          </Button>
+          {skip}
+        </>
       );
+    }
+    if (step.status === 'done' || step.status === 'skipped' || step.status === 'failed') {
+      return rerun;
     }
     if (step.type === 'confirm' && step.publish) {
       return (
@@ -319,11 +359,7 @@ export default function App() {
         <Button variant="primary" size="sm" icon="check" disabled={busy} onClick={() => runAction('complete', [step.id])}>
           Done
         </Button>
-        {step.id !== 'github_auth' && (
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => runAction('skip', [step.id])}>
-            Skip
-          </Button>
-        )}
+        {skip}
       </>
     );
   };
@@ -457,7 +493,13 @@ export default function App() {
                       actions={stepActions(step)}
                       busy={busy}
                       cli={isCurrent ? cliHint(step) : null}
-                      onReopen={isCurrent ? () => runAction('reopen', [step.id]) : null}
+                      onReopen={
+                        isCurrent &&
+                        step.type === 'auto' &&
+                        (step.status === 'done' || step.status === 'failed' || step.status === 'skipped')
+                          ? () => runAction('reopen', [step.id])
+                          : null
+                      }
                       log={
                         showLogPanel ? (
                           <LogPanel lines={isCurrent ? log : stepLines} live={isCurrent && isRunning} />
