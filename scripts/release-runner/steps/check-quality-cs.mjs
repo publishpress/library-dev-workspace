@@ -4,8 +4,8 @@ export default {
   phase: 'Code Quality',
   type: 'auto',
   instructions: 'Runs PHPCS to verify PHP matches project coding standards.',
-  command: 'composer check:cs',
+  command: 'composer lint:phpcs',
   run: async (ctx) => {
-    await ctx.exec('composer check:cs');
+    await ctx.exec('composer lint:phpcs');
   },
 };

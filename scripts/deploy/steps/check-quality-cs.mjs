@@ -4,6 +4,6 @@ export default {
   phase: 'Code Quality',
   type: 'auto',
   run: async (ctx) => {
-    await ctx.exec('composer check:cs');
+    await ctx.exec('composer lint:phpcs');
   },
 };
