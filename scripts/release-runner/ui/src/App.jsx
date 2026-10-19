@@ -12,6 +12,7 @@ import {
   StartReleaseDialog,
   StatusBadge,
   StepRow,
+  AutoRunToggle,
   ThemeToggle,
 } from './components.jsx';
 
@@ -133,6 +134,7 @@ export default function App() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [expandedStepId, setExpandedStepId] = useState(null);
   const [actionError, setActionError] = useState(null);
+  const [autoRun, setAutoRun] = useState(true);
 
   const refresh = useCallback(async () => {
     const data = await apiGet('/api/status');
@@ -158,6 +160,12 @@ export default function App() {
     };
     return () => es.close();
   }, []);
+
+  useEffect(() => {
+    if (status?.uiPrefs) {
+      setAutoRun(status.uiPrefs.autoRun !== false);
+    }
+  }, [status?.uiPrefs?.autoRun]);
 
   const release = status?.release;
   const steps = status?.steps || [];
@@ -234,6 +242,22 @@ export default function App() {
     }
   };
 
+  const toggleAutoRun = async () => {
+    const next = !autoRun;
+    setAutoRun(next);
+    setActionError(null);
+    try {
+      await apiPost('/api/ui-prefs', { autoRun: next });
+      const pendingAuto = currentStep?.type === 'auto' && currentStep.status === 'pending';
+      if (next && pendingAuto && !busy && !isRunning) {
+        await runAction('run', []);
+      }
+    } catch (err) {
+      setAutoRun(!next);
+      setActionError(err.message || 'Request failed');
+    }
+  };
+
   const quitRunner = async () => {
     setActionError(null);
     try {
@@ -255,9 +279,16 @@ export default function App() {
       );
     }
     if (step.type === 'auto') {
+      const stepIndex = steps.findIndex((s) => s.id === step.id);
+      let label = 'Run';
+      if (step.status === 'failed') {
+        label = 'Run again';
+      } else if (!autoRun && stepIndex > 0) {
+        label = 'Continue';
+      }
       return (
         <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('run', [])}>
-          {step.status === 'failed' ? 'Run again' : 'Run'}
+          {label}
         </Button>
       );
     }
@@ -329,6 +360,7 @@ export default function App() {
                 {status.ghAccount && <MetaPill label="GitHub" value={status.ghAccount} />}
               </div>
             )}
+            <AutoRunToggle on={autoRun} onChange={toggleAutoRun} />
             <Button variant="ghost" size="sm" onClick={quitRunner}>
               Quit runner
             </Button>

@@ -8,6 +8,13 @@ export const fixturePreset = [
     run: async () => {},
   },
   {
+    id: 'auto_next',
+    label: 'Fixture second auto',
+    phase: 'Fixture',
+    type: 'auto',
+    run: async () => {},
+  },
+  {
     id: 'manual_gate',
     label: 'Fixture manual gate',
     phase: 'Fixture',

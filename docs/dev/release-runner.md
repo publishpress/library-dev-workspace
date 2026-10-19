@@ -183,7 +183,7 @@ CLI `composer deploy -- start <version> [--preset <id>]` uses the same rules. Wi
 3. Current step expanded: instructions + live log (SSE).
 4. Security urgency: warning line in header.
 
-Page calls the same engine functions as the CLI. After **start**, **complete**, **skip**, or **reopen**, the runner automatically executes auto steps until the next manual or confirm gate (no separate “run pipeline” click). Re-open the UI mid-release and pending auto steps resume the same way.
+Page calls the same engine functions as the CLI. **Auto-run** (header, saved in `dev-workspace-cache/release-runner-ui.json`) is on by default: after **start**, **complete**, **skip**, or **reopen**, auto steps run until the next manual or confirm gate. Turn it off to stop after each auto step; the current step then needs **Run** (first step or a failure) or **Continue**. The CLI always chains.
 
 ### Pre-flight check failed
 

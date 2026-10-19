@@ -3,9 +3,61 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createReleaseRecord, saveRelease } from '../scripts/release-runner/state/store.mjs';
+import { commands } from '../scripts/release-runner/cli.mjs';
+import { createReleaseRecord, loadCurrentRelease, saveRelease } from '../scripts/release-runner/state/store.mjs';
 import { fixturePreset } from '../scripts/release-runner/presets/fixture.mjs';
 import { runEngine, cascadeReopen } from '../scripts/release-runner/engine/engine.mjs';
+
+test('stepwise runs one auto step and leaves the next pending', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
+    release.edition = 'fixture';
+    saveRelease(release, cwd);
+
+    const result = await runEngine(release, { cwd, stepwise: true });
+    assert.equal(result.exitCode, 0);
+    assert.equal(result.release.steps.auto_ok.status, 'done');
+    assert.equal(result.release.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('confirm with stepwise does not run the following auto step', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
+    release.edition = 'fixture';
+    release.steps.auto_ok = { status: 'done', at: new Date().toISOString() };
+    release.steps.auto_next = { status: 'done', at: new Date().toISOString() };
+    release.steps.manual_gate = { status: 'done', at: new Date().toISOString() };
+    saveRelease(release, cwd);
+
+    const result = await runEngine(release, { cwd, confirm: 'confirm_gate', stepwise: true });
+    assert.equal(result.release.steps.confirm_gate.status, 'done');
+    assert.equal(result.release.steps.auto_final.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('run with autoRun false stops after one auto step', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    const release = createReleaseRecord('1.0.0', 'fixture', 'standard', fixturePreset);
+    release.edition = 'fixture';
+    saveRelease(release, cwd);
+
+    const code = await commands.run([], cwd, { json: false, yes: false, autoRun: false });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.auto_ok.status, 'done');
+    assert.equal(loaded.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
 
 test('run stops on manual gate with exit 10', async () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));

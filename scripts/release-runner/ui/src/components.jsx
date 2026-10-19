@@ -585,6 +585,28 @@ export function EmptyState({ action, hint, children }) {
  * Header button that switches between the light and dark themes.
  * `onChange(theme)` persists the choice (the app saves it in dev-workspace-cache).
  */
+/**
+ * Header switch for chaining auto steps. Off: each auto step waits for Run or Continue.
+ */
+export function AutoRunToggle({ on, onChange }) {
+  return (
+    <button
+      type="button"
+      className={cx('rr-autorun', on && 'rr-autorun--on')}
+      aria-pressed={on}
+      title={
+        on
+          ? 'Auto-run is on. Auto steps run until the next gate.'
+          : 'Auto-run is off. Click Run or Continue for each auto step.'
+      }
+      onClick={() => onChange(!on)}
+    >
+      <span className="rr-autorun__label">Auto-run</span>
+      <span className="rr-autorun__state">{on ? 'On' : 'Off'}</span>
+    </button>
+  );
+}
+
 export function ThemeToggle({ onChange }) {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
   const next = theme === 'dark' ? 'light' : 'dark';

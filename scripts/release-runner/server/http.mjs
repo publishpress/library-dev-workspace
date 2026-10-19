@@ -68,6 +68,14 @@ const GH_ACCOUNT_TTL_MS = 60_000;
 /**
  * @param {string} cwd
  */
+function uiPrefsForStatus(cwd) {
+  const prefs = loadUiPrefs(cwd);
+  return { theme: prefs.theme, autoRun: prefs.autoRun !== false };
+}
+
+/**
+ * @param {string} cwd
+ */
 async function ghAccount(cwd) {
   const now = Date.now();
   if (ghAccountCache && ghAccountCache.cwd === cwd && now - ghAccountCache.at < GH_ACCOUNT_TTL_MS) {
@@ -102,6 +110,7 @@ async function handleApi(req, res, cwd) {
         runnerPresets,
         presetMeta,
         defaultPreset,
+        uiPrefs: uiPrefsForStatus(cwd),
         ghAccount: await ghAccount(cwd),
       });
       return;
@@ -113,6 +122,7 @@ async function handleApi(req, res, cwd) {
       runnerPresets,
       presetMeta,
       defaultPreset,
+      uiPrefs: uiPrefsForStatus(cwd),
       ...payload,
     });
     return;
@@ -188,6 +198,7 @@ async function handleApi(req, res, cwd) {
   const flags = {
     json: false,
     yes: body.yes === true,
+    autoRun: loadUiPrefs(cwd).autoRun !== false,
     onLog: (line) => publishLog(line),
   };
   const rest = args;

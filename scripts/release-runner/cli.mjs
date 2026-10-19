@@ -85,6 +85,20 @@ async function continueRelease(cwd, options = {}) {
 }
 
 /**
+ * UI with auto-run off leaves the next auto step pending until Run/Continue.
+ *
+ * @param {string} cwd
+ * @param {{ autoRun?: boolean, onLog?: (line: string) => void }} flags
+ */
+async function continueIfAuto(cwd, flags) {
+  if (flags.autoRun === false) {
+    const release = loadCurrentRelease(cwd);
+    return { exitCode: 0, release };
+  }
+  return continueRelease(cwd, { onLog: flags.onLog });
+}
+
+/**
  * @param {string[]} rest
  * @param {string} cwd
  * @param {{ json: boolean }} flags
@@ -142,7 +156,7 @@ async function cmdStart(rest, cwd, flags) {
   const steps = getPreset(edition);
   const release = createReleaseRecord(version, edition, urgency, steps, prerelease);
   saveRelease(release, cwd);
-  const result = await continueRelease(cwd, { onLog: flags.onLog });
+  const result = await continueIfAuto(cwd, flags);
   output(
     {
       started: true,
@@ -260,7 +274,7 @@ async function cmdComplete(rest, cwd, flags) {
     throw new Error('No in-progress release');
   }
   markStep(release, stepId, 'done', note, cwd);
-  const result = await continueRelease(cwd, { onLog: flags.onLog });
+  const result = await continueIfAuto(cwd, flags);
   output(formatRunPayload(result), flags.json);
   return exitFromRunResult(result);
 }
@@ -287,7 +301,7 @@ async function cmdSkip(rest, cwd, flags) {
     throw new Error('No in-progress release');
   }
   markStep(release, stepId, 'skipped', note, cwd);
-  const result = await continueRelease(cwd, { onLog: flags.onLog });
+  const result = await continueIfAuto(cwd, flags);
   output(formatRunPayload(result), flags.json);
   return exitFromRunResult(result);
 }
@@ -305,7 +319,7 @@ async function cmdReopen(rest, cwd, flags) {
   }
   cascadeReopen(release, stepId, release.edition);
   saveRelease(release, cwd);
-  const result = await continueRelease(cwd, { onLog: flags.onLog });
+  const result = await continueIfAuto(cwd, flags);
   output(formatRunPayload(result), flags.json);
   return exitFromRunResult(result);
 }
@@ -327,7 +341,12 @@ async function cmdRun(rest, cwd, flags) {
       i += 1;
     }
   }
-  const result = await continueRelease(cwd, { until, confirm, onLog: flags.onLog });
+  const result = await continueRelease(cwd, {
+    until,
+    confirm,
+    onLog: flags.onLog,
+    stepwise: flags.autoRun === false && !until,
+  });
   output(formatRunPayload(result), flags.json);
   return result.exitCode;
 }

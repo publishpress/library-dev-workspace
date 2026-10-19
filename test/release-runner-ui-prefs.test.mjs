@@ -18,6 +18,32 @@ test('theme is saved in dev-workspace-cache and read back', () => {
   }
 });
 
+test('autoRun is saved without dropping the theme', () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-ui-'));
+  try {
+    saveUiPrefs({ theme: 'dark' }, cwd);
+    saveUiPrefs({ autoRun: false }, cwd);
+    assert.deepEqual(loadUiPrefs(cwd), { theme: 'dark', autoRun: false });
+    saveUiPrefs({ autoRun: true }, cwd);
+    assert.equal(loadUiPrefs(cwd).autoRun, true);
+    assert.equal(loadUiPrefs(cwd).theme, 'dark');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('invalid autoRun is rejected on save and ignored on load', () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-ui-'));
+  try {
+    assert.throws(() => saveUiPrefs({ autoRun: 'no' }, cwd), /Invalid autoRun/);
+    mkdirSync(join(cwd, 'dev-workspace-cache'), { recursive: true });
+    writeFileSync(getUiPrefsPath(cwd), '{"autoRun":"off","theme":"light"}');
+    assert.deepEqual(loadUiPrefs(cwd), { theme: 'light' });
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test('invalid themes are rejected on save and ignored on load', () => {
   const cwd = mkdtempSync(join(tmpdir(), 'rr-ui-'));
   try {

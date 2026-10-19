@@ -151,7 +151,7 @@ async function runAutoStepInner(stepDef, ctx) {
 
 /**
  * @param {object} release
- * @param {{ cwd?: string, until?: string, confirm?: string, onLog?: (line: string) => void }} options
+ * @param {{ cwd?: string, until?: string, confirm?: string, stepwise?: boolean, onLog?: (line: string) => void }} options
  * @returns {Promise<{ exitCode: number, blocked?: string, release: object, error?: string }>}
  */
 export async function runEngine(release, options = {}) {
@@ -285,7 +285,7 @@ async function runEngineInner(release, pipeline, ctx, options) {
       return { exitCode: 1, release, error: err.message };
     }
 
-    if (options.until === stepDef.id) {
+    if (options.stepwise || options.until === stepDef.id) {
       return { exitCode: 0, release };
     }
   }
@@ -373,7 +373,7 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
       return { exitCode: 1, release, error: err.message };
     }
 
-    if (options.until === stepDef.id) {
+    if (options.stepwise || options.until === stepDef.id) {
       return { exitCode: 0, release };
     }
   }
