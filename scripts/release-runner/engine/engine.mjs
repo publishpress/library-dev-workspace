@@ -245,6 +245,29 @@ function stoppedAfterBeat(release) {
   return { exitCode: 130, release, error: 'Stopped by user' };
 }
 
+const OPTIONAL_PHASE = 'Localization';
+
+/**
+ * Auto-run stops before Localization so that phase can be skipped.
+ * `enterOptional` means the user chose to run the phase. Stepwise never stops here.
+ *
+ * @param {import('../presets/types.mjs').StepDefinition} stepDef
+ * @param {import('../presets/types.mjs').StepDefinition[]} pipeline
+ * @param {{ stepwise?: boolean, enterOptional?: boolean }} options
+ * @returns {{ exitCode: number, blocked: string } | null}
+ */
+function optionalPhaseStop(stepDef, pipeline, options) {
+  if (options.stepwise || options.enterOptional || stepDef.phase !== OPTIONAL_PHASE) {
+    return null;
+  }
+  const index = pipeline.findIndex((step) => step.id === stepDef.id);
+  const previous = index > 0 ? pipeline[index - 1] : null;
+  if (previous?.phase === OPTIONAL_PHASE) {
+    return null;
+  }
+  return { exitCode: 10, blocked: stepDef.id };
+}
+
 /**
  * @param {object} release
  * @param {import('../presets/types.mjs').StepDefinition[]} pipeline
@@ -306,6 +329,11 @@ async function runEngineInner(release, pipeline, ctx, options) {
     }
     if (stepState.status === 'done' || stepState.status === 'skipped') {
       continue;
+    }
+
+    const optionalStop = optionalPhaseStop(stepDef, pipeline, options);
+    if (optionalStop) {
+      return { ...optionalStop, release };
     }
 
     if (stepDef.skip && stepDef.skip(ctx)) {
@@ -396,6 +424,11 @@ async function continueAfterStep(release, afterStepId, pipeline, ctx, options) {
     }
     if (stepState.status === 'done' || stepState.status === 'skipped') {
       continue;
+    }
+
+    const optionalStop = optionalPhaseStop(stepDef, pipeline, options);
+    if (optionalStop) {
+      return { ...optionalStop, release };
     }
 
     if (stepDef.skip && stepDef.skip(ctx)) {

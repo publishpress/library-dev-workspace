@@ -97,8 +97,11 @@ test('run --confirm passes confirm gate', async () => {
     saveRelease(release, cwd);
 
     const result = await runEngine(release, { cwd, confirm: 'confirm_gate' });
-    assert.equal(result.exitCode, 0);
+    assert.equal(result.exitCode, 10);
+    assert.equal(result.blocked, 'localize_auto');
     assert.equal(result.release.steps.confirm_gate.status, 'done');
+    assert.equal(result.release.steps.auto_final.status, 'done');
+    assert.equal(result.release.steps.localize_auto.status, 'pending');
   } finally {
     rmSync(cwd, { recursive: true, force: true });
   }
@@ -281,6 +284,65 @@ test('reopen cascades without executing the auto step', async () => {
     assert.equal(code, 0);
     assert.equal(loaded.steps.auto_ok.status, 'pending');
     assert.equal(loaded.steps.auto_next.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('auto-run stops before Localization without running it', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate', 'confirm_gate', 'auto_final']);
+    const result = await runEngine(loadCurrentRelease(cwd), { cwd });
+    assert.equal(result.exitCode, 10);
+    assert.equal(result.blocked, 'localize_auto');
+    assert.equal(result.release.steps.localize_auto.status, 'pending');
+    assert.equal(result.release.steps.after_localize.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('run enters Localization when that step is already current', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate', 'confirm_gate', 'auto_final']);
+    const code = await commands.run([], cwd, { json: false, yes: false, autoRun: true });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 10);
+    assert.equal(loaded.steps.localize_auto.status, 'done');
+    assert.equal(loaded.steps.localize_confirm.status, 'pending');
+    assert.equal(loaded.steps.after_localize.status, 'pending');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('skip Localization with auto-run on skips the phase and continues', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate', 'confirm_gate', 'auto_final']);
+    const code = await commands.skip(['localize_auto'], cwd, { json: false, yes: false, autoRun: true });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.localize_auto.status, 'skipped');
+    assert.equal(loaded.steps.localize_confirm.status, 'skipped');
+    assert.equal(loaded.steps.after_localize.status, 'done');
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
+test('skip Localization with auto-run off skips the phase and stops', async () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'rr-engine-'));
+  try {
+    releaseAt(cwd, ['auto_ok', 'auto_next', 'manual_gate', 'confirm_gate', 'auto_final']);
+    const code = await commands.skip(['localize_auto'], cwd, { json: false, yes: false, autoRun: false });
+    const loaded = loadCurrentRelease(cwd);
+    assert.equal(code, 0);
+    assert.equal(loaded.steps.localize_auto.status, 'skipped');
+    assert.equal(loaded.steps.localize_confirm.status, 'skipped');
+    assert.equal(loaded.steps.after_localize.status, 'pending');
   } finally {
     rmSync(cwd, { recursive: true, force: true });
   }

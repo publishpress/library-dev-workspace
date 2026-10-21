@@ -38,13 +38,16 @@ function isFinished(step) {
 }
 
 function canSkip(step, autoRun) {
-  if (autoRun || !step || step.id === 'github_auth') {
+  if (!step || step.id === 'github_auth' || step.publish) {
     return false;
   }
-  if (step.type !== 'auto' && step.type !== 'manual') {
+  if (step.status === 'done' || step.status === 'skipped' || step.status === 'running') {
     return false;
   }
-  if (step.publish || step.status === 'done' || step.status === 'skipped' || step.status === 'running') {
+  if (step.phase === 'Localization') {
+    return true;
+  }
+  if (autoRun || (step.type !== 'auto' && step.type !== 'manual')) {
     return false;
   }
   return true;
@@ -295,7 +298,7 @@ export default function App() {
     const skip =
       step.id === currentStepId && canSkip(step, autoRun) ? (
         <Button variant="ghost" size="sm" disabled={busy} onClick={() => runAction('skip', [step.id])}>
-          Skip
+          {step.phase === 'Localization' ? 'Skip localization' : 'Skip'}
         </Button>
       ) : null;
     if (step.id !== currentStepId) {
@@ -343,15 +346,18 @@ export default function App() {
     }
     if (step.type === 'confirm') {
       return (
-        <Button
-          variant="primary"
-          size="sm"
-          icon="check"
-          disabled={busy}
-          onClick={() => runAction('run', ['--confirm', step.id])}
-        >
-          Confirm
-        </Button>
+        <>
+          <Button
+            variant="primary"
+            size="sm"
+            icon="check"
+            disabled={busy}
+            onClick={() => runAction('run', ['--confirm', step.id])}
+          >
+            Confirm
+          </Button>
+          {skip}
+        </>
       );
     }
     return (

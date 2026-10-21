@@ -299,11 +299,55 @@ async function cmdComplete(rest, cwd, flags) {
  * @param {string} cwd
  * @param {{ json: boolean }} flags
  */
+const OPTIONAL_PHASE = 'Localization';
+
+/**
+ * Skip this Localization step and every later Localization step still open.
+ *
+ * @param {object} release
+ * @param {import('./presets/types.mjs').StepDefinition[]} pipeline
+ * @param {string} stepId
+ * @param {string | undefined} note
+ * @param {string} cwd
+ */
+function skipOptionalPhase(release, pipeline, stepId, note, cwd) {
+  const start = pipeline.findIndex((step) => step.id === stepId);
+  const at = new Date().toISOString();
+  for (let i = start; i < pipeline.length; i += 1) {
+    const step = pipeline[i];
+    if (step.phase !== OPTIONAL_PHASE) {
+      break;
+    }
+    const status = release.steps[step.id]?.status;
+    if (!release.steps[step.id] || status === 'done' || status === 'skipped') {
+      continue;
+    }
+    release.steps[step.id] = {
+      status: 'skipped',
+      at,
+      ...(step.id === stepId && note ? { note } : {}),
+    };
+  }
+  touchRelease(release);
+  saveRelease(release, cwd);
+}
+
+/**
+ * @param {object | null} release
+ * @param {string} cwd
+ */
+function currentStepDef(release, cwd) {
+  if (!release) {
+    return null;
+  }
+  const pipeline = resolvePipeline(release.edition, cwd);
+  const currentId = getCurrentStepId(release, release.edition, cwd);
+  return pipeline.find((step) => step.id === currentId) ?? null;
+}
+
 async function cmdSkip(rest, cwd, flags) {
   const stepId = rest[0];
-  if (resolveAutoRun(flags, cwd)) {
-    throw new Error('Skip is only available when auto-run is off');
-  }
+  const autoRun = resolveAutoRun(flags, cwd);
   if (stepId === 'github_auth') {
     throw new Error('github_auth cannot be skipped');
   }
@@ -323,10 +367,14 @@ async function cmdSkip(rest, cwd, flags) {
   if (!stepDef) {
     throw new Error(`Unknown step: ${stepId}`);
   }
-  if (stepDef.type === 'confirm' || stepDef.publish === true) {
+  const optionalPhase = stepDef.phase === OPTIONAL_PHASE;
+  if (autoRun && !optionalPhase) {
+    throw new Error('Skip is only available when auto-run is off');
+  }
+  if (stepDef.publish === true || (!optionalPhase && stepDef.type === 'confirm')) {
     throw new Error(`${stepId} cannot be skipped`);
   }
-  if (stepDef.type !== 'auto' && stepDef.type !== 'manual') {
+  if (!optionalPhase && stepDef.type !== 'auto' && stepDef.type !== 'manual') {
     throw new Error(`${stepId} cannot be skipped`);
   }
   const currentStepId = getCurrentStepId(release, release.edition, cwd);
@@ -336,6 +384,17 @@ async function cmdSkip(rest, cwd, flags) {
   const status = release.steps[stepId]?.status;
   if (status === 'done' || status === 'skipped' || status === 'running') {
     throw new Error(`Cannot skip ${stepId} while it is ${status}`);
+  }
+  if (optionalPhase) {
+    skipOptionalPhase(release, pipeline, stepId, note, cwd);
+    if (autoRun) {
+      const result = await continueIfAuto(cwd, flags);
+      output(formatRunPayload(result), flags.json);
+      return exitFromRunResult(result);
+    }
+    const savedPhase = loadCurrentRelease(cwd);
+    output({ ok: true, exitCode: 0, release: savedPhase }, flags.json);
+    return 0;
   }
   markStep(release, stepId, 'skipped', note, cwd);
   const saved = loadCurrentRelease(cwd);
@@ -396,6 +455,7 @@ async function cmdRerun(rest, cwd, flags) {
     onLog: flags.onLog,
     stepwise: autoRun === false,
     beatMs: autoRun === false ? 0 : flags.beatMs,
+    enterOptional: stepDef.phase === OPTIONAL_PHASE,
   });
   output(formatRunPayload(result), flags.json);
   return result.exitCode;
@@ -418,12 +478,15 @@ async function cmdRun(rest, cwd, flags) {
       i += 1;
     }
   }
+  const release = loadCurrentRelease(cwd);
+  const enterOptional = currentStepDef(release, cwd)?.phase === OPTIONAL_PHASE;
   const result = await continueRelease(cwd, {
     until,
     confirm,
     onLog: flags.onLog,
     stepwise: flags.autoRun === false && !until,
     beatMs: flags.beatMs,
+    enterOptional,
   });
   output(formatRunPayload(result), flags.json);
   return result.exitCode;

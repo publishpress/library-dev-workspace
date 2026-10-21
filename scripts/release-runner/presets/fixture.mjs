@@ -35,4 +35,25 @@ export const fixturePreset = [
     type: 'auto',
     run: async () => {},
   },
+  {
+    id: 'localize_auto',
+    label: 'Fixture localization',
+    phase: 'Localization',
+    type: 'auto',
+    run: async () => {},
+  },
+  {
+    id: 'localize_confirm',
+    label: 'Fixture localization confirm',
+    phase: 'Localization',
+    type: 'confirm',
+    message: 'Confirm translations.',
+  },
+  {
+    id: 'after_localize',
+    label: 'Fixture after localization',
+    phase: 'Fixture',
+    type: 'auto',
+    run: async () => {},
+  },
 ];
