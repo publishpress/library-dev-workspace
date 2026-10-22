@@ -13,6 +13,7 @@
         "plugin-lang-domain": "fake-plugin",
         "plugin-github-repo": "publishpress/fake-plugin",
         "plugin-composer-package": "publishpress/fake-plugin",
+        "version-constant": "FAKE_PLUGIN_VERSION",
         "release-presets": [
             "plugin-free-stable",
             "plugin-free-unstable"
