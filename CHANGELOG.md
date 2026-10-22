@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.8.19] - 15 Oct, 2026
 
-- Changed: `publishpress/publishpress-phpcs-standards` is required from `dev-development`, so `composer lint:phpcs` runs the new PublishPress sniffs below.
 - Added: `PublishPressStandards.Security.RequireDirectAccessGuard` requires `if (!defined('ABSPATH')) exit;` after `declare`, `namespace`, and `use`.
 - Added: `PublishPressStandards.Composer.RequirePluginExtra` warns when `composer.json` `extra` metadata required by dev-workspace is missing or empty.
 - Added: `PublishPressStandards.Files.RequireGitAttributes` requires a plugin-root `.gitattributes` and `export-ignore` for common dev paths that exist in the repository.
