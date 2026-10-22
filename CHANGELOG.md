@@ -7,12 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added: `composer release` opens a local release-runner web UI to guide plugin releases, with resumable state, optional localization, quality gates, and CLI control.
 - Changed: `composer deploy` is replaced by `composer release`.
+- Added: `extra.test-suites` lets the release runner execute configured `composer test:<suite>` checks.
 - Changed: Terminal containers now use Bash as `devuser`, with persistent Bash history and cache mounts under `/home/devuser`.
 - Changed: `check:longpath` scans packed trees with the package longpath script.
 - Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.0.0`.
 
 [1.8.19] - 15 Oct, 2026
 
+- Changed: `publishpress/publishpress-phpcs-standards` is required from `dev-development`, so `composer lint:phpcs` runs the new PublishPress sniffs below.
 - Added: `PublishPressStandards.Security.RequireDirectAccessGuard` requires `if (!defined('ABSPATH')) exit;` after `declare`, `namespace`, and `use`.
 - Added: `PublishPressStandards.Composer.RequirePluginExtra` warns when `composer.json` `extra` metadata required by dev-workspace is missing or empty.
 - Added: `PublishPressStandards.Files.RequireGitAttributes` requires a plugin-root `.gitattributes` and `export-ignore` for common dev paths that exist in the repository.
