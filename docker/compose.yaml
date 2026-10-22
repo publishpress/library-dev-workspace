@@ -11,11 +11,12 @@ services:
         env_file:
             - ${REPO_ROOT}/.env
         command:
-            - sh
-            - -c
+            - bash
+            - -lc
             - |
               [ -n "$$GIT_USER_NAME" ] && git config --global user.name "$$GIT_USER_NAME"
-              exec zsh
+              [ -n "$$GIT_USER_EMAIL" ] && git config --global user.email "$$GIT_USER_EMAIL"
+              exec bash -O histappend -il
         stdin_open: true
         tty: true
         working_dir: "/project"
@@ -26,18 +27,17 @@ services:
             # path a symlink, and Docker will not replace a symlink. container-exec.sh
             # rewrites commands to /opt/dev-workspace when the vendor path is missing.
             - ${DEV_WORKSPACE_REAL}:/opt/dev-workspace
-            - ${REPO_ROOT}/vendor/publishpress/dev-workspace/docker/terminal/.zshrc:/root/.zshrc
-            - ${CACHE_PATH}/.npm:/root/.npm
-            - ${CACHE_PATH}/.oh-my-zsh/log:/root/.oh-my-zsh/log
-            - ${CACHE_PATH}/.config/gh:/root/.config/gh
-            - ${CACHE_PATH}/.gitconfig:/root/.gitconfig-vol
-            - ${CACHE_PATH}/.zsh:/root/.zsh-vol
-            - ${CACHE_PATH}/.composer/cache:/root/.composer/cache
-            - ${CACHE_PATH}/.composer/auth.json:/root/.composer/auth.json
+            - ${CACHE_PATH}/.npm:/home/devuser/.npm
+            - ${CACHE_PATH}/.config/gh:/home/devuser/.config/gh
+            - ${CACHE_PATH}/.gitconfig:/home/devuser/.gitconfig-vol
+            - ${CACHE_PATH}/.bash_history:/home/devuser/.bash_history
+            - ${CACHE_PATH}/.composer/cache:/home/devuser/.composer/cache
+            - ${CACHE_PATH}/.composer/auth.json:/home/devuser/.composer/auth.json
         environment:
             INSIDE_DEV_CONTAINER: "true"
-            GIT_CONFIG_GLOBAL: "/root/.gitconfig-vol/config"
-            HISTFILE: "/root/.zsh-vol/.zsh_history"
+            COMPOSER_HOME: "/home/devuser/.composer"
+            GIT_CONFIG_GLOBAL: "/home/devuser/.gitconfig-vol/config"
+            HISTFILE: "/home/devuser/.bash_history"
             DEV_WORKSPACE_VERSION: "1.8.19"
             GIT_CONFIG_COUNT: "1"
             GIT_CONFIG_KEY_0: safe.directory

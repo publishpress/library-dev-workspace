@@ -14,7 +14,6 @@ fi
 [[ -d $CACHE_PATH/.npm/_cacache ]] || mkdir -p $CACHE_PATH/.npm/_cacache
 [[ -d $CACHE_PATH/.npm/_logs ]] || mkdir -p $CACHE_PATH/.npm/_logs
 [[ -d $CACHE_PATH/.composer/cache ]] || mkdir -p $CACHE_PATH/.composer/cache
-[[ -d $CACHE_PATH/.oh-my-zsh/log ]] || mkdir -p $CACHE_PATH/.oh-my-zsh/log
 [[ -d $CACHE_PATH/.gitconfig ]] || mkdir -p $CACHE_PATH/.gitconfig
 # Docker bind-mount directories for test containers must be pre-created by the host user
 # so containers (mariadb, wordpress) get correct ownership on first start.
@@ -27,8 +26,6 @@ fi
 [[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/load-spatie-ray.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/load-spatie-ray.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/load-spatie-ray.php"
 [[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/pp-mailhog.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/mu-plugins/pp-mailhog.php" "$CACHE_PATH/wp_test/wp-content/mu-plugins/pp-mailhog.php"
 [[ -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/ray.php" ]] && cp -f "$DEV_WORKSPACE_DIR/docker/wp/wordpress/ray.php" "$CACHE_PATH/wp_test/ray.php"
-[[ -d $CACHE_PATH/.zsh ]] || mkdir -p $CACHE_PATH/.zsh
-[[ -f $CACHE_PATH/.zsh/.zsh_history ]] || touch $CACHE_PATH/.zsh/.zsh_history
 [[ -f $CACHE_PATH/.bash_history ]] || touch $CACHE_PATH/.bash_history
 [[ -f $CACHE_PATH/.composer/auth.json ]] || echo '{}' > $CACHE_PATH/.composer/auth.json
 [[ -f $CACHE_PATH/.gitconfig/config ]] || touch $CACHE_PATH/.gitconfig/config

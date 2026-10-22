@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Changed: Terminal containers now use Bash as `devuser`, with persistent Bash history and cache mounts under `/home/devuser`.
+
 [1.8.19] - 15 Oct, 2026
 
 - Changed: `publishpress/publishpress-phpcs-standards` is required from `dev-development`, so `composer lint:phpcs` runs the new PublishPress sniffs below.

@@ -7,7 +7,7 @@ bash "$SCRIPT_DIR/services-init-cache.sh"
 
 run_terminal_service() {
     if [ $# -eq 0 ]; then
-        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec zsh'
+        docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal bash -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi; exec bash -O histappend -il'
     else
         docker compose --env-file "$REPO_ROOT/.env" -f docker/compose.yaml run --rm terminal \
             sh -c "$(cat "$SCRIPT_DIR/container-exec.sh")" _ "$@"
@@ -16,7 +16,7 @@ run_terminal_service() {
 
 configure_git_identity_existing_container() {
     local container_id=$1
-    docker exec -i "$container_id" zsh -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi'
+    docker exec -i "$container_id" bash -lc 'if [ -n "$GIT_USER_NAME" ]; then git config --global user.name "$GIT_USER_NAME"; fi; if [ -n "$GIT_USER_EMAIL" ]; then git config --global user.email "$GIT_USER_EMAIL"; fi'
 }
 
 bash "$SCRIPT_DIR/services-pull-images.sh" --daily
@@ -63,7 +63,7 @@ else
     fi
     configure_git_identity_existing_container "$RUNNING_CONTAINER"
     if [ $# -eq 0 ]; then
-        docker exec -it "$RUNNING_CONTAINER" zsh
+        docker exec -it "$RUNNING_CONTAINER" bash -O histappend -il
     else
         docker exec -it "$RUNNING_CONTAINER" sh -c "$(cat "$SCRIPT_DIR/container-exec.sh")" _ "$@"
     fi
