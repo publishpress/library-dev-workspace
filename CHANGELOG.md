@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [2.0.0] - 22 Oct, 2026
 
-- Added: `composer release` opens a local release-runner web UI to guide plugin releases, with resumable state, optional localization, quality gates, and CLI control.
+- Added: Beta `composer release` opens a local release-runner web UI to guide plugin releases, with resumable state, optional localization, quality gates, and CLI control.
 - Changed: `composer deploy` is replaced by `composer release`.
 - Added: `extra.test-suites` lets the release runner execute configured `composer test:<suite>` checks.
 - Changed: Terminal containers now use Bash as `devuser`, with persistent Bash history and cache mounts under `/home/devuser`.
