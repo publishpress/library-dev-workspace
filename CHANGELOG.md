@@ -3,9 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.0.0] - 22 Oct, 2026
 
+- Added: `composer release` opens a local release-runner web UI to guide plugin releases, with resumable state, optional localization, quality gates, and CLI control.
+- Changed: `composer deploy` is replaced by `composer release`.
 - Changed: Terminal containers now use Bash as `devuser`, with persistent Bash history and cache mounts under `/home/devuser`.
+- Changed: `check:longpath` scans packed trees with the package longpath script.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.0.0`.
 
 [1.8.19] - 15 Oct, 2026
 

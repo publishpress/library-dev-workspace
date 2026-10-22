@@ -38,7 +38,7 @@ services:
             COMPOSER_HOME: "/home/devuser/.composer"
             GIT_CONFIG_GLOBAL: "/home/devuser/.gitconfig-vol/config"
             HISTFILE: "/home/devuser/.bash_history"
-            DEV_WORKSPACE_VERSION: "1.8.19"
+            DEV_WORKSPACE_VERSION: "2.0.0"
             GIT_CONFIG_COUNT: "1"
             GIT_CONFIG_KEY_0: safe.directory
             GIT_CONFIG_VALUE_0: /project
