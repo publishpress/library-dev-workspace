@@ -6056,11 +6056,11 @@
         },
         {
             "name": "publishpress/dev-workspace",
-            "version": "dev-cursor/release-runner",
+            "version": "dev-development",
             "dist": {
                 "type": "path",
                 "url": "../..",
-                "reference": "a58e831552c9df8c524bf9715ed054fcba377248"
+                "reference": "f87673ab416621f86c0e870661c2d905e6244207"
             },
             "require": {
                 "automattic/vipwpcs": "^3",

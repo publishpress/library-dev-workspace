@@ -5,8 +5,8 @@
 # to a directory outside the plugin checkout. The plugin mount keeps that
 # symlink, and Docker will not replace a symlink with a bind mount, so the
 # vendor path is missing inside the container. The real package is mounted
-# at /opt/dev-workspace; rewrite those command paths when the vendor copy
-# is not a directory.
+# at /opt/dev-workspace; rewrite those command paths when the vendor copy is
+# a symlink or is not a directory.
 
 project_dir="${CONTAINER_PROJECT_DIR:-/project}"
 mount_dir="${DEV_WORKSPACE_MOUNT:-/opt/dev-workspace}"
@@ -16,7 +16,7 @@ export DEV_WORKSPACE_DIR="$project_dir/$vendor_dir"
 export PATH="$DEV_WORKSPACE_DIR/scripts:$mount_dir/scripts:$PATH"
 cd "$project_dir" || exit 1
 
-if [ ! -d "$vendor_dir/scripts" ] && [ -d "$mount_dir/scripts" ]; then
+if { [ -L "$vendor_dir" ] || [ ! -d "$vendor_dir/scripts" ]; } && [ -d "$mount_dir/scripts" ]; then
     for arg do
         case "$arg" in
             vendor/publishpress/dev-workspace/*)

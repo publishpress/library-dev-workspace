@@ -65,6 +65,24 @@ else
     fail "broken vendor symlink runs the /opt package script" "$broken_output"
 fi
 
+symlink_project="$TMP_ROOT/symlink-project"
+symlink_target="$TMP_ROOT/symlink-target"
+symlink_mount="$TMP_ROOT/symlink-mount"
+mkdir -p "$symlink_project/vendor/publishpress" "$symlink_target/scripts"
+ln -s "$symlink_target" "$symlink_project/vendor/publishpress/dev-workspace"
+write_script "$symlink_target/scripts/dependency-versions.sh" "ran-symlink"
+write_script "$symlink_mount/scripts/check-release.sh" "ran-mount"
+
+symlink_exit=0
+symlink_output="$(run_container_exec "$symlink_project" "$symlink_mount" \
+    vendor/publishpress/dev-workspace/scripts/check-release.sh)" || symlink_exit=$?
+if [ "$symlink_exit" -eq 0 ] \
+    && printf '%s\n' "$symlink_output" | grep -qx "ran-mount"; then
+    pass "vendor symlink with scripts runs the /opt package script"
+else
+    fail "vendor symlink with scripts runs the /opt package script" "$symlink_output"
+fi
+
 real_project="$TMP_ROOT/real-project"
 real_mount="$TMP_ROOT/real-mount"
 write_script "$real_project/vendor/publishpress/dev-workspace/scripts/dependency-versions.sh" "ran-vendor"
