@@ -11,6 +11,8 @@
 
 defined('ABSPATH') || exit;
 
+define('FAKE_PLUGIN_VERSION', '1.0.0');
+
 /**
  * Demo strings covering common WordPress i18n patterns (gettext, contexts, plurals, placeholders).
  *

@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.0.1] - 22 Oct, 2026
+
+- Fixed: Commands from Composer path-repository symlinks run from the mounted dev-workspace package inside terminal containers.
+- Fixed: The fake-plugin fixture defines its version constant and stable tag so `composer build` passes.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.0.1`.
+
 [2.0.0] - 22 Oct, 2026
 
 - Added: Beta `composer release` opens a local release-runner web UI to guide plugin releases, with resumable state, optional localization, quality gates, and CLI control.
