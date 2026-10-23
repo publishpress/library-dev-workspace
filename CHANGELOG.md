@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 
+[2.0.4] - 23 Oct, 2026
+
+- Changed: `publishpress/publishpress-phpcs-standards` is required from `^1.2` instead of `dev-development`.
+- Changed: Composer lock updates for dependency upgrades.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.0.4`.
+
 [2.0.3] - 23 Oct, 2026
 
 - Added: `composer dev:shell` shows changelog entries since the last dev-workspace version used in this plugin.
