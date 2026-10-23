@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 
+- Added: `composer dev:shell` shows changelog entries since the last dev-workspace version used in this plugin.
 - Added: `composer check:min-php` verifies the minimum PHP version (default 8.2, override with `--version=X.Y` or `PP_MIN_PHP_VERSION`) in readme.txt `Requires PHP`, the main plugin file header and guard (`version_compare(phpversion()|PHP_VERSION, ...)` or `PHP_VERSION_ID`), and composer.json `require.php`.
 - Changed: `composer check:php` and `check:release` run `check:min-php` and fail when the minimum PHP version is not declared and enforced everywhere.
 

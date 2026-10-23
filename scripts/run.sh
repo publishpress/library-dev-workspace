@@ -19,11 +19,24 @@ show_help() {
     echo "  <command>: Run a command in the dev-workspace"
 }
 
+should_show_update_notice() {
+    if [ $# -eq 0 ]; then
+        return 0
+    fi
+    if [ $# -eq 1 ] && { [ "$1" = "--new" ] || [ "$1" = "-n" ]; }; then
+        return 0
+    fi
+    return 1
+}
+
 run_in_dev_workspace() {
     if [ -n "${INSIDE_DEV_CONTAINER:-}" ]; then
         export PATH="$DEV_SCRIPTS_DIR:$PATH"
         "$@"
     else
+        if should_show_update_notice "$@"; then
+            bash "$DEV_SCRIPTS_DIR/update-notice.sh" || true
+        fi
         "$SCRIPT_DIR/echo-step.sh" "Initializing dev-workspace environment. Please wait..."
         cd "$DEV_WORKSPACE_DIR"
         bash "$DEV_SCRIPTS_DIR/terminal-service-run.sh" "$@"

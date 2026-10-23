@@ -58,6 +58,8 @@ jobs:
           bash -n test/lint-phpcs-test.sh
           bash -n test/translate-pot-test.sh
           bash -n test/container-exec-test.sh
+          bash -n scripts/update-notice.sh
+          bash -n test/update-notice-test.sh
 
       - name: Run shell fixture tests
         run: |
@@ -66,3 +68,4 @@ jobs:
           bash test/lint-phpcs-test.sh
           bash test/translate-pot-test.sh
           bash test/container-exec-test.sh
+          bash test/update-notice-test.sh
