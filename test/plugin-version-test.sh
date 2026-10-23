@@ -77,6 +77,9 @@ write_stable_fixture_file() {
     cat > "$fixture_dir/composer.json" <<'JSON'
 {
   "name": "publishpress/demo-plugin",
+  "require": {
+    "php": ">=8.2"
+  },
   "extra": {
     "plugin-slug": "demo-plugin",
     "version-constant": "DEMO_PLUGIN_VERSION"
@@ -84,7 +87,7 @@ write_stable_fixture_file() {
 }
 JSON
 
-    printf 'Stable tag: %s\n' "$version" > "$fixture_dir/readme.txt"
+    printf 'Stable tag: %s\nRequires PHP: 8.2\n' "$version" > "$fixture_dir/readme.txt"
 
     while [[ $# -ge 2 ]]; do
         local relative="$1"
@@ -136,7 +139,12 @@ MAIN_ONLY_HEADER='<?php
 /**
  * Plugin Name: Demo Plugin
  * Version: 2.0.0
- */'
+ * Requires PHP: 8.2
+ */
+
+if (PHP_VERSION_ID < 80200) {
+    return;
+}'
 
 write_stable_fixture_file "$CONST_FIXTURE/defines-only" "2.0.0" \
     "demo-plugin.php" "$MAIN_ONLY_HEADER" \

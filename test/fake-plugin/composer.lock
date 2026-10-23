@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d939df77eb5322d9dcb7fb26569d7bb1",
+    "content-hash": "ace257913a64c03ad8230a47f0583863",
     "packages": [],
     "packages-dev": [
         {
@@ -6060,7 +6060,7 @@
             "dist": {
                 "type": "path",
                 "url": "../..",
-                "reference": "d69612ab5cf5d6037447bdeddaeead8ae5493abe"
+                "reference": "0bc363613217a98bb62099db1cf3fe8e87623b18"
             },
             "require": {
                 "automattic/vipwpcs": "^3",
@@ -6176,8 +6176,12 @@
                     "@lint:phpmd",
                     "@check:longpath"
                 ],
+                "check:min-php": [
+                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-min-php.sh \"$@\""
+                ],
                 "check:php": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6,7.2' --full-versions='7.4,8.0,8.1,8.2,8.3,8.4,8.5'"
+                    "@check:min-php",
+                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6,7.2,7.4,8.0,8.1' --full-versions='8.2,8.3,8.4,8.5'"
                 ],
                 "check:php-5.6": [
                     "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6'"
@@ -6186,13 +6190,13 @@
                     "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='7.2'"
                 ],
                 "check:php-7.4": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --full-versions='7.4'"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='7.4'"
                 ],
                 "check:php-8.0": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --full-versions='8.0'"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='8.0'"
                 ],
                 "check:php-8.1": [
-                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --full-versions='8.1'"
+                    "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='8.1'"
                 ],
                 "check:php-8.2": [
                     "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --full-versions='8.2'"
@@ -14079,7 +14083,9 @@
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=8.2"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

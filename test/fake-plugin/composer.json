@@ -19,6 +19,9 @@
             "plugin-free-unstable"
         ]
     },
+    "require": {
+        "php": ">=8.2"
+    },
     "require-dev": {
         "publishpress/dev-workspace": "*",
         "wp-coding-standards/wpcs": "^3"

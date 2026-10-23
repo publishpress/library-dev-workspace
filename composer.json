@@ -96,7 +96,11 @@
             "@lint:phpmd",
             "@check:longpath"
         ],
-        "check:php": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6,7.2,7.4,8.0,8.1' --full-versions='8.2,8.3,8.4,8.5'",
+        "check:min-php": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-min-php.sh \"$@\"",
+        "check:php": [
+            "@check:min-php",
+            "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6,7.2,7.4,8.0,8.1' --full-versions='8.2,8.3,8.4,8.5'"
+        ],
         "check:php-5.6": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='5.6'",
         "check:php-7.2": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='7.2'",
         "check:php-7.4": "vendor/publishpress/dev-workspace/scripts/run.sh bash vendor/publishpress/dev-workspace/scripts/check-php.sh --simple-versions='7.4'",
@@ -337,7 +341,8 @@
         "profile:js": "Profile the JavaScript webpack build",
         "watch:js": "Watch JavaScript sources and rebuild on change",
         "check:all": "Run PHP compatibility, phplint, PHPCS, and long-path checks",
-        "check:php": "Run PHP compatibility checks for all configured PHP versions",
+        "check:min-php": "Verify min PHP version (default 8.2) in readme.txt, plugin header, main file guard, and composer.json require.php",
+        "check:php": "Run check:min-php, then PHP compatibility checks for all configured PHP versions",
         "check:php-5.6": "Check PHP 5.6 compatibility (main plugin file only)",
         "check:php-7.2": "Check PHP 7.2 compatibility (main plugin file only)",
         "check:php-7.4": "Check PHP 7.4 compatibility",

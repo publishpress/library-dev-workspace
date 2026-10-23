@@ -42,6 +42,8 @@ Checks (all must pass for a stable release):
   - Header Version, version constant, and readme Stable tag agree
   - package.json "version" (only if the file exists and defines version)
   - CHANGELOG.md section (only if CHANGELOG.md exists)
+  - Minimum PHP version in readme.txt, plugin header, guard, and composer.json
+    (check-min-php.sh; default 8.2, override with PP_MIN_PHP_VERSION)
   - Version is not already published on wordpress.org (when the plugin is hosted there)
 EOF
 }
@@ -262,6 +264,13 @@ else
     else
         fail "CHANGELOG section" "missing [${VERSION}] heading in CHANGELOG.md"
     fi
+fi
+
+"$SCRIPT_DIR/echo-step.sh" "Checking minimum PHP version"
+if bash "$SCRIPT_DIR/check-min-php.sh" "$CHECK_PATH"; then
+    pass "Minimum PHP version" "readme.txt, plugin header, guard, and composer.json agree"
+else
+    fail "Minimum PHP version" "see check:min-php output above"
 fi
 
 "$SCRIPT_DIR/echo-command-header.sh" "Checking WordPress.org publication status"

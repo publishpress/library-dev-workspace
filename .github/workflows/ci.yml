@@ -49,6 +49,8 @@ jobs:
           bash -n scripts/version-constant-lib.sh
           bash -n scripts/plugin-version.sh
           bash -n scripts/check-release.sh
+          bash -n scripts/check-min-php.sh
+          bash -n test/check-min-php-test.sh
           bash -n scripts/check-wporg.sh
           bash -n scripts/translate-pot.sh
           bash -n scripts/container-exec.sh
@@ -60,6 +62,7 @@ jobs:
       - name: Run shell fixture tests
         run: |
           bash test/plugin-version-test.sh
+          bash test/check-min-php-test.sh
           bash test/lint-phpcs-test.sh
           bash test/translate-pot-test.sh
           bash test/container-exec-test.sh

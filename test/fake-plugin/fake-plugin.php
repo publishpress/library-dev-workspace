@@ -4,12 +4,19 @@
  * Plugin URI:  https://publishpress.com
  * Description: A minimal fake WordPress plugin used to test publishpress/dev-workspace locally.
  * Version:     1.0.0
+ * Requires PHP: 8.2
  * Author:      PublishPress
  * License:     GPL-2.0-or-later
  * Text Domain: fake-plugin
  */
 
 defined('ABSPATH') || exit;
+
+$fake_plugin_min_php_version = '8.2';
+
+if (version_compare(phpversion(), $fake_plugin_min_php_version, '<')) {
+    return;
+}
 
 define('FAKE_PLUGIN_VERSION', '1.0.0');
 
