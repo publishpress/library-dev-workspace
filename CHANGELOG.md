@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.0.2] - 23 Oct, 2026
+
+- Changed: `composer check:php` runs simple checks (main plugin file) for PHP 7.4, 8.0, and 8.1, and full checks for 8.2–8.5. `check:php-7.4`, `check:php-8.0`, and `check:php-8.1` use `--simple-versions`.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.0.2`.
+
 [2.0.1] - 22 Oct, 2026
 
 - Fixed: Commands from Composer path-repository symlinks run from the mounted dev-workspace package inside terminal containers.
