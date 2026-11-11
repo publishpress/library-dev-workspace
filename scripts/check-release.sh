@@ -7,6 +7,11 @@
 
 set -euo pipefail
 
+if [[ "${PP_SKIP_RELEASE_CHECK:-0}" == "1" ]]; then
+    echo "Skipping release checks for an explicitly requested CI test build."
+    exit 0
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=version-constant-lib.sh
 source "${SCRIPT_DIR}/version-constant-lib.sh"
@@ -32,6 +37,7 @@ Usage: check-release.sh [--if-stable] [--allow-published] [PATH] [VERSION]
   --if-stable         If current version is not stable (beta/rc/alpha), skip and exit 0.
                       Used by composer build so beta packages still pack.
   --allow-published   Do not fail when this version is already on wordpress.org.
+  PP_SKIP_RELEASE_CHECK=1  Skip all checks for CI pre-release artifact builds only.
   -h, --help          Show help.
 
   A single positional is treated as VERSION when it is a semantic version;

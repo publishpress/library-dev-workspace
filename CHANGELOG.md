@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 
+- Added: `PP_SKIP_RELEASE_CHECK=1` explicitly skips the release gate for unpublished CI artifact builds, #39.
+- Changed: Unstable release presets omit translation work and the stable release gate; stable presets retain those steps.
+
 [2.0.4] - 23 Oct, 2026
 
 - Changed: `publishpress/publishpress-phpcs-standards` is required from `^1.2` instead of `dev-development`.
