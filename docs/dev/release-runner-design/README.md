@@ -14,7 +14,7 @@ Reference for agents and developers changing the release runner page (`scripts/r
 - Use tokens by name (`var(--status-waiting-fg)`), never raw hex or pixel values. The names match the custom properties in `scripts/release-runner/ui/src/styles.css`.
 - To change a value, edit `tokens.json` first, regenerate [tokens.css](tokens.css), then mirror the change in the app's `styles.css`.
 - Status is always icon + word + colour, never colour alone.
-- One column, no side panel: the current step's actions, log and footer live in its `StepRow`, and the chevron is always the rightmost item in a row.
+- Two panels under a fixed header: the step list is the left column and scrolls to the current step; the right panel is a terminal for the selected step's output. Its actions are Run again, Run (Continue when auto-run is off), and Skip. A publish step uses Publish…. Changing steps slides that panel horizontally.
 - Publish steps (merge to `master`, GitHub release) use the `publish` button variant and `ConfirmPublishDialog`, below `PublishBoundary`.
 - Text must keep 4.5:1 contrast on the grounds named in its token's usage note, in both themes.
 - Theme: dark values apply under `[data-theme="dark"]` on `<html>`. The server writes the saved theme (`dev-workspace-cache/release-runner-ui.json`) into `index.html`; with none saved the page follows the OS setting. The header `ThemeToggle` switches it and saves via `POST /api/ui-prefs`.

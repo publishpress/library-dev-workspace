@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  AlertBanner,
   Button,
+  ToastStack,
   ConfirmPublishDialog,
   EmptyState,
-  LogPanel,
   MetaPill,
   PhaseGroup,
   PhaseProgress,
   PublishBoundary,
   StartReleaseDialog,
-  StepRow,
+  StepNavItem,
+  TerminalView,
   AutoRunToggle,
   ThemeToggle,
 } from './components.jsx';
@@ -151,9 +151,24 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [startOpen, setStartOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [expandedStepId, setExpandedStepId] = useState(null);
-  const [actionError, setActionError] = useState(null);
+  const [viewStepId, setViewStepId] = useState(null);
+  const [slideDir, setSlideDir] = useState(1);
+  const [toasts, setToasts] = useState([]);
+  const toastSeq = useRef(0);
+  const securityToastKey = useRef(null);
   const [autoRun, setAutoRun] = useState(true);
+  const navRef = useRef(null);
+  const stepsRef = useRef([]);
+
+  const pushToast = useCallback((toast) => {
+    const id = toastSeq.current + 1;
+    toastSeq.current = id;
+    setToasts((prev) => [{ id, ...toast }, ...prev].slice(0, 4));
+  }, []);
+
+  const dismissToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
 
   const refresh = useCallback(async () => {
     const data = await apiGet('/api/status');
@@ -187,6 +202,23 @@ export default function App() {
   }, [status?.uiPrefs?.autoRun]);
 
   const release = status?.release;
+
+  useEffect(() => {
+    if (release?.urgency !== 'security' || !release.version) {
+      return;
+    }
+    const key = `${release.version}:${release.edition}`;
+    if (securityToastKey.current === key) {
+      return;
+    }
+    securityToastKey.current = key;
+    pushToast({
+      tone: 'security',
+      title: 'Security release',
+      message:
+        'Keep essential checks. Translations may be skipped. Do not disclose vulnerability details until it is published.',
+    });
+  }, [release?.urgency, release?.version, release?.edition, pushToast]);
   const steps = status?.steps || [];
   const currentStepId = status?.currentStepId;
   const groups = useMemo(() => groupByPhase(steps, currentStepId), [steps, currentStepId]);
@@ -194,6 +226,7 @@ export default function App() {
   const version = status?.effectiveVersion || release?.version;
   const firstPublishId = steps.find((s) => s.publish)?.id;
   const logByStep = useMemo(() => splitSessionLogByStep(log), [log]);
+  stepsRef.current = steps;
 
   useEffect(() => {
     if (!release?.version) {
@@ -222,16 +255,48 @@ export default function App() {
   }, [release?.version]);
 
   useEffect(() => {
-    if (currentStepId) {
-      setExpandedStepId(currentStepId);
+    if (!currentStepId) {
+      return;
     }
+    setViewStepId((prev) => {
+      if (prev && prev !== currentStepId) {
+        const list = stepsRef.current;
+        const from = list.findIndex((s) => s.id === prev);
+        const to = list.findIndex((s) => s.id === currentStepId);
+        setSlideDir(to >= from ? 1 : -1);
+      }
+      return currentStepId;
+    });
   }, [currentStepId]);
+
+  useEffect(() => {
+    const root = navRef.current;
+    if (!root || !currentStepId) {
+      return;
+    }
+    root.querySelector(`[data-step-id="${currentStepId}"]`)?.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
+  }, [currentStepId]);
+
+  const pickStep = (id) => {
+    setViewStepId((prev) => {
+      const fromId = prev || currentStepId;
+      if (fromId && fromId !== id) {
+        const list = stepsRef.current;
+        const from = list.findIndex((s) => s.id === fromId);
+        const to = list.findIndex((s) => s.id === id);
+        setSlideDir(to >= from ? 1 : -1);
+      }
+      return id;
+    });
+  };
 
   const runAction = async (sub, args = [], body = {}) => {
     if (sub === 'start' || sub === 'reset') {
       setLog([]);
     }
-    setActionError(null);
     setBusy(true);
     try {
       const data = await apiPost(`/api/${sub}`, { args, ...body });
@@ -240,7 +305,7 @@ export default function App() {
         return;
       }
     } catch (err) {
-      setActionError(err.message || 'Request failed');
+      pushToast({ tone: 'failed', title: 'Action failed', message: err.message || 'Request failed' });
     } finally {
       setBusy(false);
     }
@@ -249,13 +314,12 @@ export default function App() {
   const isRunning = steps.some((s) => s.status === 'running');
 
   const stopRun = async () => {
-    setActionError(null);
     setBusy(true);
     try {
       await apiPost('/api/stop');
       await refresh();
     } catch (err) {
-      setActionError(err.message || 'Request failed');
+      pushToast({ tone: 'failed', title: 'Action failed', message: err.message || 'Request failed' });
     } finally {
       setBusy(false);
     }
@@ -264,7 +328,6 @@ export default function App() {
   const toggleAutoRun = async () => {
     const next = !autoRun;
     setAutoRun(next);
-    setActionError(null);
     try {
       await apiPost('/api/ui-prefs', { autoRun: next });
       const pendingAuto = currentStep?.type === 'auto' && currentStep.status === 'pending';
@@ -273,12 +336,11 @@ export default function App() {
       }
     } catch (err) {
       setAutoRun(!next);
-      setActionError(err.message || 'Request failed');
+      pushToast({ tone: 'failed', title: 'Action failed', message: err.message || 'Request failed' });
     }
   };
 
   const quitRunner = async () => {
-    setActionError(null);
     try {
       await apiPost('/api/shutdown');
     } catch {
@@ -286,96 +348,107 @@ export default function App() {
     }
   };
 
-  const stepActions = (step) => {
+  const terminalActions = (step) => {
     if (!step) {
       return null;
     }
-    const rerun = canRerun(step) ? (
-      <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('rerun', [step.id])}>
-        Run again
-      </Button>
-    ) : null;
-    const skip =
-      step.id === currentStepId && canSkip(step, autoRun) ? (
-        <Button variant="ghost" size="sm" disabled={busy} onClick={() => runAction('skip', [step.id])}>
-          {step.phase === 'Localization' ? 'Skip localization' : 'Skip'}
-        </Button>
-      ) : null;
-    if (step.id !== currentStepId) {
-      return rerun;
+    const isCurrent = step.id === currentStepId;
+    const ran = canRerun(step);
+    const skippable = isCurrent && canSkip(step, autoRun);
+    const running = step.status === 'running';
+    const finished = step.status === 'done' || step.status === 'skipped';
+    const advanceDisabled = busy || !isCurrent || running || finished;
+    const stepIndex = steps.findIndex((s) => s.id === step.id);
+    const runLabel = step.publish ? 'Publish…' : !autoRun && stepIndex > 0 ? 'Continue' : 'Run';
+    let advanceTitle = 'Run this step';
+    if (step.publish) {
+      advanceTitle = 'Publish this step';
+    } else if (step.status === 'failed') {
+      advanceTitle = 'Retry this step';
+    } else if (runLabel === 'Continue') {
+      advanceTitle = 'Continue from this step';
     }
-    if (step.status === 'running') {
-      return (
-        <Button variant="primary" size="sm" icon="spinner" disabled>
-          Running…
-        </Button>
-      );
+    if (!isCurrent) {
+      advanceTitle = 'Only the current step can run';
+    } else if (running) {
+      advanceTitle = 'This step is still running';
+    } else if (finished) {
+      advanceTitle = 'This step is already finished';
     }
-    if (step.type === 'auto') {
-      if (step.status === 'done' || step.status === 'skipped') {
-        return rerun;
+    const onAdvance = () => {
+      if (step.type === 'confirm' && step.publish) {
+        setConfirmOpen(true);
+        return;
       }
-      if (step.status === 'failed') {
-        return (
-          <>
-            {rerun}
-            {skip}
-          </>
-        );
+      if (step.type === 'confirm') {
+        runAction('run', ['--confirm', step.id]);
+        return;
       }
-      const stepIndex = steps.findIndex((s) => s.id === step.id);
-      const label = !autoRun && stepIndex > 0 ? 'Continue' : 'Run';
-      return (
-        <>
-          <Button variant="primary" size="sm" icon="play" disabled={busy} onClick={() => runAction('run', [])}>
-            {label}
-          </Button>
-          {skip}
-        </>
-      );
+      if (step.type === 'manual') {
+        runAction('complete', [step.id]);
+        return;
+      }
+      runAction('run', []);
+    };
+    let skipTitle = 'Skip this step';
+    if (step.publish || step.id === 'github_auth') {
+      skipTitle = 'This step cannot be skipped';
+    } else if (!isCurrent) {
+      skipTitle = 'Only the current step can be skipped';
+    } else if (autoRun && step.phase !== 'Localization') {
+      skipTitle = 'Turn auto-run off to skip this step';
+    } else if (step.phase === 'Localization') {
+      skipTitle = 'Skip the localization phase';
     }
-    if (step.status === 'done' || step.status === 'skipped' || step.status === 'failed') {
-      return rerun;
-    }
-    if (step.type === 'confirm' && step.publish) {
-      return (
-        <Button variant="publish" size="sm" icon="lock" disabled={busy} onClick={() => setConfirmOpen(true)}>
-          Publish…
-        </Button>
-      );
-    }
-    if (step.type === 'confirm') {
-      return (
-        <>
-          <Button
-            variant="primary"
-            size="sm"
-            icon="check"
-            disabled={busy}
-            onClick={() => runAction('run', ['--confirm', step.id])}
-          >
-            Confirm
-          </Button>
-          {skip}
-        </>
-      );
-    }
+    const againDisabled = busy || running || !ran;
+    const advanceVariant = advanceDisabled ? 'secondary' : step.publish ? 'publish' : 'primary';
+    const againVariant = !againDisabled && advanceDisabled ? 'primary' : 'secondary';
     return (
       <>
-        <Button variant="primary" size="sm" icon="check" disabled={busy} onClick={() => runAction('complete', [step.id])}>
-          Done
+        <Button
+          variant={againVariant}
+          size="sm"
+          icon="play"
+          disabled={againDisabled}
+          title={ran ? 'Re-execute this step' : 'Available after this step has run'}
+          onClick={() => runAction('rerun', [step.id])}
+        >
+          Run again
         </Button>
-        {skip}
+        <Button
+          variant={advanceVariant}
+          size="sm"
+          icon={step.publish && !advanceDisabled ? 'lock' : running ? 'spinner' : 'play'}
+          disabled={advanceDisabled}
+          title={advanceTitle}
+          onClick={onAdvance}
+        >
+          {running ? 'Running…' : runLabel}
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={busy || !skippable}
+          title={skipTitle}
+          onClick={() => runAction('skip', [step.id])}
+        >
+          Skip
+        </Button>
       </>
     );
   };
+
+  const shownId = viewStepId || currentStepId;
+  const shownStep = steps.find((s) => s.id === shownId) || null;
+  const shownLines = shownStep ? linesForStep(logByStep, shownStep.id) : [];
+  const shownIsCurrent = Boolean(shownStep && shownStep.id === currentStepId);
 
   const runnerPresets = status?.runnerPresets ?? [];
   const presetMeta = status?.presetMeta ?? {};
   const defaultPreset = status?.defaultPreset ?? runnerPresets[0] ?? '';
 
   return (
-    <div className="rr-screen">
+    <div className={release ? 'rr-screen rr-screen--split' : 'rr-screen'}>
       <header className="rr-header">
         <div className="rr-header__top">
           <div>
@@ -413,19 +486,6 @@ export default function App() {
         </div>
 
         {release && steps.length > 0 && <PhaseProgress phases={groups} />}
-
-        {release?.urgency === 'security' && (
-          <AlertBanner tone="security" title="Security release">
-            Keep essential checks. Translations may be skipped; do not disclose vulnerability details until it is
-            published.
-          </AlertBanner>
-        )}
-
-        {actionError && (
-          <AlertBanner tone="failed" title="Action failed">
-            {actionError}
-          </AlertBanner>
-        )}
 
         {release && (
           <div className="rr-header__bar">
@@ -472,51 +532,43 @@ export default function App() {
       )}
 
       {release && (
-        <div className="rr-steps">
-          {groups.map((group) => (
-            <PhaseGroup key={group.key} name={group.name} done={group.done} total={group.total}>
-              {group.steps.map((step) => {
-                const isCurrent = step.id === currentStepId;
-                const isExpanded = expandedStepId === step.id;
-                const stepUsesLog = step.type === 'auto';
-                const stepLines = stepUsesLog ? linesForStep(logByStep, step.id) : [];
-                const hasLogOutput = stepUsesLog && stepLines.length > 0;
-                const showLogPanel =
-                  stepUsesLog && (isCurrent || isExpanded) && (hasLogOutput || (isCurrent && isRunning));
-                return (
+        <div className="rr-workspace">
+          <nav className="rr-nav" ref={navRef} aria-label="Release steps">
+            {groups.map((group) => (
+              <PhaseGroup key={group.key} name={group.name} done={group.done} total={group.total}>
+                {group.steps.map((step) => (
                   <React.Fragment key={step.id}>
                     {step.id === firstPublishId && <PublishBoundary />}
-                    <StepRow
+                    <StepNavItem
+                      id={step.id}
                       label={step.label}
                       type={step.type}
                       status={step.status}
-                      guide={step.instructions || step.message}
-                      note={hasLogOutput ? null : distinctStepNote(step.note, stepLines, isCurrent && stepUsesLog)}
-                      hasLogOutput={hasLogOutput}
-                      current={isCurrent}
-                      open={expandedStepId === step.id}
-                      onOpenChange={(next) => setExpandedStepId(next ? step.id : null)}
-                      actions={stepActions(step)}
-                      busy={busy}
-                      cli={isCurrent ? cliHint(step) : null}
-                      onReopen={
-                        isCurrent &&
-                        step.type === 'auto' &&
-                        (step.status === 'done' || step.status === 'failed' || step.status === 'skipped')
-                          ? () => runAction('reopen', [step.id])
-                          : null
-                      }
-                      log={
-                        showLogPanel ? (
-                          <LogPanel lines={isCurrent ? log : stepLines} live={isCurrent && isRunning} />
-                        ) : null
-                      }
+                      current={step.id === currentStepId}
+                      selected={step.id === shownId}
+                      onSelect={pickStep}
                     />
                   </React.Fragment>
-                );
-              })}
-            </PhaseGroup>
-          ))}
+                ))}
+              </PhaseGroup>
+            ))}
+          </nav>
+          <TerminalView
+            stepId={shownStep?.id}
+            title={shownStep?.label}
+            status={shownStep?.status}
+            lines={shownLines}
+            live={shownIsCurrent && isRunning}
+            guide={shownStep?.instructions || shownStep?.message}
+            note={
+              shownLines.length
+                ? null
+                : distinctStepNote(shownStep?.note, shownLines, shownIsCurrent)
+            }
+            cli={shownIsCurrent ? cliHint(shownStep) : null}
+            slideDir={slideDir}
+            actions={terminalActions(shownStep)}
+          />
         </div>
       )}
 
@@ -536,6 +588,8 @@ export default function App() {
           setStartOpen(false);
         }}
       />
+
+      <ToastStack toasts={toasts} onDismiss={dismissToast} />
 
       <ConfirmPublishDialog
         open={confirmOpen}

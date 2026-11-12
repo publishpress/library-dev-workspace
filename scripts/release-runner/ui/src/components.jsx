@@ -183,6 +183,49 @@ export function AlertBanner({ tone = 'security', title, children }) {
   );
 }
 
+function Toast({ toast, onDismiss, timeoutMs }) {
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) {
+      return undefined;
+    }
+    const timer = setTimeout(() => onDismiss(toast.id), timeoutMs);
+    return () => clearTimeout(timer);
+  }, [paused, toast.id, onDismiss, timeoutMs]);
+  return (
+    <div
+      className={`rr-toast rr-alert rr-alert--${toast.tone}`}
+      role={toast.tone === 'failed' ? 'alert' : 'status'}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
+      <Icon name={ALERT_ICON[toast.tone] || 'alert'} />
+      <div className="rr-toast__text">
+        {toast.title && <span className="rr-alert__title">{toast.title}</span>}
+        {toast.message}
+      </div>
+      <button type="button" className="rr-toast__close" aria-label="Dismiss" onClick={() => onDismiss(toast.id)}>
+        <Icon name="x" />
+      </button>
+    </div>
+  );
+}
+
+export function ToastStack({ toasts, onDismiss, timeoutMs = 5000 }) {
+  if (!toasts.length) {
+    return null;
+  }
+  return (
+    <div className="rr-toasts">
+      {toasts.map((toast) => (
+        <Toast key={toast.id} toast={toast} onDismiss={onDismiss} timeoutMs={timeoutMs} />
+      ))}
+    </div>
+  );
+}
+
 export function PhaseGroup({ name, done, total, children }) {
   return (
     <section className="rr-phase">
@@ -277,6 +320,33 @@ export function StepRow({
   );
 }
 
+export function StepNavItem({ id, label, type, status, current, selected, onSelect }) {
+  const key = statusKey(status);
+  return (
+    <li>
+      <button
+        type="button"
+        data-step-id={id}
+        className={cx(
+          'rr-navitem',
+          `rr-navitem--${key}`,
+          current && 'rr-navitem--current',
+          selected && 'rr-navitem--selected'
+        )}
+        aria-current={current ? 'step' : undefined}
+        aria-pressed={selected}
+        onClick={() => onSelect(id)}
+      >
+        <span className={`rr-step__dot rr-badge--${key}`}>
+          <Icon name={STATUS[key].icon} />
+        </span>
+        <span className="rr-navitem__label">{label}</span>
+        <StepTypeTag type={type} />
+      </button>
+    </li>
+  );
+}
+
 export function PublishBoundary() {
   return (
     <li role="presentation">
@@ -312,6 +382,74 @@ export function logLineKind(text) {
     return 'ok';
   }
   return undefined;
+}
+
+export function TerminalView({
+  stepId,
+  title,
+  status,
+  lines,
+  live,
+  guide,
+  note,
+  cli,
+  slideDir = 1,
+  actions,
+}) {
+  const ref = React.useRef(null);
+  const stick = React.useRef(true);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (el && stick.current) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [lines, stepId, guide, note]);
+  return (
+    <section className="rr-tty" aria-label="Step output">
+      <div className="rr-tty__chrome">
+        <span className="rr-tty__prompt" aria-hidden="true">
+          ❯
+        </span>
+        <h2 className="rr-tty__title">{title || 'No step selected'}</h2>
+        {stepId && <span className="rr-tty__id">{stepId}</span>}
+        {status && <StatusBadge status={status} />}
+        {live && <span className="rr-log__live">Live</span>}
+      </div>
+      <div className="rr-tty__viewport">
+        <div
+          key={stepId || 'empty'}
+          className={cx('rr-tty__pane', slideDir < 0 ? 'rr-tty__pane--back' : 'rr-tty__pane--forward')}
+        >
+          <pre
+            ref={ref}
+            className="rr-tty__body"
+            aria-live={live ? 'polite' : 'off'}
+            onScroll={(e) => {
+              const el = e.currentTarget;
+              stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+            }}
+          >
+            {guide && <span className="rr-tty__guide">{guide}</span>}
+            {note && <span className="rr-log__line rr-log__line--meta">{note}</span>}
+            {lines?.length ? (
+              lines.map((text, i) => (
+                <span key={i} className={cx('rr-log__line', logLineKind(text) && `rr-log__line--${logLineKind(text)}`)}>
+                  {text}
+                </span>
+              ))
+            ) : (
+              <span className="rr-log__placeholder">Waiting for output…</span>
+            )}
+            {live && <span className="rr-tty__cursor" aria-hidden="true" />}
+          </pre>
+          <div className="rr-tty__actions">
+            {cli && <p className="rr-tty__cli">$ composer release -- {cli}</p>}
+            <div className="rr-row">{actions}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export function LogPanel({ lines, live, maxHeight = 280, placeholder = 'Waiting for log output…' }) {
