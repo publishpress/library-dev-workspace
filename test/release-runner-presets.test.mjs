@@ -41,9 +41,23 @@ test('plugin-free-unstable omits milestone and post-release gates', () => {
   assert.ok(ids.includes('github_release'));
 });
 
-test('plugin-pro-unstable omits milestone steps only', () => {
+test('plugin-pro-unstable omits milestone steps', () => {
   const ids = getPreset(PRESET_PLUGIN_PRO_UNSTABLE).map((s) => s.id);
   assert.ok(!ids.includes('milestone_check'));
   assert.ok(!ids.includes('milestone_close'));
   assert.ok(ids.includes('package_server_check'));
+});
+
+test('unstable presets omit translation work and the stable release gate', () => {
+  const skipped = ['translate_ai', 'translate_commit', 'wait_translator_es_fr_it',
+    'wait_translator_pt_br', 'translate_download', 'translate_compile',
+    'changelog_i18n', 'check_release'];
+  for (const preset of [PRESET_PLUGIN_FREE_UNSTABLE, PRESET_PLUGIN_PRO_UNSTABLE]) {
+    const ids = getPreset(preset).map(step => step.id);
+    for (const id of skipped) assert.ok(!ids.includes(id), `${preset}: ${id}`);
+  }
+  for (const preset of [PRESET_PLUGIN_FREE_STABLE, PRESET_PLUGIN_PRO_STABLE]) {
+    const ids = getPreset(preset).map(step => step.id);
+    for (const id of skipped) assert.ok(ids.includes(id), `${preset}: ${id}`);
+  }
 });

@@ -154,6 +154,10 @@ Set the following keys in the plugin's `composer.json` `extra` section so the wo
 
 Release checks (`check:release`, `check-wporg`) and `plugin-bump-version` all use this list. Defining the constant in more than one candidate file fails. Supported syntax is strict `define('NAME', 'version')` / `define("NAME", "version")`, including mixed quote styles; the bump script preserves the quote style already in the file.
 
+For unpublished CI artifact builds only, `PP_SKIP_RELEASE_CHECK=1` makes `scripts/check-release.sh` exit successfully before any checks. Normal stable builds must not set it. This is separate from `--if-stable` (skip checks for an unstable version) and `--allow-published` (permit an already published version). `composer build` remains `check:release-if-stable` followed by `pack:zip`.
+
+The unstable free and Pro release-runner presets omit translation work and the stable release gate. Stable presets retain those steps. The release runner never attaches a local ZIP to a GitHub release; Actions builds and signs published ZIPs. Signed tester ZIPs come from the shared pre-release Actions workflow, not from publishing a pre-release.
+
 Each plugin root must have two environment files:
 
 - **`.env.example`** — committed template with placeholder or default values; keep it in the repository so contributors know what variables are required.
