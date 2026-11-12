@@ -409,8 +409,12 @@ body { margin: 0; font-family: var(--font-sans); font-size: 16px; line-height: 1
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
 }
-.rr-nav .rr-phase { margin-bottom: var(--space-md); }
-.rr-nav .rr-phase:last-child { margin-bottom: 0; }
+.rr-nav .rr-phase { margin-bottom: 0; }
+.rr-nav .rr-phase + .rr-phase {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
 .rr-navitem {
   width: 100%;
   display: flex;
