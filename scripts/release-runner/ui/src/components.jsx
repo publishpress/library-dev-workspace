@@ -23,6 +23,7 @@ const PATHS = {
   sun: 'M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1',
   moon: 'M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z',
   stop: 'M5.5 5.5h5v5h-5z',
+  power: 'M8 2.5v4.5M5.1 4.4a4.75 4.75 0 1 0 5.8 0',
 };
 
 export function Icon({ name, className }) {

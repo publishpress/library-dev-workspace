@@ -3,8 +3,8 @@ import {
   Button,
   ToastStack,
   ConfirmPublishDialog,
+  EditionBadge,
   EmptyState,
-  MetaPill,
   PhaseGroup,
   PhaseProgress,
   PublishBoundary,
@@ -451,66 +451,91 @@ export default function App() {
     <div className={release ? 'rr-screen rr-screen--split' : 'rr-screen'}>
       <header className="rr-header">
         <div className="rr-header__top">
-          <div>
+          <div className="rr-header__identity">
             <h1 className="rr-header__title">Release Runner</h1>
             <p className="rr-header__sub">Local release checklist for this plugin clone</p>
-          </div>
-          <div className="rr-header__end">
             {release && (
-              <div className="rr-header__pills">
-                <MetaPill
-                  label="Version"
-                  value={version}
-                  tone="accent"
-                  mono
-                  product={presetMeta[release.edition]?.product}
-                />
-                <MetaPill
-                  label="Preset"
-                  value={presetMeta[release.edition]?.label ?? release.edition}
-                />
-                {release.urgency === 'security' && <MetaPill label="Urgency" value="security" tone="alert" />}
-                <MetaPill label="Branch" value={release.branchName} mono />
-                {release.prerelease?.channel && (
-                  <MetaPill label="Package" value={`${release.prerelease.channel}.${release.prerelease.n}`} mono />
-                )}
-                {status.ghAccount && <MetaPill label="GitHub" value={status.ghAccount} />}
+              <div className="rr-header__facts">
+                <p className="rr-header__version">
+                  <span>{version}</span>
+                  {release.prerelease?.channel && (
+                    <span className="rr-header__channel">
+                      {release.prerelease.channel}.{release.prerelease.n}
+                    </span>
+                  )}
+                  <EditionBadge product={presetMeta[release.edition]?.product} />
+                </p>
+                <dl className="rr-facts">
+                  <div className="rr-fact">
+                    <dt>Preset</dt>
+                    <dd>{presetMeta[release.edition]?.label ?? release.edition}</dd>
+                  </div>
+                  <div className="rr-fact">
+                    <dt>Branch</dt>
+                    <dd className="rr-fact__mono">{release.branchName}</dd>
+                  </div>
+                  {status.ghAccount && (
+                    <div className="rr-fact">
+                      <dt>GitHub</dt>
+                      <dd>{status.ghAccount}</dd>
+                    </div>
+                  )}
+                  {release.urgency === 'security' && (
+                    <div className="rr-fact rr-fact--alert">
+                      <dt>Urgency</dt>
+                      <dd>Security</dd>
+                    </div>
+                  )}
+                </dl>
               </div>
             )}
+          </div>
+          <div className="rr-header__options">
+            {release && (isRunning || busy) && (
+              <Button variant="danger" size="sm" icon="stop" onClick={stopRun}>
+                Stop
+              </Button>
+            )}
+            {release && (
+              <Button
+                variant="reset"
+                size="sm"
+                disabled={busy}
+                title="Drop this release from the runner. Git history stays as it is."
+                onClick={() => runAction('reset', [], { yes: true })}
+              >
+                Discard release
+              </Button>
+            )}
             <AutoRunToggle on={autoRun} onChange={toggleAutoRun} />
-            <Button variant="ghost" size="sm" onClick={quitRunner}>
-              Quit runner
-            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              icon="power"
+              className="rr-icon-btn"
+              aria-label="Quit runner"
+              title="Quit runner"
+              onClick={quitRunner}
+            />
             <ThemeToggle onChange={(theme) => apiPost('/api/ui-prefs', { theme })} />
           </div>
         </div>
-
-        {release && steps.length > 0 && <PhaseProgress phases={groups} />}
-
-        {release && (
-          <div className="rr-header__bar">
-            <div className="rr-header__next">
-              {currentStep ? (
-                <span>
-                  Next: <strong>{currentStep.label}</strong>
-                </span>
-              ) : (
-                <span>All steps complete.</span>
-              )}
-            </div>
-            <div className="rr-row">
-              {(isRunning || busy) && (
-                <Button variant="danger" size="sm" icon="stop" onClick={stopRun}>
-                  Stop
-                </Button>
-              )}
-              <Button variant="reset" size="sm" disabled={busy} onClick={() => runAction('reset', [], { yes: true })}>
-                Reset state
-              </Button>
-            </div>
-          </div>
-        )}
       </header>
+
+      {release && steps.length > 0 && (
+        <section className="rr-progress-panel" aria-label="Release progress">
+          <PhaseProgress phases={groups} />
+          <p className="rr-progress-panel__next">
+            {currentStep ? (
+              <>
+                Next: <strong>{currentStep.label}</strong>
+              </>
+            ) : (
+              'All steps complete.'
+            )}
+          </p>
+        </section>
+      )}
 
       {status && !release && (
         <EmptyState
