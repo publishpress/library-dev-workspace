@@ -195,6 +195,7 @@ body { margin: 0; font-family: var(--font-sans); font-size: 16px; line-height: 1
 .rr-alert--security { background: var(--alert-security-bg); border-color: var(--alert-security-border); color: var(--alert-security-fg); }
 .rr-alert--failed { background: var(--status-failed-bg); color: var(--status-failed-fg); }
 .rr-alert--waiting { background: var(--status-waiting-bg); color: var(--status-waiting-fg); }
+.rr-screen--split .rr-toasts { bottom: calc(var(--space-2xl) * 3 + var(--space-md)); }
 .rr-toasts {
   position: fixed;
   z-index: 80;

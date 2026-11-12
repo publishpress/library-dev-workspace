@@ -522,21 +522,6 @@ export default function App() {
         </div>
       </header>
 
-      {release && steps.length > 0 && (
-        <section className="rr-progress-panel" aria-label="Release progress">
-          <PhaseProgress phases={groups} />
-          <p className="rr-progress-panel__next">
-            {currentStep ? (
-              <>
-                Next: <strong>{currentStep.label}</strong>
-              </>
-            ) : (
-              'All steps complete.'
-            )}
-          </p>
-        </section>
-      )}
-
       {status && !release && (
         <EmptyState
           action={
@@ -595,6 +580,21 @@ export default function App() {
             actions={terminalActions(shownStep)}
           />
         </div>
+      )}
+
+      {release && steps.length > 0 && (
+        <section className="rr-progress-panel" aria-label="Release progress">
+          <PhaseProgress phases={groups} />
+          <p className="rr-progress-panel__next">
+            {currentStep ? (
+              <>
+                Next: <strong>{currentStep.label}</strong>
+              </>
+            ) : (
+              'All steps complete.'
+            )}
+          </p>
+        </section>
       )}
 
       <StartReleaseDialog
