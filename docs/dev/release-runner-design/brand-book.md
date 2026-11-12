@@ -30,13 +30,13 @@ Release Runner is the local web page (`composer release`, `127.0.0.1:9876`) that
 
 **Space and shape.** A 4px base: `space-xs` 4 · `space-sm` 8 · `space-md` 12 · `space-lg` 16 · `space-xl` 24 · `space-2xl` 32. Radii grow with the container: `radius-sm` for controls and the log, `radius-md` for step rows, `radius-lg` for the header, panel and dialogs, `radius-pill` for pills and badges. Separate surfaces with `border-subtle` hairlines. `shadow-sm` is for the header and `shadow-md` for the floating panel and dialogs.
 
-**Layout.** One page, one column, no router. The `ReleaseHeader` sits on top and is sticky on desktop; on phones it scrolls away. Below it, the phase list (max 52rem wide). There is no side panel: the current step is its own row, outlined in `pp-purple`, with its action buttons in the row and its guide, live log, *Reopen from here* and CLI hint in the expanded body. Only the current step is expanded by default. The chevron is always the rightmost item in a row, after the action buttons.
+**Layout.** One page, no router. The header stays fixed and holds the release identity (version, preset, branch, progress). Below it, two panels: a left list of steps that scrolls to the current step as the release moves, and a right terminal for that step's output and the three actions (Run again, Run or Continue, and Skip). Selecting another step, or the release moving to the next step, slides the terminal horizontally. On a narrow window the list stacks above the terminal.
 
 **The log** is dark in both themes (`log-bg`) so output reads like a terminal. Colour lines by kind with `log-cmd`, `log-ok`, `log-warn`, `log-err` and `log-muted`.
 
 **Focus and states.** Every control gets a solid 2px `focus-ring` outline, offset 2px. It is at least 5.6:1 on every surface in both themes and replaces the old 35% alpha ring. Hover moves fills one step toward `surface-sunken`. Disabled is 45% opacity, with a nearby reason. Inputs use `border-control`, which meets 3:1.
 
-**Motion.** Only the running spinner (stopped under `prefers-reduced-motion`), plus a 150ms fade and 6px rise on dialogs. Nothing animates on its own otherwise.
+**Motion.** The running spinner, a 150ms fade and 6px rise on dialogs, and a 220ms horizontal slide when the terminal step changes. All of these stop under `prefers-reduced-motion`. Nothing else animates on its own.
 
 **Dark theme.** Every token has a dark value. Dark applies under `[data-theme="dark"]` on `<html>`: the server writes it into `index.html` from `dev-workspace-cache/release-runner-ui.json` (the saved choice), else the page follows `prefers-color-scheme`, and `ThemeToggle` in the header switches it. `pp-purple` lightens to `#b3abe6`, so text on it turns dark (`text-inverse`). Status grounds become deep tints with light text.
 
@@ -50,4 +50,4 @@ The plugin icons (Future, Cart) are purple squares with an amber glyph and a whi
 
 ## Implementation
 
-The app implements this system in `scripts/release-runner/ui/src/`: `styles.css` holds the tokens and component styles (same class names as `components/bundle.css`), and `components.jsx` holds the React components (same names and props as `components/index.d.ts`). The page is one column: the current step's actions, log and footer live in its row (`StepRow`); there is no side panel. The theme is saved in `dev-workspace-cache/release-runner-ui.json` via `POST /api/ui-prefs`. The engine reports the `running` and `waiting` statuses, each step's `type`, and the resolved command through `/api/status`.
+The app implements this system in `scripts/release-runner/ui/src/`: `styles.css` holds the tokens and component styles (same class names as `components/bundle.css`), and `components.jsx` holds the React components (same names and props as `components/index.d.ts`). The page is a fixed header plus two panels: `StepNavItem` in the left list, `TerminalView` for the selected step. The theme is saved in `dev-workspace-cache/release-runner-ui.json` via `POST /api/ui-prefs`. The engine reports the `running` and `waiting` statuses, each step's `type`, and the resolved command through `/api/status`.

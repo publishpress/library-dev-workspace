@@ -145,7 +145,7 @@ function findVersionConstantLocation(string $versionConstant): string
         $basenames = array_map(
             static function (string $path): string {
                 $prefix = BASE_PATH . '/';
-                if (str_starts_with($path, $prefix)) {
+                if (strncmp($path, $prefix, strlen($prefix)) === 0) {
                     return substr($path, strlen($prefix));
                 }
 

@@ -3,7 +3,14 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.1.0] - 12 Nov, 2026
+
+- Fixed: Keep duplicate version-constant diagnostics compatible with PHP 7.4.
+- Fixed: Respect project PHPCS ruleset paths instead of always scanning the current directory.
+- Added: `PP_SKIP_RELEASE_CHECK=1` explicitly skips the release gate for unpublished CI artifact builds, #39.
+- Changed: Unstable release presets omit translation work and the stable release gate; stable presets retain those steps.
+- Changed: Change the layout of the release runner UI to make it more readable.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.0`.
 
 [2.0.4] - 23 Oct, 2026
 
