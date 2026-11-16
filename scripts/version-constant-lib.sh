@@ -6,6 +6,7 @@ VERSION_CONSTANT_BASENAMES=(
     defines.php
     constants.php
     include.php
+    includes.php
     autoload.php
     src/constants.php
     src/defines.php

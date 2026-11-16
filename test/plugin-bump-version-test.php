@@ -329,6 +329,17 @@ assertSame('defines.php only header', '1.2.0', extractHeader(read($definesOnlyDi
 assertSame('defines.php only constant', '1.2.0', extractConstantFromFile($definesOnlyDir, 'defines.php'));
 assertSame('defines.php only main unchanged', '', extractConstantFromFile($definesOnlyDir, 'demo-plugin.php'));
 
+// --- constant only in includes.php ---
+$includesOnlyDir = makeFixture([
+    'composer.json' => defaultComposerJson(),
+    'demo-plugin.php' => pluginFileWithoutConstant('1.0.0'),
+    'includes.php' => "define('DEMO_PLUGIN_VERSION', '1.0.0');\n",
+    'readme.txt' => "Stable tag: 1.0.0\n",
+]);
+[$code] = runBump($includesOnlyDir, '1.2.0');
+assertSame('includes.php only exit code', 0, $code);
+assertSame('includes.php only constant', '1.2.0', extractConstantFromFile($includesOnlyDir, 'includes.php'));
+
 // --- constant only in src/constants.php ---
 $srcConstantsDir = makeFixture([
     'composer.json' => defaultComposerJson(),

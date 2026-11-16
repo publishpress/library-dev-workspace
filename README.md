@@ -146,6 +146,7 @@ Set the following keys in the plugin's `composer.json` `extra` section so the wo
 - `defines.php`
 - `constants.php`
 - `include.php`
+- `includes.php`
 - `autoload.php`
 - `src/constants.php`
 - `src/defines.php`
