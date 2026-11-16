@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.1.1] - 16 Nov, 2026
+
+- Fixed: `check-release`, `check-wporg`, and `plugin-bump-version` accept the version constant in root `includes.php`.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.1`.
+
 [2.1.0] - 12 Nov, 2026
 
 - Fixed: Keep duplicate version-constant diagnostics compatible with PHP 7.4.
