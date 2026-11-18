@@ -3,9 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.1.2] - 18 Nov, 2026
 
 - Fixed: Weblate translate commands stop when `CF_ACCESS_CLIENT_ID` or `CF_ACCESS_CLIENT_SECRET` is missing for weblate.publishpress.com.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.2`.
 
 [2.1.1] - 16 Nov, 2026
 
