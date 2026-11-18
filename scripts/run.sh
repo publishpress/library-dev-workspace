@@ -48,4 +48,6 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     exit 0
 fi
 
+"$SCRIPT_DIR/require-weblate-access.sh" "$@"
+
 run_in_dev_workspace "$@"

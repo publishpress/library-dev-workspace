@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Fixed: Weblate translate commands stop when `CF_ACCESS_CLIENT_ID` or `CF_ACCESS_CLIENT_SECRET` is missing for weblate.publishpress.com.
+
 [2.1.1] - 16 Nov, 2026
 
 - Fixed: `check-release`, `check-wporg`, and `plugin-bump-version` accept the version constant in root `includes.php`.

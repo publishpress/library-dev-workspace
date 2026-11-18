@@ -53,10 +53,12 @@ jobs:
           bash -n test/check-min-php-test.sh
           bash -n scripts/check-wporg.sh
           bash -n scripts/translate-pot.sh
+          bash -n scripts/require-weblate-access.sh
           bash -n scripts/container-exec.sh
           bash -n test/plugin-version-test.sh
           bash -n test/lint-phpcs-test.sh
           bash -n test/translate-pot-test.sh
+          bash -n test/require-weblate-access-test.sh
           bash -n test/container-exec-test.sh
           bash -n scripts/update-notice.sh
           bash -n test/update-notice-test.sh
@@ -67,5 +69,6 @@ jobs:
           bash test/check-min-php-test.sh
           bash test/lint-phpcs-test.sh
           bash test/translate-pot-test.sh
+          bash test/require-weblate-access-test.sh
           bash test/container-exec-test.sh
           bash test/update-notice-test.sh
