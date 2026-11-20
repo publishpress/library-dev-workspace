@@ -6103,16 +6103,16 @@
         },
         {
             "name": "publishpress/translations",
-            "version": "v1.8.1",
+            "version": "v1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/publishpress/library-publishpress-translator.git",
-                "reference": "446ae7a2c0f4beadbaf9a6d0f59ddc09733735aa"
+                "reference": "87c9944ffa151c02aff117bac2c06bd07fec1f4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/446ae7a2c0f4beadbaf9a6d0f59ddc09733735aa",
-                "reference": "446ae7a2c0f4beadbaf9a6d0f59ddc09733735aa",
+                "url": "https://api.github.com/repos/publishpress/library-publishpress-translator/zipball/87c9944ffa151c02aff117bac2c06bd07fec1f4e",
+                "reference": "87c9944ffa151c02aff117bac2c06bd07fec1f4e",
                 "shasum": ""
             },
             "require": {
@@ -6154,9 +6154,9 @@
             "description": "AI-powered translation automation for PublishPress plugins using Potomatic",
             "support": {
                 "issues": "https://github.com/publishpress/library-publishpress-translator/issues",
-                "source": "https://github.com/publishpress/library-publishpress-translator/tree/v1.8.1"
+                "source": "https://github.com/publishpress/library-publishpress-translator/tree/v1.8.2"
             },
-            "time": "2026-11-20T15:26:03+00:00"
+            "time": "2026-11-20T15:29:41+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
