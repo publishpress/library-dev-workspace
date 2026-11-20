@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+- Changed: `publishpress/translations` is required from `^1.7` (v1.7.0) instead of `^1.4`.
+- Fixed: `composer config:phpcs` runs `scripts/config-phpcs-installed-paths.sh` in this repository. Plugins still use the copy under `vendor/publishpress/dev-workspace`.
+
 [2.1.2] - 18 Nov, 2026
 
 - Fixed: Weblate translate commands stop when `CF_ACCESS_CLIENT_ID` or `CF_ACCESS_CLIENT_SECRET` is missing for weblate.publishpress.com.
