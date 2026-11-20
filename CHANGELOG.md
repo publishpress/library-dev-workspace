@@ -3,10 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.1.3] - 19 Nov, 2026
 
 - Changed: `publishpress/translations` is required from `^1.7` (v1.7.0) instead of `^1.4`.
 - Fixed: `composer config:phpcs` runs `scripts/config-phpcs-installed-paths.sh` in this repository. Plugins still use the copy under `vendor/publishpress/dev-workspace`.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.3`.
 
 [2.1.2] - 18 Nov, 2026
 
