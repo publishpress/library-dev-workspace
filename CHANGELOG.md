@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.1.6] - 20 Nov, 2026
+
+- Changed: `publishpress/translations` lock is v1.8.2. The constraint stays `^1.8`.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.6`.
+
 [2.1.5] - 20 Nov, 2026
 
 - Changed: `publishpress/translations` lock is v1.8.1. The constraint stays `^1.8`.
