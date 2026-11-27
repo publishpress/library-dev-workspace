@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.1.7] - 27 Nov, 2026
+
+- Changed: `publishpress/translations` is required from `^1.9` (v1.9.0, npm `@publishpress/potomatic`).
+- Changed: `publishpress/translations` lock is v1.9.0.
+- Changed: Builder/terminal `DEV_WORKSPACE_VERSION` in `docker/compose.yaml` updated to `2.1.7`.
+- Changed: `test/fake-plugin` lock refreshed for the new potomatic chmod paths.
+
 [2.1.6] - 20 Nov, 2026
 
 - Changed: `publishpress/translations` lock is v1.8.2. The constraint stays `^1.8`.
