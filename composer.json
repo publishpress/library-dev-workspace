@@ -307,13 +307,13 @@
         "install:node-deps": "[ -x scripts/install-node-deps.sh ] && scripts/install-node-deps.sh || vendor/publishpress/dev-workspace/scripts/install-node-deps.sh",
         "post-install-cmd": [
             "@config:phpcs",
-            "for f in vendor/publishpress/translations/potomatic/potomatic vendor/publishpress/translations/potomatic/potomatic.js; do [ -f \"$f\" ] && chmod +x \"$f\"; done || true",
+            "for f in vendor/publishpress/translations/node_modules/@publishpress/potomatic/potomatic vendor/publishpress/translations/node_modules/@publishpress/potomatic/potomatic.js vendor/publishpress/translations/potomatic/potomatic vendor/publishpress/translations/potomatic/potomatic.js; do [ -f \"$f\" ] && chmod +x \"$f\"; done || true",
             "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true",
             "@install:node-deps"
         ],
         "post-update-cmd": [
             "@config:phpcs",
-            "for f in vendor/publishpress/translations/potomatic/potomatic vendor/publishpress/translations/potomatic/potomatic.js; do [ -f \"$f\" ] && chmod +x \"$f\"; done || true",
+            "for f in vendor/publishpress/translations/node_modules/@publishpress/potomatic/potomatic vendor/publishpress/translations/node_modules/@publishpress/potomatic/potomatic.js vendor/publishpress/translations/potomatic/potomatic vendor/publishpress/translations/potomatic/potomatic.js; do [ -f \"$f\" ] && chmod +x \"$f\"; done || true",
             "chmod +x vendor/publishpress/dev-workspace/scripts/*.sh || true",
             "@install:node-deps"
         ],
